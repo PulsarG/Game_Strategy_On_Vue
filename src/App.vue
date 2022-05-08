@@ -1,16 +1,33 @@
 <template>
   <div class="main">
-    <info-block :isItemMenu="isItemMenu" :isForgeMenu="isForgeMenu" @afterBuyMiner="afterBuyMiner" @buyForge="buyForge" :isForgeBuy="isForgeBuy"
-      :priceGoldMiner="priceGoldMiner" :goldCount="goldCount" class="infoblock" />
-    <div class="field">
-      <h1>Hello</h1>
+
+    <info-block v-show="!isFail" :isItemMenu="isItemMenu" :isForgeMenu="isForgeMenu" @afterBuyMiner="afterBuyMiner" @buyForge="buyForge"
+      @upDmg="upDmg" :isForgeBuy="isForgeBuy" :priceGoldMiner="priceGoldMiner" :goldCount="goldCount" :heroDmg="heroDmg"
+      :forgePrice="forgePrice" :isEng="isEng" @upArmor="upArmor" :heroHp="heroHp" :heroArmor="heroArmor"
+      class="infoblock" />
+
+    <div v-show="isFail" class="fail">
+      <h1>FAIL</h1>
+    </div>
+
+    <div v-show="!isFail" class="field">
+
+      <div class="gamezone" id="gamezone">
+        <div class="hero"> <img src="@/assets/png-clipart-silhouette-graphy-archer-angle-photography.png" alt=""></div>
+
+        <div class="enemy">
+          <h1>{{ enemyHp }}</h1>
+        </div>
+      </div>
+
       <hero-base :isVisibleGoldMiner1="isVisibleGoldMiner1" :isVisibleGoldMiner3="isVisibleGoldMiner3"
         :isVisibleGoldMiner4="isVisibleGoldMiner4" :isVisibleGoldMiner5="isVisibleGoldMiner5"
         :isVisibleGoldMiner6="isVisibleGoldMiner6" :isVisibleGoldMiner7="isVisibleGoldMiner7"
         :isVisibleGoldMiner8="isVisibleGoldMiner8" @setShowItemMenu="setShowItemMenu"
         @setShowForgeMenu="setShowForgeMenu" :isForgeBuy="isForgeBuy" class="herobase" />
+
     </div>
-    <menu-block @setGold="setGold" class="menublock" />
+    <menu-block v-show="!isFail" @setGold="setGold" class="menublock" :isEng="isEng" @setLang="setLang" />
   </div>
 </template>
 
@@ -30,10 +47,22 @@ export default {
       goldPlus: 1,
       priceGoldMiner: 10,
       minerAddGold: 1,
+      forgePrice: 5,
+
+      heroHp: 200,
+      heroDmg: 1,
+      heroArmor: 1,
+
+      enemyHp: 200,
+      enemyDmg: 10,
 
       isItemMenu: false,
       isForgeMenu: false,
       isForgeBuy: false,
+
+      isEng: true,
+
+      isFail: false,
 
       isVisibleGoldMiner1: false,
       isVisibleGoldMiner3: false,
@@ -48,6 +77,13 @@ export default {
   methods: {
     setGold() {
       setInterval(() => { this.goldCount += this.goldPlus }, 1000);
+
+      setInterval(() => { this.enemyHp -= this.heroDmg }, 1000);
+
+      setInterval(() => { this.heroHp -= (this.enemyDmg - this.heroArmor) }, 1000);
+
+      setInterval(() => { this.enemyDmg += 5 }, 5000);
+
     },
 
     setShowItemMenu() {
@@ -74,6 +110,7 @@ export default {
       if (this.isVisibleGoldMiner8 == false) {
         this.goldCount -= this.priceGoldMiner;
         this.goldPlus += this.minerAddGold;
+        this.priceGoldMiner += 5;
 
         if (this.isVisibleGoldMiner1 == false) {
           this.isVisibleGoldMiner1 = true;
@@ -95,6 +132,29 @@ export default {
 
     buyForge() {
       this.isForgeBuy = true;
+      this.goldCount -= 5;
+    },
+    upDmg(priceDmgUp) {
+      this.goldCount -= priceDmgUp;
+      this.heroDmg += 1;
+    },
+    upArmor(priceArmorUp) {
+      this.goldCount -= priceArmorUp;
+      this.heroArmor += 1;
+    },
+    setLang() {
+      if (this.isEng) {
+        this.isEng = false;
+      } else {
+        this.isEng = true;
+      }
+    }
+  },
+  watch: {
+    heroHp(newValue) {
+      if (newValue < 0) {
+        this.isFail = true;
+      }
     }
   }
 }
@@ -106,14 +166,61 @@ export default {
   flex-direction: row;
 }
 
+.gamezone {
+  height: 750px;
+  width: 750px;
+  /* border: 2px solid blue; */
+  display: flex;
+  background-color: green;
+  margin: auto;
+}
+
+.hero {
+  height: 64px;
+  width: 64px;
+  border: 2px solid black;
+  align-self: center;
+  margin-left: 5px;
+}
+
+.enemy {
+  height: 64px;
+  width: 64px;
+  border: 2px solid black;
+  align-self: center;
+  margin-left: 5px;
+  margin-right: 0;
+  margin-left: auto;
+  margin-right: 5px;
+}
+
+img {
+  height: 64px;
+  width: 64px;
+}
+
+.fail {
+  margin-left: 15px;
+  height: 900px;
+  width: 50%;
+  /*  border: 2px solid red; */
+  justify-self: center;
+  align-self: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
 .field {
   margin-left: 15px;
   height: 900px;
   width: 50%;
-  border: 2px solid red;
+  /*  border: 2px solid red; */
   justify-self: center;
   align-self: center;
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .herobase {

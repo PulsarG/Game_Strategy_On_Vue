@@ -5,7 +5,6 @@
       :isVisibleGoldMiner6="isVisibleGoldMiner6" :isVisibleGoldMiner7="isVisibleGoldMiner7"
       :isVisibleGoldMiner8="isVisibleGoldMiner8" @setShowItemMenu="setShowItemMenu" />
     <forge-house :isForgeBuy="isForgeBuy" @setShowForgeMenu="setShowForgeMenu" />
-    <div class="tr"></div>
   </div>
 </template>
 
@@ -63,16 +62,11 @@ export default {
   margin: auto;
   height: 150px;
   width: 100%;
-  border: 2px solid red;
+ /*  border: 2px solid red; */
   display: flex;
   flex-direction: row;
   justify-content: center;
   background-color: rgb(221, 215, 207);
 }
 
-.tr {
-  width: 100px;
-  height: 100px;
-  border: 1px solid red;
-}
 </style>
