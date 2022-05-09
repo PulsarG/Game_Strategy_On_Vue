@@ -71,7 +71,7 @@ export default {
   /* margin: auto; */
   height: 150px;
   width: 100%;
-  border: 0.5px solid red;
+  /* border: 0.5px solid red; */
   display: flex;
   flex-direction: row;
   justify-content: center;

@@ -5,17 +5,22 @@
             <h1>{{ hpText }}: {{ heroHp }}</h1>
             <h1>{{ damageText }}: {{ heroDmg }}</h1>
             <h1>{{ armorText }}: {{ heroArmor }}</h1>
-            <p></p>
-            <h1>{{ enemyText }}: {{ enemyDmg }}</h1>
+
+            <h2>{{ enemyText }}: {{ enemyDmg }}</h2>
         </div>
 
         <div v-show="isItemMenu" class="itemmenu">
-            <h1>{{ goldrushText }}</h1>
+            <div class="htext">
+                <h1 class="hitemmenu">{{ goldrushText }}</h1>
+            </div>
             <button class="bmbtn" @click="buyGoldMiner">{{ buyMinerText }} {{ priceGoldMiner }}</button>
         </div>
 
         <div v-show="isForgeMenu" class="forgemenu">
-            <h1>{{ forgeText }}</h1>
+            <div class="htext">
+                <h1>{{ forgeText }}</h1>
+            </div>
+
             <button @click="buyForge" class="btnfd" v-bind:class="{ deletebuy: isForgeBuy }">{{ buildForgeText }}
                 {{ forgePrice }}</button>
             <button class="fbtn" v-bind:class="{ active: isForgeBuy }" @click="upDmg">{{ upDmgText }} {{ priceDmgUp }}
@@ -25,22 +30,24 @@
         </div>
 
         <div v-show="isTavernOpen" class="tavern">
-            <h1>{{ tavernText }}</h1>
-            <button @click="buyTavern" v-bind:class="{ deletebuy: isTavernBuy }" class="btnfd">{{ buyTavernText }} {{
-                    priceTavern
-            }}</button>
+            <div class="htext">
+                <h1>{{ tavernText }}</h1>
+            </div>
+            <button @click="buyTavern" v-bind:class="{ deletebuy: isTavernBuy }" class="btnfd">{{ buyTavernText }}
+                {{ priceTavern }}</button>
             <button class="tbtn" v-bind:class="{ active: isTavernBuy }" @click="healUp">{{ healingText }}
                 {{ healingPrice }}</button>
-            <button class="tbtn" v-bind:class="{ active: isTavernBuy, deletebuy: isSpeedMax }" @click="upSpeed">{{ speedText }}
+            <button class="tbtn" v-bind:class="{ active: isTavernBuy, deletebuy: isSpeedMax }" @click="upSpeed">{{
+                    speedText
+            }}
                 {{ speedPrice }}</button>
-            <button class="tbtn" v-bind:class="{ active: isTavernBuy }">{{ shieldText }} {{ shieldPrice }}</button>
+            <button class="tbtn" v-bind:class="{ active: isTavernBuy }">{{ shieldText }} {{ shieldPrice
+            }}</button>
         </div>
     </div>
 </template>
 
 <script>
-import { tsImportEqualsDeclaration } from '@babel/types';
-import { watch } from '@vue/runtime-core';
 export default {
     data() {
         return {
@@ -203,11 +210,22 @@ export default {
     /* border: 1px solid red; */
     display: flex;
     position: relative;
-    justify-content: center;
+    flex-direction: column;
 }
 
 .info {
-    justify-self: center;
+    border: 10px double black;
+    height: 300px;
+    width: 400px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+h1 {
+    height: 10px;
+    margin-top: 5px;
 }
 
 .itemmenu {
@@ -219,30 +237,37 @@ export default {
     width: 400px;
     position: absolute;
     bottom: 0;
+    border: 10px double black;
     /* border: 1px solid blue; */
 }
 
 .tavern {
-    height: 400px;
-    width: 400px;
-    border: 1px solid red;
     display: flex;
     flex-direction: column;
-    position: absolute;
-    bottom: 0;
     justify-content: center;
     align-items: center;
+    height: 400px;
+    width: 400px;
+    position: absolute;
+    bottom: 0;
+    border: 10px double black;
+}
 
+.htext {
+    justify-self: flex-start;
+    position: absolute;
+    top: 0;
+    margin-top: 10px;
 }
 
 .tbtn {
-    height: 100px;
+    height: 50px;
     width: 200px;
     opacity: 0.5;
 }
 
 .bmbtn {
-    height: 100px;
+    height: 50px;
     width: 200px;
 }
 
@@ -255,25 +280,23 @@ export default {
     width: 400px;
     position: absolute;
     bottom: 0;
-    /* border: 1px solid blue; */
-    display: flex;
-    flex-direction: column;
+    border: 10px double black;
 }
 
 .fbtn {
-    height: 100px;
+    height: 50px;
     width: 200px;
     opacity: 0.5;
 }
 
 .active {
-    height: 100px;
+    height: 50px;
     width: 200px;
     opacity: 1;
 }
 
 .btnfd {
-    height: 100px;
+    height: 50px;
     width: 200px;
 }
 

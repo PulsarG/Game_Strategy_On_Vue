@@ -26,7 +26,7 @@ export default {
     height: 150px;
   /*   border: 1px solid blue; */
     margin: auto;
-    opacity: 0.5;
+    opacity: 0.4;
 }
 
 .active {

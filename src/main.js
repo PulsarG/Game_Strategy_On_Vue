@@ -1,10 +1,14 @@
 import { createApp } from 'vue'
 import { initializeApp } from "firebase/app";
-import App from '@/App.vue'
-/* import router from './router'
-import store from './store' */
+import router from '@/router/router';
+import App from '@/App.vue';
 
-createApp(App).mount('#app')
+const aps = createApp(App);
+
+aps.mount('#appp');
+aps.use(router);
+
+
 const firebaseConfig = {
     apiKey: "AIzaSyBK8mylfZRwLqQLPXgC3FXXy6XI16bcBqI",
     authDomain: "testgame-59bd1.firebaseapp.com",
