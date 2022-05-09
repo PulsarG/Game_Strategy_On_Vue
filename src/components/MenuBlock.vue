@@ -1,12 +1,21 @@
 <template>
-    <div class="main">
+    <div class="one">
         <div class="menu">
-            <h1>{{menuText}}</h1>
+            <p> <strong>{{ menuText }}</strong></p>
+        </div>
+        <div class="learn">
+            <p>
+                Кликните на Золотой рудник, Кузницу или Таверну
+                для взаимодействия.
+            </p>
+            <p>Урон противника переодически растет.</p>
+            <p>Улучшайте свои оружие и броню, покупайте услуги
+                лекаря, изучайте способности.</p>
         </div>
         <div class="btn">
-            <button @click="toSetGold">{{ startBtn }}</button>
+            <button class="btn" v-bind:class="{deletestart: isStart}" @click="toSetGold">{{ startBtn }}</button>
         </div>
-        <div class="langbtns">
+        <div class="langbtn">
             <button class="btnl" @click="setLang">{{ lang }}</button>
         </div>
     </div>
@@ -34,12 +43,15 @@ export default {
 
             enMenu: "Menu",
             ruMenu: "Меню",
+
+            isStart: false,
         }
     },
 
     methods: {
         toSetGold() {
             this.$emit('setGold');
+            this.isStart = true;
         },
         setLang() {
             this.$emit('setLang');
@@ -60,28 +72,53 @@ export default {
 </script>
 
 <style scoped>
-.main {
+.one {
     width: 400px;
     height: 900px;
-    /* border: 1px solid red; */
+  /*   border: 1px solid red; */
     display: flex;
-    flex-flow: column;
+    flex-direction: column;
+    align-items: center;
 }
 
-.menu {}
+.menu {
+    width: 100px;
+    height: 100px;
+   /*  border: 1px solid red; */
+}
+
+.learn {
+    height: 300px;
+    width: 400px;
+    /* border: 1px solid red; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: auto;
+}
 
 .btn {
     height: 100px;
-    width: 100px;
-
+    width: 200px;
+    /* border: 1px solid red; */
 }
 
-.langbtns {
-    display: flex;
-    align-self: flex-end;
+.langbtn {
+    width: 100px;
+    height: 40px;
+   /*  border: 1px solid red; */
 }
 
 .btnl {
-    margin: 5px;
+    width: 100px;
+    height: 40px;
+}
+
+p {
+    font-size: 20px;
+}
+
+.deletestart {
+    display: none;
 }
 </style>

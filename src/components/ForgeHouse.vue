@@ -45,6 +45,7 @@ button {
 }
 
 img {
+    border-radius: 100px;
     width: 140px;
     height: 140px;
     margin: auto;

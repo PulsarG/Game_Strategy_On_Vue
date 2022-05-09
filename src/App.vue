@@ -1,10 +1,12 @@
 <template>
   <div class="main">
 
-    <info-block v-show="!isFail" :isItemMenu="isItemMenu" :isForgeMenu="isForgeMenu" @afterBuyMiner="afterBuyMiner" @buyForge="buyForge"
-      @upDmg="upDmg" :isForgeBuy="isForgeBuy" :priceGoldMiner="priceGoldMiner" :goldCount="goldCount" :heroDmg="heroDmg"
-      :forgePrice="forgePrice" :isEng="isEng" @upArmor="upArmor" :heroHp="heroHp" :heroArmor="heroArmor"
-      class="infoblock" />
+    <info-block v-show="!isFail" :isItemMenu="isItemMenu" :isForgeMenu="isForgeMenu" @afterBuyMiner="afterBuyMiner"
+      @buyForge="buyForge" @upDmg="upDmg" :isForgeBuy="isForgeBuy" :priceGoldMiner="priceGoldMiner" @upSpeed="upSpeed"
+      :shieldPrice="shieldPrice" @healUp="healUp" :goldCount="goldCount" :heroDmg="heroDmg" :forgePrice="forgePrice"
+      :isEng="isEng" @upArmor="upArmor" :speedPrice="speedPrice" :priceTavern="priceTavern" @buyTavern="buyTavern"
+      :isTavernOpen="isTavernOpen" :heroHp="heroHp" :healingPrice="healingPrice" :isTavernBuy="isTavernBuy"
+      :enemyDmg="enemyDmg" :heroArmor="heroArmor" class="infoblock" />
 
     <div v-show="isFail" class="fail">
       <h1>FAIL</h1>
@@ -13,17 +15,21 @@
     <div v-show="!isFail" class="field">
 
       <div class="gamezone" id="gamezone">
-        <div class="hero"> <img src="@/assets/png-clipart-silhouette-graphy-archer-angle-photography.png" alt=""></div>
+        <div class="hero"> <img src="@/assets/59503_1_b.jpg" alt=""></div>
 
         <div class="enemy">
-          <h1>{{ enemyHp }}</h1>
+          <img src="@/assets/images.jpg" alt="">
+          <div>
+
+            <h1>{{ enemyHp }}</h1>
+          </div>
         </div>
       </div>
 
       <hero-base :isVisibleGoldMiner1="isVisibleGoldMiner1" :isVisibleGoldMiner3="isVisibleGoldMiner3"
         :isVisibleGoldMiner4="isVisibleGoldMiner4" :isVisibleGoldMiner5="isVisibleGoldMiner5"
         :isVisibleGoldMiner6="isVisibleGoldMiner6" :isVisibleGoldMiner7="isVisibleGoldMiner7"
-        :isVisibleGoldMiner8="isVisibleGoldMiner8" @setShowItemMenu="setShowItemMenu"
+        :isVisibleGoldMiner8="isVisibleGoldMiner8" @setShowItemMenu="setShowItemMenu" @setOpenTavern="setOpenTavern" :isTavernBuy="isTavernBuy"
         @setShowForgeMenu="setShowForgeMenu" :isForgeBuy="isForgeBuy" class="herobase" />
 
     </div>
@@ -43,15 +49,22 @@ export default {
 
   data() {
     return {
-      goldCount: 0,
+      goldCount: 100000,
       goldPlus: 1,
-      priceGoldMiner: 10,
-      minerAddGold: 1,
+      priceGoldMiner: 1,
+      minerAddGold: 10,
       forgePrice: 5,
+      priceTavern: 5,
+      healingPrice: 50,
+      speedPrice: 20,
+      shieldPrice: 50,
 
-      heroHp: 200,
+      heroHp: 1800,
       heroDmg: 1,
       heroArmor: 1,
+      atackSpeed: 2000,
+
+      healingPoints: 500,
 
       enemyHp: 200,
       enemyDmg: 10,
@@ -59,6 +72,8 @@ export default {
       isItemMenu: false,
       isForgeMenu: false,
       isForgeBuy: false,
+      isTavernOpen: false,
+      isTavernBuy: false,
 
       isEng: true,
 
@@ -71,6 +86,7 @@ export default {
       isVisibleGoldMiner6: false,
       isVisibleGoldMiner7: false,
       isVisibleGoldMiner8: false,
+
     }
   },
 
@@ -78,11 +94,40 @@ export default {
     setGold() {
       setInterval(() => { this.goldCount += this.goldPlus }, 1000);
 
-      setInterval(() => { this.enemyHp -= this.heroDmg }, 1000);
+      setInterval(() => {
+        if (this.atackSpeed == 2000) {
+          this.enemyHp -= this.heroDmg;
+        }
+      }, this.atackSpeed);
+      setInterval(() => {
+        if (this.atackSpeed == 1800) {
+          this.enemyHp -= this.heroDmg;
+        }
+      }, 1800);
+      setInterval(() => {
+        if (this.atackSpeed == 1600) {
+          this.enemyHp -= this.heroDmg;
+        }
+      }, 1600);
+      setInterval(() => {
+        if (this.atackSpeed == 1400) {
+          this.enemyHp -= this.heroDmg;
+        }
+      }, 1400);
+      setInterval(() => {
+        if (this.atackSpeed == 1200) {
+          this.enemyHp -= this.heroDmg;
+        }
+      }, 1200);
+      setInterval(() => {
+        if (this.atackSpeed == 1000) {
+          this.enemyHp -= this.heroDmg;
+        }
+      }, 1000);
 
-      setInterval(() => { this.heroHp -= (this.enemyDmg - this.heroArmor) }, 1000);
+      setInterval(() => { this.heroHp -= (this.enemyDmg - this.heroArmor) }, 2000);
 
-      setInterval(() => { this.enemyDmg += 5 }, 5000);
+      setInterval(() => { this.enemyDmg += 5 }, 10000);
 
     },
 
@@ -93,6 +138,7 @@ export default {
       else {
         this.isItemMenu = true;
         this.isForgeMenu = false;
+        this.isTavernOpen = false;
       }
     },
 
@@ -102,6 +148,7 @@ export default {
       } else {
         this.isForgeMenu = true;
         this.isItemMenu = false;
+        this.isTavernOpen = false;
       }
     },
 
@@ -134,6 +181,10 @@ export default {
       this.isForgeBuy = true;
       this.goldCount -= 5;
     },
+    buyTavern() {
+      this.isTavernBuy = true;
+      this.goldCount -= this.priceTavern;
+    },
     upDmg(priceDmgUp) {
       this.goldCount -= priceDmgUp;
       this.heroDmg += 1;
@@ -148,6 +199,26 @@ export default {
       } else {
         this.isEng = true;
       }
+    },
+    setOpenTavern() {
+      if (this.isTavernOpen) {
+        this.isTavernOpen = false;
+      } else {
+        this.isTavernOpen = true;
+        this.isItemMenu = false;
+        this.isForgeMenu = false;
+      }
+    },
+
+    healUp() {
+      this.goldCount -= this.healingPrice;
+      this.heroHp += this.healingPoints;
+      this.healingPrice += 10;
+    },
+    upSpeed() {
+      this.goldCount -= this.speedPrice;
+      this.speedPrice += 20;
+      this.atackSpeed -= 200;
     }
   },
   watch: {
@@ -156,7 +227,8 @@ export default {
         this.isFail = true;
       }
     }
-  }
+  },
+
 }
 </script>
 
@@ -171,32 +243,34 @@ export default {
   width: 750px;
   /* border: 2px solid blue; */
   display: flex;
-  background-color: green;
+  /*  background-color: green; */
   margin: auto;
 }
 
 .hero {
-  height: 64px;
-  width: 64px;
-  border: 2px solid black;
+  height: 200px;
+  width: 200px;
+  /* border: 2px solid black; */
   align-self: center;
   margin-left: 5px;
 }
 
 .enemy {
-  height: 64px;
-  width: 64px;
-  border: 2px solid black;
+  height: 200px;
+  width: 200px;
+  /*  border: 2px solid black; */
   align-self: center;
   margin-left: 5px;
   margin-right: 0;
   margin-left: auto;
   margin-right: 5px;
+  display: flex;
+  flex-direction: column;
 }
 
 img {
-  height: 64px;
-  width: 64px;
+  height: 300px;
+  width: 200px;
 }
 
 .fail {

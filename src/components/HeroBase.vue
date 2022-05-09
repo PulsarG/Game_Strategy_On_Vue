@@ -5,12 +5,15 @@
       :isVisibleGoldMiner6="isVisibleGoldMiner6" :isVisibleGoldMiner7="isVisibleGoldMiner7"
       :isVisibleGoldMiner8="isVisibleGoldMiner8" @setShowItemMenu="setShowItemMenu" />
     <forge-house :isForgeBuy="isForgeBuy" @setShowForgeMenu="setShowForgeMenu" />
+
+    <hero-tavern @setOpenTavern="setOpenTavern" :isTavernBuy="isTavernBuy" />
   </div>
 </template>
 
 <script>
 import GoldRush from "@/components/GoldRush.vue"
 import ForgeHouse from "@/components/ForgeHouse.vue";
+import HeroTavern from "@/components/HeroTavern.vue"
 
 export default {
   props: {
@@ -38,8 +41,11 @@ export default {
     isForgeBuy: {
       type: Boolean,
     },
+    isTavernBuy: {
+      type: Boolean,
+    }
   },
-  components: { GoldRush, ForgeHouse, },
+  components: { GoldRush, ForgeHouse, HeroTavern },
   name: 'hero-base',
   data() {
     return {
@@ -52,21 +58,24 @@ export default {
     },
     setShowForgeMenu() {
       this.$emit('setShowForgeMenu');
-    }
+    },
+    setOpenTavern() {
+      this.$emit('setOpenTavern');
+    },
   },
 }
 </script>
 
 <style scoped>
 .base {
-  margin: auto;
+  /* margin: auto; */
   height: 150px;
   width: 100%;
- /*  border: 2px solid red; */
+  border: 0.5px solid red;
   display: flex;
   flex-direction: row;
   justify-content: center;
-  background-color: rgb(221, 215, 207);
+  align-items: center;
+  /*  background-color: rgb(221, 215, 207); */
 }
-
 </style>

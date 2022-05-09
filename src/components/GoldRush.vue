@@ -7,7 +7,7 @@
         </div>
         <div class="row">
             <div v-show="isVisibleGoldMiner5" class="item"><img src="@/assets/simple_pickaxe.png" alt=""></div>
-            <button @click="setShowItemMenu" class="goldbtn"><img src="@/assets/kisspng-gold-bar-bullion-gold-as-an-investment-gold-bar-5ac2a363976f87.9780410415227052516203.jpg" alt=""></button>
+            <button @click="setShowItemMenu" class="goldbtn"><img src="@/assets/1987372.png" alt=""></button>
             <div v-show="isVisibleGoldMiner4" class="item"><img src="@/assets/simple_pickaxe.png" alt=""></div>
         </div>
         <div class="row">
@@ -87,6 +87,7 @@ export default {
 }
 
 img {
+    border-radius: 100px;
     width: 50px;
     height: 50px;
 }
