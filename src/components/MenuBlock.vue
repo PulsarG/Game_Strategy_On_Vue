@@ -227,7 +227,7 @@ export default {
 
 .btnstop {
     height: 100px;
-    width: 450px;
+    width: auto;
     /* border: 1px solid red; */
     display: none;
     
@@ -236,7 +236,7 @@ export default {
 .twobtn {
     display: flex;
     flex-direction: row;
-    width: 450px;
+    width: auto;
 }
 
 .langbtn {
