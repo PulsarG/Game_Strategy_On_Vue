@@ -2,20 +2,42 @@
     <div class="one">
         <div class="menu">
             <p> <strong>{{ menuText }}</strong></p>
-        </div>
-        <div class="learn" v-bind:class="{ hidel: isHideLearn, learn: !isHideLearn }">
-            <p>
-                Кликните на Золотой рудник, Кузницу или Таверну
-                для взаимодействия.
-            </p>
-            <p>Урон противника переодически растет.</p>
-            <p>Улучшайте свои оружие и броню, покупайте услуги
-                лекаря, изучайте способности.</p>
+            <div class="menubtns">
+                <button class="mbtn" @click="setLearn">Learn</button>
+                <button class="mbtn">LOR</button>
+                <button class="mbtn" @click="setLadder">Ladder</button>
+            </div>
         </div>
 
-        <div class="check">
-            <input type="checkbox" name="hidelearn" id="hidelearn" v-model="isHideLearn">
-            <label for="hidelearn">{{ hideText }}</label>
+        <div class="learn" v-bind:class="{ hidel: isHideLearn, learn: !isHideLearn }">
+            <div class="learntext">
+                <p>
+                    Кликните на Золотой рудник, Кузницу или Таверну
+                    для взаимодействия.
+                </p>
+                <p>Урон противника переодически растет.</p>
+                <p>Улучшайте свои оружие и броню, покупайте услуги
+                    лекаря, изучайте способности.</p>
+                <p>Нажмите еще раз, чтобы скрыть обучение</p>
+            </div>
+
+            <!-- <div class="check">
+                <input type="checkbox" name="hidelearn" id="hidelearn" v-model="isHideLearn">
+                <label for="hidelearn">{{ hideText }}</label>
+            </div> -->
+        </div>
+
+        <div class="ladder" v-show="isLadder">
+            <table>
+                <th>Nick</th>
+                <th>Hero lvl</th>
+                <th>Kills</th>
+                <tr>
+                    <td>Admin</td>
+                    <td>over9000</td>
+                    <td>over9000</td>
+                </tr>
+            </table>
         </div>
 
         <div class="btn">
@@ -55,6 +77,7 @@ export default {
             isStart: false,
 
             isHideLearn: false,
+            isLadder: false,
             hideText: "Hide/Show learn",
 
             stopBtnText: "Resset",
@@ -62,6 +85,7 @@ export default {
     },
 
     methods: {
+
         toSetGold() {
             this.$emit('setGold');
             this.isStart = true;
@@ -84,7 +108,20 @@ export default {
                 this.hideText = "Скрыть/показать подсказки";
                 this.stopBtnText = "Заново";
             }
-
+        },
+        setLearn() {
+            if (this.isHideLearn) {
+                this.isHideLearn = false;
+            } else {
+                this.isHideLearn = true;
+            }
+        },
+        setLadder() {
+            if (this.isLadder) {
+                this.isLadder = false;
+            } else {
+                this.isLadder = true;
+            }
         }
     },
 }
@@ -104,9 +141,33 @@ export default {
     width: 100px;
     height: 100px;
     /*  border: 1px solid red; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.menubtns {
+    display: flex;
+    flex-direction: row;
+}
+
+.mbtn {
+    height: 20px;
+    width: 80px;
+    margin: 2px;
 }
 
 .learn {
+    height: 700px;
+}
+
+.ladder {
+    display: flex;
+    justify-self: center;
+    align-self: center;
+}
+
+.learntext {
     height: 300px;
     width: 400px;
     /* border: 1px solid red; */

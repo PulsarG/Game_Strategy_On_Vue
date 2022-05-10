@@ -1,20 +1,20 @@
-import { createApp } from 'vue'
-import { initializeApp } from "firebase/app";
+import { createApp } from 'vue';
 import router from '@/router/router';
 import App from '@/App.vue';
+import { initializeApp } from "firebase/app";
 
-const aps = createApp(App);
+const aps = createApp(App)
 
-aps.mount('#appp');
 aps.use(router);
-
+aps.mount('#app');
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBK8mylfZRwLqQLPXgC3FXXy6XI16bcBqI",
-    authDomain: "testgame-59bd1.firebaseapp.com",
-    projectId: "testgame-59bd1",
-    storageBucket: "testgame-59bd1.appspot.com",
-    messagingSenderId: "655433217473",
-    appId: "1:655433217473:web:fb080e25f976154ae4eb40"
+    apiKey: "AIzaSyBQIPxtfHfpLW4Rup58t31wt-SmsXXoFbs",
+    authDomain: "test2-1e70d.firebaseapp.com",
+    projectId: "test2-1e70d",
+    storageBucket: "test2-1e70d.appspot.com",
+    messagingSenderId: "708542517274",
+    appId: "1:708542517274:web:9a996cbe7083da743641a3"
 };
+
 const app = initializeApp(firebaseConfig);
