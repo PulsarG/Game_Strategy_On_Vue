@@ -35,8 +35,9 @@
           <img src="@/assets/59503_1_b.jpg" alt="">
         </div>
 
-        <div class="enemy">
-          <h1 v-show="isCrit">CRIT</h1>
+        <h1 class="crit" v-show="isCrit">CRIT</h1>
+
+        <div v-show="isEnemyLife" class="enemy">
           <h1>{{ fEnemyName }} {{ fEnemyLvl }}</h1>
           <img src="@/assets/images.jpg" alt="">
           <div>
@@ -69,7 +70,7 @@ export default {
 
   data() {
     return {
-      goldCount: 0,
+      goldCount: 99999990,
       goldPlus: 1,
       priceGoldMiner: 10,
       minerAddGold: 1,
@@ -86,6 +87,7 @@ export default {
       killCount: 0,
       heroLvl: 1,
       critChance: 0,
+      chanceCrit: 0,
 
       isCrit: false,
 
@@ -99,6 +101,7 @@ export default {
       enemyDmg: 10,
       fEnemyName: "Enemy lvl",
       fEnemyLvl: 1,
+      isEnemyLife: true,
 
       killCountText: "Enemy kills",
       levelText: "Hero's level",
@@ -142,7 +145,7 @@ export default {
       setInterval(() => {
         if (this.atackSpeed == 2000 && !this.isFail && !this.isPause) {
           this.critChance = Math.floor(Math.random() * 9);
-          if (this.critChance == 0) {
+          if (this.critChance <= this.chanceCrit) {
             this.setCrit();
             this.enemyHp -= this.heroDmg * 2;
           } else {
@@ -153,31 +156,61 @@ export default {
 
       setInterval(() => {
         if (this.atackSpeed == 1800 && !this.isFail && !this.isPause) {
-          this.enemyHp -= this.heroDmg;
+          this.critChance = Math.floor(Math.random() * 9);
+          if (this.critChance <= this.chanceCrit) {
+            this.setCrit();
+            this.enemyHp -= this.heroDmg * 2;
+          } else {
+            this.enemyHp -= this.heroDmg;
+          }
         }
       }, 1800);
 
       setInterval(() => {
         if (this.atackSpeed == 1600 && !this.isFail && !this.isPause) {
-          this.enemyHp -= this.heroDmg;
+          this.critChance = Math.floor(Math.random() * 9);
+          if (this.critChance <= this.chanceCrit) {
+            this.setCrit();
+            this.enemyHp -= this.heroDmg * 2;
+          } else {
+            this.enemyHp -= this.heroDmg;
+          }
         }
       }, 1600);
 
       setInterval(() => {
         if (this.atackSpeed == 1400 && !this.isFail && !this.isPause) {
-          this.enemyHp -= this.heroDmg;
+          this.critChance = Math.floor(Math.random() * 9);
+          if (this.critChance <= this.chanceCrit) {
+            this.setCrit();
+            this.enemyHp -= this.heroDmg * 2;
+          } else {
+            this.enemyHp -= this.heroDmg;
+          }
         }
       }, 1400);
 
       setInterval(() => {
         if (this.atackSpeed == 1200 && !this.isFail && !this.isPause) {
-          this.enemyHp -= this.heroDmg;
+          this.critChance = Math.floor(Math.random() * 9);
+          if (this.critChance <= this.chanceCrit) {
+            this.setCrit();
+            this.enemyHp -= this.heroDmg * 2;
+          } else {
+            this.enemyHp -= this.heroDmg;
+          }
         }
       }, 1200);
 
       setInterval(() => {
         if (this.atackSpeed == 1000 && !this.isFail && !this.isPause) {
-          this.enemyHp -= this.heroDmg;
+          this.critChance = Math.floor(Math.random() * 9);
+          if (this.critChance <= this.chanceCrit) {
+            this.setCrit();
+            this.enemyHp -= this.heroDmg * 2;
+          } else {
+            this.enemyHp -= this.heroDmg;
+          }
         }
       }, 1000);
 
@@ -298,7 +331,7 @@ export default {
         this.inChance = Math.floor(Math.random() * 9);  // chance 0-9 
         if (this.inChance <= 5) {
           console.log("GOLD");
-          this.chestGold = Math.floor(Math.random() * 100);
+          this.chestGold = Math.floor((Math.random() * 99) + 1);
           this.goldCount += this.chestGold;
         } else if (this.inChance > 5 && this.inChance < 9) {
           console.log("UP");
@@ -311,6 +344,7 @@ export default {
       if (this.isChest) {
         this.isChest = false;
         this.isPause = false;
+        this.isEnemyLife = true;
       }
     }
   },
@@ -324,6 +358,14 @@ export default {
         this.fEnemyLvl += 1;
 
         this.setChest();
+
+        this.isPause = true;
+        this.isEnemyLife = false;
+        setTimeout(() => {
+          if (!this.isChest) {
+            this.isPause = false; this.isEnemyLife = true
+          }
+        }, 1000);
       }
     },
 
@@ -371,6 +413,7 @@ export default {
   justify-self: center;
   align-self: center;
   margin-bottom: 100px;
+  /*  flex-direction: row; */
 }
 
 .activechest {
@@ -417,6 +460,13 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.crit {
+  display: flex;
+  justify-self: center;
+  /* align-self: center; */
+  margin: auto;
 }
 
 .enemy {
