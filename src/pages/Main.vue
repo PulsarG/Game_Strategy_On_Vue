@@ -17,7 +17,13 @@
         <h1>
           {{ killCountText }}: {{ killCount }}
         </h1>
+        <div v-bind:class="{ activechest: isChest, nochest: !isChest }">
+          <button class="chestbtn" @click="useChest"> <img class="chestimg"
+              src="@/assets/Loot_Bag_without_background.webp" alt="">
+          </button>
+        </div>
       </div>
+
 
       <div class="gamezone" id="gamezone">
 
@@ -43,7 +49,7 @@
         :isTavernBuy="isTavernBuy" @setShowForgeMenu="setShowForgeMenu" :isForgeBuy="isForgeBuy" class="herobase" />
 
     </div>
-    <menu-block @setGold="setGold" class="menublock" :isEng="isEng" @setLang="setLang" />
+    <menu-block @setGold="setGold" class="menublock" :isEng="isEng" @setLang="setLang" @setPause="setPause" />
   </div>
 </template>
 
@@ -70,7 +76,7 @@ export default {
       shieldPrice: 50,
 
       heroHp: 1800,
-      heroDmg: 10,
+      heroDmg: 100,
       heroArmor: 1,
       atackSpeed: 2000,
       killCount: 0,
@@ -82,7 +88,7 @@ export default {
       healingPoints: 500,
 
       enemyHp: 200,
-      enemyDmg: 1000,
+      enemyDmg: 10,
       fEnemyName: "Enemy lvl",
       fEnemyLvl: 1,
 
@@ -99,6 +105,11 @@ export default {
 
       isFail: false,
 
+      isChest: false,
+      chestChance: 0,
+
+      isPause: false,
+
       isVisibleGoldMiner1: false,
       isVisibleGoldMiner3: false,
       isVisibleGoldMiner4: false,
@@ -113,45 +124,45 @@ export default {
   methods: {
     setGold() {
       setInterval(() => {
-        if (!this.isFail) {
+        if (!this.isFail && !this.isPause) {
           this.goldCount += this.goldPlus;
         }
       }, 1000);
 
       setInterval(() => {
-        if (this.atackSpeed == 2000) {
+        if (this.atackSpeed == 2000 && !this.isFail && !this.isPause) {
           this.enemyHp -= this.heroDmg;
         }
       }, this.atackSpeed);
       setInterval(() => {
-        if (this.atackSpeed == 1800) {
+        if (this.atackSpeed == 1800 && !this.isFail && !this.isPause) {
           this.enemyHp -= this.heroDmg;
         }
       }, 1800);
       setInterval(() => {
-        if (this.atackSpeed == 1600) {
+        if (this.atackSpeed == 1600 && !this.isFail && !this.isPause) {
           this.enemyHp -= this.heroDmg;
         }
       }, 1600);
       setInterval(() => {
-        if (this.atackSpeed == 1400) {
+        if (this.atackSpeed == 1400 && !this.isFail && !this.isPause) {
           this.enemyHp -= this.heroDmg;
         }
       }, 1400);
       setInterval(() => {
-        if (this.atackSpeed == 1200) {
+        if (this.atackSpeed == 1200 && !this.isFail && !this.isPause) {
           this.enemyHp -= this.heroDmg;
         }
       }, 1200);
       setInterval(() => {
-        if (this.atackSpeed == 1000) {
+        if (this.atackSpeed == 1000 && !this.isFail && !this.isPause) {
           this.enemyHp -= this.heroDmg;
         }
       }, 1000);
 
-      setInterval(() => { if (!this.isFail) { this.heroHp -= (this.enemyDmg - this.heroArmor); } }, 2000);
+      setInterval(() => { if (!this.isFail && !this.isPause) { this.heroHp -= (this.enemyDmg - this.heroArmor); } }, 2000);
 
-      setInterval(() => { this.enemyDmg += 5 }, 10000);
+      setInterval(() => { if (!this.isFail && !this.isPause) { this.enemyDmg += 5 } }, 10000);
 
     },
 
@@ -243,6 +254,26 @@ export default {
       this.goldCount -= this.speedPrice;
       this.speedPrice += 20;
       this.atackSpeed -= 200;
+    },
+
+    setPause() {
+      if (!this.isPause) {
+        this.isPause = true;
+      } else {
+        this.isPause = false;
+      }
+    },
+
+    setChest() {
+      this.chestChance = Math.floor(Math.random() * 3);  // 25% chance 0-3
+      if (this.chestChance == 1) {
+        this.isChest = true;
+      }
+    },
+    useChest() {
+      if (this.isChest) {
+        this.isChest = false;
+      }
     }
   },
   watch: {
@@ -252,6 +283,8 @@ export default {
         this.heroExp += 1;
         this.enemyHp = 200;
         this.fEnemyLvl += 1;
+
+        this.setChest();
       }
     },
 
@@ -292,17 +325,46 @@ export default {
 }
 
 .gamezone {
-  height: 750px;
+  height: 400px;
   width: 750px;
   /* border: 2px solid blue; */
   display: flex;
   /*  background-color: green; */
-  margin: auto;
+  justify-self: center;
+  align-self: center;
+  margin-bottom: 100px;
+}
+
+.activechest {
+  display: flex;
+  justify-self: center;
+  align-self: center;
+  height: 150px;
+  width: 150px;
+  /* border: 2px solid blue; */
+}
+
+.nochest {
+  display: none;
+}
+
+.chestimg {
+  height: 150px;
+  width: 150px;
+}
+
+.chestbtn {
+  border: none;
+  background: none;
 }
 
 .level {
   display: flex;
   margin: auto;
+  flex-direction: column;
+  position: relative;
+  top: 0%;
+  /* border: 2px solid blue; */
 }
 
 .hero {
@@ -363,8 +425,8 @@ img {
 }
 
 .herobase {
-  position: absolute;
-  bottom: 0;
+
+  /*  border: 2px solid red; */
 }
 
 .infoblock {

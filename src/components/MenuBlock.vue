@@ -42,7 +42,11 @@
 
         <div class="btn">
             <button class="btnstart" v-bind:class="{ deletestart: isStart }" @click="toSetGold">{{ startBtn }}</button>
-            <form action=""><button class="btnstop" id="btnstop">{{ stopBtnText }}</button></form>
+            <div class="btnstop" id="btnstop">
+
+                <button class="rpbtns" @click="setPause">Pause</button>
+                <form action=""><button class="rpbtns">{{ stopBtnText }}</button></form>
+            </div>
         </div>
 
         <div class="langbtn">
@@ -122,6 +126,10 @@ export default {
             } else {
                 this.isLadder = true;
             }
+        },
+
+        setPause() {
+            this.$emit('setPause');
         }
     },
 }
@@ -203,6 +211,14 @@ export default {
     display: block;
 }
 
+.rpbtns {
+    height: 50px;
+    width: 200px;
+    /* border: 1px solid red; */
+    display: block;
+    margin: 5px;
+}
+
 .btn {
     height: 100px;
     width: 200px;
@@ -211,9 +227,16 @@ export default {
 
 .btnstop {
     height: 100px;
-    width: 200px;
+    width: 450px;
     /* border: 1px solid red; */
     display: none;
+    
+}
+
+.twobtn {
+    display: flex;
+    flex-direction: row;
+    width: 450px;
 }
 
 .langbtn {
