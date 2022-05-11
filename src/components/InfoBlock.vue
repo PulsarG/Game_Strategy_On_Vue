@@ -41,8 +41,29 @@
                     speedText
             }}
                 {{ speedPrice }}</button>
-            <button class="tbtn" v-bind:class="{ active: isTavernBuy }">{{ shieldText }} {{ shieldPrice
+            <button class="tbtn" v-bind:class="{ active: isTavernBuy }" @click="upShield">{{ shieldText }} {{
+                    shieldPrice
             }}</button>
+        </div>
+
+        <div v-show="isHeroSpellsOpen" class="herospells">
+            <div class="htext">
+                <h1>{{ spellsText }}</h1>
+            </div>
+            <!-- <button @click="setShield" class="btnfd">{{ useShieldText }} {{ shieldTimeSec }} sec for {{ useShieldPrice }} gold</button> -->
+            <div class="spellbtn">
+                <button @click="setShield" class="spell">{{ useShieldText }} {{ shieldTimeSec }} sec for {{
+                        useShieldPrice
+                }} gold</button>
+                <button @click="upCrit" class="spell">Up crit-chance for 1 point</button>
+                <button class="spell"></button>
+            </div>
+            <h2>Spell points: {{ spellPoints }}</h2>
+            <h1>Items: </h1>
+            <div class="spellbtn">
+                <button class="spell"></button>
+                <button class="spell"></button>
+            </div>
         </div>
     </div>
 </template>
@@ -60,6 +81,8 @@ export default {
             countUpSpeed: 0,
             isSpeedMax: false,
 
+            shieldTime: 5,
+
             goldText: "Gold",
             hpText: "HP",
             damageText: "Damage",
@@ -74,8 +97,10 @@ export default {
             tavernText: "Tavern",
             healingText: "Healing for",
             speedText: "Up atackSpeed for",
-            shieldText: "Use shield 10 sec for",
+            shieldText: "Upgrade shield for",
             buyTavernText: "Build tavern for",
+            spellsText: "Hero's spells",
+            useShieldText: "Use shield",
 
 
         }
@@ -93,6 +118,9 @@ export default {
         healingPrice: Number,
         speedPrice: Number,
         shieldPrice: Number,
+        useShieldPrice: Number,
+        shieldTimeSec: Number,
+        spellPoints: Number,
         isItemMenu: {
             type: Boolean,
         },
@@ -109,6 +137,9 @@ export default {
             type: Boolean,
         },
         isTavernBuy: {
+            type: Boolean,
+        },
+        isHeroSpellsOpen: {
             type: Boolean,
         },
     },
@@ -155,6 +186,23 @@ export default {
             }
             this.countUpSpeed += 1;
         },
+
+        setShield() {
+            if (this.goldCount >= this.useShieldPrice) {
+                this.$emit('setUseShield');
+            }
+        },
+        upShield() {
+            if (this.goldCount >= this.shieldPrice) {
+                this.$emit('upShield');
+            }
+        },
+
+        upCrit() {
+            if (this.spellPoints >= 1) {
+                this.$emit('upCrit');
+            }
+        },
     },
     watch: {
         countUpSpeed(newValue) {
@@ -178,8 +226,10 @@ export default {
                 this.tavernText = "Таверна";
                 this.healingText = "Восстановить здоровье за";
                 this.speedText = "Повысить скорость атаки за";
-                this.shieldText = "Поднять щит на 10 сек за";
+                this.shieldText = "Улучшить щит за";
                 this.buyTavernText = "Построить таверну за";
+                this.spellsText = "Способности героя";
+                this.useShieldText = "Использовать щит";
             } else {
                 this.goldText = "Gold";
                 this.hpText = "HP";
@@ -195,8 +245,10 @@ export default {
                 this.tavernText = "Tavern";
                 this.healingText = "Healing for";
                 this.speedText = "Up atackSpeed for";
-                this.shieldText = "Use shield 10 sec for";
+                this.shieldText = "Upgrade shield for";
                 this.buyTavernText = "Build tavern for";
+                this.spellsText = "Hero's spells";
+                this.useShieldText = "Use shield";
             }
         }
     },
@@ -253,11 +305,24 @@ h1 {
     border: 10px double black;
 }
 
+.herospells {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 400px;
+    width: 400px;
+    position: absolute;
+    bottom: 0;
+    border: 10px double black;
+}
+
 .htext {
     justify-self: flex-start;
-    position: absolute;
+   /*  position: absolute;
     top: 0;
-    margin-top: 10px;
+    margin-top: 10px; */
+    margin-bottom: 10px;
 }
 
 .tbtn {
@@ -302,5 +367,15 @@ h1 {
 
 .deletebuy {
     display: none;
+}
+
+.spellbtn {
+    display: flex;
+    flex-direction: row;
+}
+
+.spell {
+    width: 100px;
+    height: 100px;
 }
 </style>

@@ -2,11 +2,13 @@
   <div class="mainpage">
 
     <info-block :isItemMenu="isItemMenu" :isForgeMenu="isForgeMenu" @afterBuyMiner="afterBuyMiner" @buyForge="buyForge"
-      @upDmg="upDmg" :isForgeBuy="isForgeBuy" :priceGoldMiner="priceGoldMiner" @upSpeed="upSpeed"
-      :shieldPrice="shieldPrice" @healUp="healUp" :goldCount="goldCount" :heroDmg="heroDmg" :forgePrice="forgePrice"
-      :isEng="isEng" @upArmor="upArmor" :speedPrice="speedPrice" :priceTavern="priceTavern" @buyTavern="buyTavern"
-      :isTavernOpen="isTavernOpen" :heroHp="heroHp" :healingPrice="healingPrice" :isTavernBuy="isTavernBuy"
-      :enemyDmg="enemyDmg" :heroArmor="heroArmor" class="infoblock" />
+      @upDmg="upDmg" :isForgeBuy="isForgeBuy" :priceGoldMiner="priceGoldMiner" @upSpeed="upSpeed" @upShield="upShield"
+      :isHeroSpellsOpen="isHeroSpellsOpen" :shieldPrice="shieldPrice" @healUp="healUp" :goldCount="goldCount"
+      :heroDmg="heroDmg" :forgePrice="forgePrice" :isEng="isEng" @upArmor="upArmor" :speedPrice="speedPrice"
+      :spellPoints="spellPoints" :priceTavern="priceTavern" @buyTavern="buyTavern" :isTavernOpen="isTavernOpen"
+      :heroHp="heroHp" :shieldTimeSec="shieldTimeSec" :healingPrice="healingPrice" :isTavernBuy="isTavernBuy"
+      :enemyDmg="enemyDmg" :heroArmor="heroArmor" :useShieldPrice="useShieldPrice" @setUseShield="setUseShield" @upCrit="upCrit"
+      class="infoblock" />
 
     <div v-show="isFail" class="fail">
       <h1>YOU DIED</h1>
@@ -23,7 +25,8 @@
           <button class="chestbtn" @click="useChest"> <img class="chestimg"
               src="@/assets/Loot_Bag_without_background.webp" alt="">
           </button>
-          <h1>{{ chestGold }} gold!</h1>
+          <h1 v-show="isGold">{{ chestGold }} gold!</h1>
+          <h1 v-show="isPoint">Spell point</h1>
         </div>
       </div>
 
@@ -32,10 +35,13 @@
 
         <div class="hero">
           <h1>{{ levelText }}: {{ heroLvl }}</h1>
-          <img src="@/assets/59503_1_b.jpg" alt="">
+          <button @click="setOpenHeroSpells" class="herobtn">
+            <img src="@/assets/59503_1_b.jpg" alt="">
+          </button>
+          <h1 v-show="isShield">SHIELD</h1>
         </div>
 
-        <h1 class="crit" v-show="isCrit">CRIT</h1>
+        <h1 class="crit" v-show="isCrit">{{ critText }}</h1>
 
         <div v-show="isEnemyLife" class="enemy">
           <h1>{{ fEnemyName }} {{ fEnemyLvl }}</h1>
@@ -62,6 +68,7 @@
 import HeroBase from "@/components/HeroBase.vue";
 import InfoBlock from "@/components/InfoBlock.vue";
 import MenuBlock from "@/components/MenuBlock.vue";
+import { switchCase } from "@babel/types";
 
 export default {
   components: {
@@ -79,6 +86,9 @@ export default {
       healingPrice: 50,
       speedPrice: 20,
       shieldPrice: 50,
+      useShieldPrice: 100,
+      shieldTime: 5000,
+      shieldTimeSec: 5,
 
       heroHp: 1800,
       heroDmg: 100,
@@ -87,9 +97,12 @@ export default {
       killCount: 0,
       heroLvl: 1,
       critChance: 0,
-      chanceCrit: 0,
+      chanceCrit: 10,
+      spellPoints: 0,
 
       isCrit: false,
+
+      isShield: false,
 
       heroExp: 0,
       expMult: 1,
@@ -105,12 +118,14 @@ export default {
 
       killCountText: "Enemy kills",
       levelText: "Hero's level",
+      critText: "CRIT",
 
       isItemMenu: false,
       isForgeMenu: false,
       isForgeBuy: false,
       isTavernOpen: false,
       isTavernBuy: false,
+      isHeroSpellsOpen: false,
 
       isEng: true,
 
@@ -120,6 +135,8 @@ export default {
       chestChance: 0,
       inChest: 0,
       chestGold: 0,
+      isGold: false,
+      isPoint: false,
 
       isPause: false,
 
@@ -144,7 +161,7 @@ export default {
 
       setInterval(() => {
         if (this.atackSpeed == 2000 && !this.isFail && !this.isPause) {
-          this.critChance = Math.floor(Math.random() * 9);
+          this.critChance = Math.floor(Math.random() * 99);
           if (this.critChance <= this.chanceCrit) {
             this.setCrit();
             this.enemyHp -= this.heroDmg * 2;
@@ -156,7 +173,7 @@ export default {
 
       setInterval(() => {
         if (this.atackSpeed == 1800 && !this.isFail && !this.isPause) {
-          this.critChance = Math.floor(Math.random() * 9);
+          this.critChance = Math.floor(Math.random() * 99);
           if (this.critChance <= this.chanceCrit) {
             this.setCrit();
             this.enemyHp -= this.heroDmg * 2;
@@ -168,7 +185,7 @@ export default {
 
       setInterval(() => {
         if (this.atackSpeed == 1600 && !this.isFail && !this.isPause) {
-          this.critChance = Math.floor(Math.random() * 9);
+          this.critChance = Math.floor(Math.random() * 99);
           if (this.critChance <= this.chanceCrit) {
             this.setCrit();
             this.enemyHp -= this.heroDmg * 2;
@@ -180,7 +197,7 @@ export default {
 
       setInterval(() => {
         if (this.atackSpeed == 1400 && !this.isFail && !this.isPause) {
-          this.critChance = Math.floor(Math.random() * 9);
+          this.critChance = Math.floor(Math.random() * 99);
           if (this.critChance <= this.chanceCrit) {
             this.setCrit();
             this.enemyHp -= this.heroDmg * 2;
@@ -192,7 +209,7 @@ export default {
 
       setInterval(() => {
         if (this.atackSpeed == 1200 && !this.isFail && !this.isPause) {
-          this.critChance = Math.floor(Math.random() * 9);
+          this.critChance = Math.floor(Math.random() * 99);
           if (this.critChance <= this.chanceCrit) {
             this.setCrit();
             this.enemyHp -= this.heroDmg * 2;
@@ -204,7 +221,7 @@ export default {
 
       setInterval(() => {
         if (this.atackSpeed == 1000 && !this.isFail && !this.isPause) {
-          this.critChance = Math.floor(Math.random() * 9);
+          this.critChance = Math.floor(Math.random() * 99);
           if (this.critChance <= this.chanceCrit) {
             this.setCrit();
             this.enemyHp -= this.heroDmg * 2;
@@ -214,7 +231,7 @@ export default {
         }
       }, 1000);
 
-      setInterval(() => { if (!this.isFail && !this.isPause) { this.heroHp -= (this.enemyDmg - this.heroArmor); } }, 2000);
+      setInterval(() => { if (!this.isFail && !this.isPause && !this.isShield) { this.heroHp -= (this.enemyDmg - this.heroArmor); } }, 2000);
 
       setInterval(() => { if (!this.isFail && !this.isPause) { this.enemyDmg += 5 } }, 10000);
 
@@ -225,6 +242,11 @@ export default {
       setTimeout(() => { this.isCrit = false }, 1000);
     },
 
+    upCrit() {
+      this.chanceCrit += 5;
+      this.spellPoints -= 1;
+    },
+
     setShowItemMenu() {
       if (this.isItemMenu == true) {
         this.isItemMenu = false;
@@ -233,6 +255,7 @@ export default {
         this.isItemMenu = true;
         this.isForgeMenu = false;
         this.isTavernOpen = false;
+        this.isHeroSpellsOpen = false;
       }
     },
 
@@ -243,6 +266,7 @@ export default {
         this.isForgeMenu = true;
         this.isItemMenu = false;
         this.isTavernOpen = false;
+        this.isHeroSpellsOpen = false;
       }
     },
 
@@ -301,7 +325,29 @@ export default {
         this.isTavernOpen = true;
         this.isItemMenu = false;
         this.isForgeMenu = false;
+        this.isHeroSpellsOpen = false;
       }
+    },
+    setOpenHeroSpells() {
+      if (this.isHeroSpellsOpen) {
+        this.isHeroSpellsOpen = false;
+      } else {
+        this.isHeroSpellsOpen = true;
+        this.isItemMenu = false;
+        this.isForgeMenu = false;
+        this.isTavernOpen = false;
+      }
+    },
+
+    setUseShield() {
+      this.isShield = true;
+      setTimeout(() => { this.isShield = false; }, this.shieldTime);
+      this.useShieldPrice += 100;
+    },
+    upShield() {
+      this.shieldPrice += 50;
+      this.shieldTime += 5000;
+      this.shieldTimeSec += 5;
     },
 
     healUp() {
@@ -328,13 +374,16 @@ export default {
       if (this.chestChance == 1) {
         this.isChest = true;
         this.isPause = true;
-        this.inChance = Math.floor(Math.random() * 9);  // chance 0-9 
+        this.inChance = Math.floor(Math.random() * 10);  // chance 0-9 
         if (this.inChance <= 5) {
           console.log("GOLD");
           this.chestGold = Math.floor((Math.random() * 99) + 1);
           this.goldCount += this.chestGold;
+          this.isGold = true;
         } else if (this.inChance > 5 && this.inChance < 9) {
           console.log("UP");
+          this.spellPoints += 1;
+          this.isPoint = true;
         } else if (this.inChance == 9) {
           console.log("ITEM");
         };
@@ -345,6 +394,8 @@ export default {
         this.isChest = false;
         this.isPause = false;
         this.isEnemyLife = true;
+        this.isGold = false;
+        this.isPoint = false;
       }
     }
   },
@@ -369,6 +420,13 @@ export default {
       }
     },
 
+    heroLvl(newValue) {
+      let b = newValue % 2;
+      if (b != 0) {
+        this.spellPoints += 1;
+      };
+    },
+
     heroExp(newValue) {
       if (newValue == this.expMult) {
         this.heroLvl += 1;
@@ -388,10 +446,12 @@ export default {
         this.fEnemyName = "Враг ур.";
         this.killCountText = "Врагов повержено";
         this.levelText = "Уровень героя";
+        this.critText = "КРИТ. УРОН";
       } else {
         this.fEnemyName = "Enemy lvl";
         this.killCountText = "Enemy kills";
         this.levelText = "Hero's level";
+        this.critText = "CRIT";
       }
     }
   },
@@ -460,6 +520,11 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.herobtn {
+  background: none;
+  border: none;
 }
 
 .crit {

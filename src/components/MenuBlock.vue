@@ -1,16 +1,16 @@
 <template>
-    <div class="one">
+    <div class="allmenu">
         <div class="menu">
             <p> <strong>{{ menuText }}</strong></p>
             <div class="menubtns">
                 <button class="mbtn" @click="setLearn">Learn</button>
-                <button class="mbtn">LOR</button>
+                <button class="mbtn" @click="setLor">LOR</button>
                 <button class="mbtn" @click="setLadder">Ladder</button>
             </div>
         </div>
 
-        <div class="learn" v-bind:class="{ hidel: isHideLearn, learn: !isHideLearn }">
-            <div class="learntext">
+        <div class="menublock">
+            <div class="learn" v-show="!isHideLearn">
                 <p>
                     Кликните на Золотой рудник, Кузницу или Таверну
                     для взаимодействия.
@@ -21,37 +21,121 @@
                 <p>Нажмите еще раз, чтобы скрыть обучение</p>
             </div>
 
-            <!-- <div class="check">
-                <input type="checkbox" name="hidelearn" id="hidelearn" v-model="isHideLearn">
-                <label for="hidelearn">{{ hideText }}</label>
-            </div> -->
-        </div>
+            <div class="lor" v-show="!isHideLor">
+                <p v-show="!isEng">
+                    Далекий космос. Вы - наемник из элитной группы "Evans". В данный момент вы состоите в отряде,
+                    который охраняет шахтерское предприятие на планете Тангейзер-1701.
+                    <br>
+                    <br>
+                    Планета богата минералами. Это привлекает многих пиратов. Но главный ваш враг - Барги.
+                    <br>
+                    <br>
+                    Барги - это одни из самых опасных противников в галактике. Но не для вашей элитной группы.
+                    Барги объеденены коллективным разумом и уникальными технологиями, что позволяет им противостоять
+                    любой угрозе. Если умирает один Барг, то остальные участся противостоять тому, что убило их боевую
+                    единицу, и последующие уже имеют повышенную сопротивляемость.
+                    <br>
+                    <br>
+                    Убивая одного Барга вы учите следующего противостоять тому урону, что был нанесет предыдущему.
+                    Поэтому для убийства каждого последующего Барга требуется больше усилий.
+                    А Барги, мало того, что становятся более стойкими, но и наращивают свой урон, если противник
+                    способен противостоять ему. Поэтому Барги все сильнее и сильнее.
+                    <br>
+                    <br>
+                    Противостоять Баргам в затяжной битве - верный проигрыш.
+                    <br>
+                    <br>
+                    Но наемников из отряда "Evans" это только раззадоривает. Постоянно совершенствующийся противник -
+                    отличная причина устроить состязание.
+                    Во время своей смены многие наемники группы "Evans" выходят в открытую к врагу и ведут счет
+                    скошенных голов противника.
+                    <br>
+                    <br>
+                    Конечно, такой запал наемников не редко выходит за рамки стоймости стандартной смены. Поэтому
+                    руководство группы объявило: сам ищешь себе пробем - сам оплачиваешь свое веселье.
+                    <br>
+                    <br>
+                    Поэтому наемники, что вышли в соревновательный бой, за свой счет оплачивают повышенный расход
+                    ресурсов. В свою очереть отряд снабжения незамедлительно доставляет все с Корабля-Базы.
+                    <br>
+                    <br>
+                    Если наемник терпит поражение, то его товарищи незамедлительно взрывают псионическую бомбу, которая
+                    на время прерывает связь Баргов и не позволяет совершенствоваться дальше.
+                    Псионические бомбы - не панацея от Баргов, но в локальным стычках позволяют выиграть сражение.
+                    <br>
+                    <br>
+                    Личная криптовалютная система позволяет зарабатывать Кредиты и наращивать заработок за счет
+                    установки новых
+                    модулей.
+                    <br>
+                    <br>
+                    Вы - новичок в элитной группе "Evans", который только что заступил на пост и решил включится в
+                    соревнование со своими товарищами.
+                    <br>
+                    <br>
+                    Зарабатывайте Кредиты, тратьте их на
+                    <br>
+                    зарядку и улучшение энерго-щита,
+                    улучшение защитного поля костюма,
+                    <br>
+                    <br>
+                    улучшения системы наводки (что позволяет
+                    точнее целиться и наносит критический урон),
+                    <br>
+                    <br>
+                    модули накопления (которые позволяют быстрее
+                    <br>
+                    <br>
+                    накапливать заряд для выстрела, что повышает скорострельность оружия),
+                    <br>
+                    <br>
+                    покупку особых вещей.
+                    <br>
+                    <br>
+                    Иногда с убитого Барга можно поживиться кредитами, модулями улучшения и особыми предметами.
+                    <br>
+                    <br>
+                    Удачи!
+                </p>
+                <p v-show="isEng">
+                    Сфера кибербезопасности со стороны может показаться уделом людей строгих и отрешенных. Однако ребята
+                    этой профессии умеют не только ловить мошенников, но и отдыхать. Например, в компании BI.ZONE есть
+                    свой аниме-клуб
+                </p>
+            </div>
 
-        <div class="ladder" v-show="isLadder">
-            <table>
-                <th>Nick</th>
-                <th>Hero lvl</th>
-                <th>Kills</th>
-                <tr>
-                    <td>Admin</td>
-                    <td>over9000</td>
-                    <td>over9000</td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="btn">
-            <button class="btnstart" v-bind:class="{ deletestart: isStart }" @click="toSetGold">{{ startBtn }}</button>
-            <div class="btnstop" id="btnstop">
-
-                <button class="rpbtns" @click="setPause">Pause</button>
-                <form action=""><button class="rpbtns">{{ stopBtnText }}</button></form>
+            <div class="ladder" v-show="!isLadder">
+                <table>
+                    <th>Nick</th>
+                    <th>Hero lvl</th>
+                    <th>Kills</th>
+                    <tr>
+                        <td>Admin</td>
+                        <td>over9000</td>
+                        <td>over9000</td>
+                    </tr>
+                </table>
             </div>
         </div>
 
-        <div class="langbtn">
-            <button class="btnl" @click="setLang">{{ lang }}</button>
+        <div class="botbtn">
+
+            <div class="btn">
+                <button class="btnstart" v-bind:class="{ deletestart: isStart }" @click="toSetGold">{{ startBtn
+                }}</button>
+                <div class="btnstop" id="btnstop">
+                    <button class="rpbtns" @click="setPause">{{ pauseText }}</button>
+                    <form action=""><button class="rpbtns">{{ stopBtnText }}</button></form>
+                </div>
+            </div>
+
+
+            <div class="langbtn">
+                <button class="btnl" @click="setLang">{{ lang }}</button>
+                <button class="btnl" @click="setLang">{{ aboutText }}</button>
+            </div>
         </div>
+
     </div>
 </template>
 
@@ -67,7 +151,8 @@ export default {
         return {
             startBtn: "Start game",
             lang: "RUS",
-            menuText: "Menu",
+            menuText: "Evans. Autho-shoot game",
+            aboutText: "About",
 
             ruStart: "Начать игру",
             enStart: "Start game",
@@ -75,16 +160,15 @@ export default {
             enLang: "ENG",
             ruLang: "RUS",
 
-            enMenu: "Menu",
-            ruMenu: "Меню",
-
             isStart: false,
 
             isHideLearn: false,
-            isLadder: false,
+            isLadder: true,
+            isHideLor: true,
             hideText: "Hide/Show learn",
 
             stopBtnText: "Resset",
+            pauseText: "Pause",
         }
     },
 
@@ -101,30 +185,47 @@ export default {
 
             if (!this.isEng) {
                 this.startBtn = this.enStart;
-                this.menuText = this.enMenu;
+                this.menuText = "Evans. Autho-shoot game";
                 this.lang = this.ruLang;
                 this.hideText = "Hide/Show learn";
                 this.stopBtnText = "Resset";
+                this.pauseText = "Pause";
+                this.aboutText = "About";
             } else {
                 this.startBtn = this.ruStart;
-                this.menuText = this.ruMenu;
+                this.menuText = "Evans. Autho-shoot game";
                 this.lang = this.enLang;
                 this.hideText = "Скрыть/показать подсказки";
                 this.stopBtnText = "Заново";
+                this.pauseText = "Пауза";
+                this.aboutText = "Инфо";
             }
         },
         setLearn() {
-            if (this.isHideLearn) {
-                this.isHideLearn = false;
-            } else {
+            if (!this.isHideLearn) {
                 this.isHideLearn = true;
+            } else {
+                this.isHideLearn = false;
+                this.isHideLor = true;
+                this.isLadder = true;
+            }
+        },
+        setLor() {
+            if (!this.isHideLor) {
+                this.isHideLor = true;
+            } else {
+                this.isHideLor = false;
+                this.isHideLearn = true;
+                this.isLadder = true;
             }
         },
         setLadder() {
-            if (this.isLadder) {
-                this.isLadder = false;
-            } else {
+            if (!this.isLadder) {
                 this.isLadder = true;
+            } else {
+                this.isLadder = false;
+                this.isHideLearn = true;
+                this.isHideLor = true;
             }
         },
 
@@ -136,27 +237,31 @@ export default {
 </script>
 
 <style scoped>
-.one {
+.allmenu {
     width: 400px;
     height: 900px;
-    /*   border: 1px solid red; */
+    /* border: 5px solid blue; */
     display: flex;
     flex-direction: column;
     align-items: center;
+    /* position: relative;
+    top: 0; */
 }
 
 .menu {
-    width: 100px;
+    width: 300px;
     height: 100px;
-    /*  border: 1px solid red; */
+    /* border: 1px solid red; */
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
 }
 
 .menubtns {
     display: flex;
     flex-direction: row;
+
 }
 
 .mbtn {
@@ -166,42 +271,29 @@ export default {
 }
 
 .learn {
-    height: 700px;
+    height: auto;
+}
+
+.menublock {
+    height: 890px;
+}
+
+.lor {
+    height: 600px;
+    width: auto;
+    /* border: 1px solid red; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 20px;
+    opacity: 1;
 }
 
 .ladder {
     display: flex;
     justify-self: center;
     align-self: center;
-}
-
-.learntext {
-    height: 300px;
-    width: 400px;
-    /* border: 1px solid red; */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin: auto;
-    opacity: 1;
-}
-
-.hidel {
-    height: 300px;
-    width: 400px;
-    /* border: 1px solid red; */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin: auto;
-    opacity: 0;
-}
-
-.check {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    margin: auto;
+    height: auto;
 }
 
 .btnstart {
@@ -216,13 +308,13 @@ export default {
     width: 200px;
     /* border: 1px solid red; */
     display: block;
-    margin: 5px;
 }
 
 .btn {
-    height: 100px;
-    width: 200px;
-    margin-bottom: 40px;
+    height: auto;
+    width: auto;
+    display: flex;
+    /* border: 1px solid red; */
 }
 
 .btnstop {
@@ -230,31 +322,38 @@ export default {
     width: auto;
     /* border: 1px solid red; */
     display: none;
-    
-}
-
-.twobtn {
-    display: flex;
-    flex-direction: row;
-    width: auto;
+    position: relative;
+    bottom: 0;
+    margin-bottom: 10px;
 }
 
 .langbtn {
-    width: 100px;
-    height: 40px;
-    /*  border: 1px solid red; */
+    width: auto;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    /* border: 1px solid red; */
+    bottom: 0;
 }
 
 .btnl {
-    width: 100px;
-    height: 40px;
+    width: 50px;
+    height: 30px;
 }
 
 p {
     font-size: 20px;
+    overflow: auto;
 }
 
 .deletestart {
     display: none;
+}
+
+.botbtn {
+    display: flex;
+    justify-self: flex-end;
+    flex-direction: column;
+    align-items: center;
 }
 </style>
