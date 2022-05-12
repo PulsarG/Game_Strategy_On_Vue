@@ -1,17 +1,17 @@
 <template>
     <div class="main">
         <div class="row">
-            <div v-show="isVisibleGoldMiner3" class="item"><img src="@/assets/simple_pickaxe.png" alt=""></div>
             <div v-show="isVisibleGoldMiner2" class="item"><img src="@/assets/simple_pickaxe.png" alt=""></div>
+            <div class="item"><img src="@/assets/simple_pickaxe.png" alt=""></div>
             <div v-show="isVisibleGoldMiner1" class="item"><img src="@/assets/simple_pickaxe.png" alt=""></div>
         </div>
         <div class="row">
-            <div v-show="isVisibleGoldMiner5" class="item"><img src="@/assets/simple_pickaxe.png" alt=""></div>
+            <div v-show="isVisibleGoldMiner3" class="item"><img src="@/assets/simple_pickaxe.png" alt=""></div>
             <button @click="setShowItemMenu" class="goldbtn"><img src="@/assets/1987372.png" alt=""></button>
             <div v-show="isVisibleGoldMiner4" class="item"><img src="@/assets/simple_pickaxe.png" alt=""></div>
         </div>
         <div class="row">
-            <div v-show="isVisibleGoldMiner8" class="item"><img src="@/assets/simple_pickaxe.png" alt=""></div>
+            <div v-show="isVisibleGoldMiner5" class="item"><img src="@/assets/simple_pickaxe.png" alt=""></div>
             <div v-show="isVisibleGoldMiner7" class="item"><img src="@/assets/simple_pickaxe.png" alt=""></div>
             <div v-show="isVisibleGoldMiner6" class="item"><img src="@/assets/simple_pickaxe.png" alt=""></div>
         </div>
@@ -22,31 +22,18 @@
 export default {
     name: 'gold-rush',
     props: {
-        isVisibleGoldMiner1: {
-            type: Boolean,
-        },
-        isVisibleGoldMiner3: {
-            type: Boolean,
-        },
-        isVisibleGoldMiner4: {
-            type: Boolean,
-        },
-        isVisibleGoldMiner5: {
-            type: Boolean,
-        },
-        isVisibleGoldMiner6: {
-            type: Boolean,
-        },
-        isVisibleGoldMiner7: {
-            type: Boolean,
-        },
-        isVisibleGoldMiner8: {
-            type: Boolean,
-        },
+        countMiners: Number,
     },
     data() {
         return {
-            isVisibleGoldMiner2: true,
+            isVisibleGoldMiner2: false,
+            isVisibleGoldMiner4: false,
+            isVisibleGoldMiner5: false,
+            isVisibleGoldMiner7: false,
+            isVisibleGoldMiner4: false,
+            isVisibleGoldMiner1: false,
+            isVisibleGoldMiner6: false,
+            isVisibleGoldMiner3: false,
         }
     },
     methods: {
@@ -54,6 +41,33 @@ export default {
             this.$emit('setShowItemMenu');
         }
     },
+    watch: {
+        countMiners(newValue) {          
+            switch (newValue) {
+                case 2:
+                    this.isVisibleGoldMiner1 = true;
+                    break;
+                case 3:
+                    this.isVisibleGoldMiner2 = true;
+                    break;
+                case 4:
+                    this.isVisibleGoldMiner3 = true;
+                    break;
+                case 5:
+                    this.isVisibleGoldMiner4 = true;
+                    break;
+                case 6:
+                    this.isVisibleGoldMiner5 = true;
+                    break;
+                case 7:
+                    this.isVisibleGoldMiner6 = true;
+                    break;
+                case 8:
+                    this.isVisibleGoldMiner7 = true;
+                    break;
+            }
+        }
+    }
 }
 </script>
 
@@ -72,7 +86,7 @@ export default {
 .goldbtn {
     width: 50px;
     height: 50px;
-  /*   border: 1px solid yellow; */
+    /*   border: 1px solid yellow; */
     margin: auto;
     background: none;
     border: none;

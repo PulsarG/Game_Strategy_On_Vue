@@ -9,7 +9,7 @@
       :heroHp="heroHp" :shieldTimeSec="shieldTimeSec" :healingPrice="healingPrice" :isTavernBuy="isTavernBuy"
       :bombPrice="bombPrice" @buyBomb="buyBomb" :enemyDmg="enemyDmg" :heroArmor="heroArmor" @useBomb="useBomb"
       :countBomb="countBomb" :useShieldPrice="useShieldPrice" @setUseShield="setUseShield" @upCrit="upCrit"
-      @useKill="useKill" class="infoblock" />
+      @useKill="useKill" class="infoblock" ref="infoblock" />
 
     <div v-show="isFail" class="fail">
       <h1>YOU DIED</h1>
@@ -59,11 +59,9 @@
 
       </div>
 
-      <hero-base :isVisibleGoldMiner1="isVisibleGoldMiner1" :isVisibleGoldMiner3="isVisibleGoldMiner3"
-        :isVisibleGoldMiner4="isVisibleGoldMiner4" :isVisibleGoldMiner5="isVisibleGoldMiner5"
-        :isVisibleGoldMiner6="isVisibleGoldMiner6" :isVisibleGoldMiner7="isVisibleGoldMiner7"
-        :isVisibleGoldMiner8="isVisibleGoldMiner8" @setShowItemMenu="setShowItemMenu" @setOpenTavern="setOpenTavern"
-        :isTavernBuy="isTavernBuy" @setShowForgeMenu="setShowForgeMenu" :isForgeBuy="isForgeBuy" class="herobase" />
+      <hero-base @setShowItemMenu="setShowItemMenu" @setOpenTavern="setOpenTavern" :isTavernBuy="isTavernBuy"
+        @setShowForgeMenu="setShowForgeMenu" :isForgeBuy="isForgeBuy" class="herobase" ref="herobase"
+        :countMiners="countMiners" />
 
     </div>
     <menu-block @setGold="setGold" class="menublock" :isEng="isEng" @setLang="setLang" @setPause="setPause" />
@@ -87,6 +85,8 @@ export default {
       goldPlus: 1,
       priceGoldMiner: 10,
       minerAddGold: 1,
+      countMiners: 1,
+
       forgePrice: 5,
       priceTavern: 5,
       healingPrice: 50,
@@ -156,15 +156,6 @@ export default {
       isAutoHeal: false,
 
       isPause: false,
-
-      isVisibleGoldMiner1: false,
-      isVisibleGoldMiner3: false,
-      isVisibleGoldMiner4: false,
-      isVisibleGoldMiner5: false,
-      isVisibleGoldMiner6: false,
-      isVisibleGoldMiner7: false,
-      isVisibleGoldMiner8: false,
-
     }
   },
 
@@ -308,27 +299,10 @@ export default {
 
 
     afterBuyMiner() {
-      if (this.isVisibleGoldMiner8 == false) {
-        this.goldCount -= this.priceGoldMiner;
-        this.goldPlus += this.minerAddGold;
-        this.priceGoldMiner += 5;
-
-        if (this.isVisibleGoldMiner1 == false) {
-          this.isVisibleGoldMiner1 = true;
-        } else if (this.isVisibleGoldMiner1 == true && this.isVisibleGoldMiner3 == false) {
-          this.isVisibleGoldMiner3 = true;
-        } else if (this.isVisibleGoldMiner3 == true && this.isVisibleGoldMiner4 == false) {
-          this.isVisibleGoldMiner4 = true;
-        } else if (this.isVisibleGoldMiner4 == true && this.isVisibleGoldMiner5 == false) {
-          this.isVisibleGoldMiner5 = true;
-        } else if (this.isVisibleGoldMiner5 == true && this.isVisibleGoldMiner6 == false) {
-          this.isVisibleGoldMiner6 = true;
-        } else if (this.isVisibleGoldMiner6 == true && this.isVisibleGoldMiner7 == false) {
-          this.isVisibleGoldMiner7 = true;
-        } else if (this.isVisibleGoldMiner7 == true && this.isVisibleGoldMiner8 == false) {
-          this.isVisibleGoldMiner8 = true;
-        }
-      }
+      this.countMiners++;
+      this.goldCount -= this.priceGoldMiner;
+      this.goldPlus += this.minerAddGold;
+      this.priceGoldMiner += 5;
     },
 
     buyForge() {
@@ -472,7 +446,8 @@ export default {
       this.enemyHp = 0;
       this.isFastKill = true;
       setTimeout(() => { this.isFastKill = false; }, 1000);
-    }
+    },
+
   },
   watch: {
     enemyHp(newValue) {
@@ -652,13 +627,13 @@ img {
 
 .field {
   height: 900px;
-  width: 900px;
-  /* border: 2px solid red; */
+  width: 800px;
+ /*  border: 2px solid red; */
   justify-self: center;
   align-self: center;
   position: relative;
-  left: 25%;
-  right: 25%;
+  left: 30%;
+ /*  right: 25%; */
   display: flex;
   flex-direction: column;
 }

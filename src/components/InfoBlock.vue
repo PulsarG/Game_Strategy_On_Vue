@@ -13,7 +13,7 @@
             <div class="htext">
                 <h1 class="hitemmenu">{{ goldrushText }}</h1>
             </div>
-            <button class="bmbtn" @click="buyGoldMiner">{{ buyMinerText }} {{ priceGoldMiner }}</button>
+            <button class="bmbtn" id="btnbuyminer" @click="buyGoldMiner">{{ buyMinerText }} {{ priceGoldMiner }}</button>
         </div>
 
         <div v-show="isForgeMenu" class="forgemenu">
@@ -59,8 +59,9 @@
                 }} gold</button>
                 <button @click="upCrit" class="spell" v-bind:class="{ nospell: isNoSpellPoint }">{{ upCritChanceText
                 }}</button>
-                <button class="spell" v-bind:class="{ nospell: isNoSpellPoint }" @click="useKill">{{ oneShotKillText }}</button>
-                <button class="spell" v-bind:class="{ isnotbomb: isNotBomb }" @click="useBomb">Use Bomb</button>
+                <button class="spell" v-bind:class="{ nospell: isNoSpellPoint }" @click="useKill">{{ oneShotKillText
+                }}</button>
+                <button class="spell" v-bind:class="{ isnotbomb: isNotBomb }" @click="useBomb">Use Bomb <br><br> Have {{countBomb}} </button>
             </div>
 
             <h2>{{ spellPointsText }}: {{ spellPoints }}</h2>
@@ -75,7 +76,6 @@
                 </button>
                 <button class="spell" v-bind:class="{ cantbuybomb: !isCanBuyBomb }" @click="buyBomb">
                     Buy psy-bomb for 5000
-                    <p>Have: {{ countBomb }}</p>
                 </button>
             </div>
 
@@ -90,6 +90,8 @@ export default {
         return {
             upDmgCount: 1,
             priceDmgUp: 5,
+
+            countBuyMiners: 0,
 
             upArmorCount: 1,
             priceArmorUp: 10,
@@ -124,7 +126,7 @@ export default {
             useShieldText: "Use shield",
             upCritChanceText: "Up crit-chance for 1 point",
             spellPointsText: "Spell points",
-            oneShotKillText: "One shot kill for 1 point",
+            oneShotKillText: "Up chance one shot kill for 1 point",
 
         }
     },
@@ -187,6 +189,10 @@ export default {
         buyGoldMiner() {
             if (this.goldCount >= this.priceGoldMiner) {
                 this.$emit('afterBuyMiner');
+            };
+            this.countBuyMiners++;
+            if (this.countBuyMiners == 7) {
+                document.getElementById('btnbuyminer').setAttribute('disabled', true);
             }
         },
         buyForge() {
@@ -238,10 +244,10 @@ export default {
             this.$emit('useBomb');
         },
         useKill() {
-             if (this.spellPoints >= 1) {
+            if (this.spellPoints >= 1) {
                 this.$emit('useKill');
             }
-        }
+        },
 
     },
     watch: {
@@ -270,7 +276,7 @@ export default {
         countBomb(newValue) {
             if (newValue > 0) {
                 this.isNotBomb = false;
-            
+
             } else {
                 this.isNotBomb = true;
             }
@@ -298,7 +304,7 @@ export default {
                 this.useShieldText = "Использовать щит";
                 this.upCritChanceText = "Увеличить шанс крит.удара за 1 оч. навыка";
                 this.spellPointsText = "Очки навыков";
-                this.oneShotKillText = "Моментальное убийство за 1 оч. навыка";
+                this.oneShotKillText = "Увеличить шанс моментального убийства за 1 оч. навыка";
             } else {
                 this.goldText = "Gold";
                 this.hpText = "HP";
@@ -320,7 +326,7 @@ export default {
                 this.useShieldText = "Use shield";
                 this.upCritChanceText = "Up crit-chance for 1 point";
                 this.spellPointsText = "Spell points";
-                this.oneShotKillText = "One shot kill for 1 point";
+                this.oneShotKillText = "Up chance one shot kill for 1 point";
             }
         }
     },
@@ -383,7 +389,7 @@ h1 {
     justify-content: center;
     align-items: center;
     height: 400px;
-    width: 400px;
+    width: auto;
     position: absolute;
     bottom: 0;
     border: 10px double black;
@@ -442,8 +448,10 @@ h1 {
 }
 
 .spellbtn {
+    width: auto;
     display: flex;
     flex-direction: row;
+    /* border: 1px solid blue; */
 }
 
 .spell {
