@@ -7,8 +7,9 @@
       :heroDmg="heroDmg" :forgePrice="forgePrice" :isEng="isEng" @upArmor="upArmor" :speedPrice="speedPrice"
       :spellPoints="spellPoints" :priceTavern="priceTavern" @buyTavern="buyTavern" :isTavernOpen="isTavernOpen"
       :heroHp="heroHp" :shieldTimeSec="shieldTimeSec" :healingPrice="healingPrice" :isTavernBuy="isTavernBuy"
-      :enemyDmg="enemyDmg" :heroArmor="heroArmor" :useShieldPrice="useShieldPrice" @setUseShield="setUseShield" @upCrit="upCrit"
-      class="infoblock" />
+      :bombPrice="bombPrice" @buyBomb="buyBomb" :enemyDmg="enemyDmg" :heroArmor="heroArmor" @useBomb="useBomb"
+      :countBomb="countBomb" :useShieldPrice="useShieldPrice" @setUseShield="setUseShield" @upCrit="upCrit"
+      @useKill="useKill" class="infoblock" />
 
     <div v-show="isFail" class="fail">
       <h1>YOU DIED</h1>
@@ -27,6 +28,9 @@
           </button>
           <h1 v-show="isGold">{{ chestGold }} gold!</h1>
           <h1 v-show="isPoint">Spell point</h1>
+          <h1 v-show="isBomb">Bomb</h1>
+          <h1 v-show="isBufMiners">Buf for Miners</h1>
+          <h1 v-show="isAutoHeal">Autoheal</h1>
         </div>
       </div>
 
@@ -39,9 +43,11 @@
             <img src="@/assets/59503_1_b.jpg" alt="">
           </button>
           <h1 v-show="isShield">SHIELD</h1>
+          <h2 v-show="isSpellPoints">+ {{ spellPoints }} spell point(s)</h2>
         </div>
 
         <h1 class="crit" v-show="isCrit">{{ critText }}</h1>
+        <h1 class="crit" v-show="isFastKill">FAST KILL</h1>
 
         <div v-show="isEnemyLife" class="enemy">
           <h1>{{ fEnemyName }} {{ fEnemyLvl }}</h1>
@@ -77,7 +83,7 @@ export default {
 
   data() {
     return {
-      goldCount: 99999990,
+      goldCount: 999999999,
       goldPlus: 1,
       priceGoldMiner: 10,
       minerAddGold: 1,
@@ -89,9 +95,10 @@ export default {
       useShieldPrice: 100,
       shieldTime: 5000,
       shieldTimeSec: 5,
+      bombPrice: 5000,
 
       heroHp: 1800,
-      heroDmg: 100,
+      heroDmg: 200,
       heroArmor: 0,
       atackSpeed: 2000,
       killCount: 0,
@@ -99,8 +106,14 @@ export default {
       critChance: 0,
       chanceCrit: 10,
       spellPoints: 0,
+      countBomb: 0,
+      fastKillChance: 1,
+      rollChanceFastKill: 0,
+
+      isSpellPoints: false,
 
       isCrit: false,
+      isFastKill: false,
 
       isShield: false,
 
@@ -137,6 +150,10 @@ export default {
       chestGold: 0,
       isGold: false,
       isPoint: false,
+      inChance: 0,
+      isBomb: false,
+      isBufMiners: false,
+      isAutoHeal: false,
 
       isPause: false,
 
@@ -162,11 +179,15 @@ export default {
       setInterval(() => {
         if (this.atackSpeed == 2000 && !this.isFail && !this.isPause) {
           this.critChance = Math.floor(Math.random() * 99);
+          this.rollChanceFastKill = Math.floor(Math.random() * 99);
           if (this.critChance <= this.chanceCrit) {
             this.setCrit();
             this.enemyHp -= this.heroDmg * 2;
           } else {
             this.enemyHp -= this.heroDmg;
+          };
+          if (this.fastKillChance >= this.rollChanceFastKill) {
+            this.fastKill();
           }
         }
       }, this.atackSpeed);
@@ -179,6 +200,9 @@ export default {
             this.enemyHp -= this.heroDmg * 2;
           } else {
             this.enemyHp -= this.heroDmg;
+          };
+          if (this.fastKillChance >= this.rollChanceFastKill) {
+            this.fastKill();
           }
         }
       }, 1800);
@@ -191,6 +215,9 @@ export default {
             this.enemyHp -= this.heroDmg * 2;
           } else {
             this.enemyHp -= this.heroDmg;
+          };
+          if (this.fastKillChance >= this.rollChanceFastKill) {
+            this.fastKill();
           }
         }
       }, 1600);
@@ -203,6 +230,9 @@ export default {
             this.enemyHp -= this.heroDmg * 2;
           } else {
             this.enemyHp -= this.heroDmg;
+          };
+          if (this.fastKillChance >= this.rollChanceFastKill) {
+            this.fastKill();
           }
         }
       }, 1400);
@@ -215,6 +245,9 @@ export default {
             this.enemyHp -= this.heroDmg * 2;
           } else {
             this.enemyHp -= this.heroDmg;
+          };
+          if (this.fastKillChance >= this.rollChanceFastKill) {
+            this.fastKill();
           }
         }
       }, 1200);
@@ -227,6 +260,9 @@ export default {
             this.enemyHp -= this.heroDmg * 2;
           } else {
             this.enemyHp -= this.heroDmg;
+          };
+          if (this.fastKillChance >= this.rollChanceFastKill) {
+            this.fastKill();
           }
         }
       }, 1000);
@@ -239,7 +275,7 @@ export default {
 
     setCrit() {
       this.isCrit = true;
-      setTimeout(() => { this.isCrit = false }, 1000);
+      setTimeout(() => { this.isCrit = false }, 500);
     },
 
     upCrit() {
@@ -374,18 +410,32 @@ export default {
       if (this.chestChance == 1) {
         this.isChest = true;
         this.isPause = true;
-        this.inChance = Math.floor(Math.random() * 10);  // chance 0-9 
-        if (this.inChance <= 5) {
+        this.inChance = Math.floor(Math.random() * 100);
+        // chance 0-99 
+        if (this.inChance <= 70) {
           console.log("GOLD");
           this.chestGold = Math.floor((Math.random() * 99) + 1);
           this.goldCount += this.chestGold;
           this.isGold = true;
-        } else if (this.inChance > 5 && this.inChance < 9) {
+
+        } else if (this.inChance > 70 && this.inChance <= 90) {
           console.log("UP");
           this.spellPoints += 1;
           this.isPoint = true;
-        } else if (this.inChance == 9) {
-          console.log("ITEM");
+
+        } else if (this.inChance > 90 && this.inChance < 98) {
+          console.log("BOMB");
+          this.countBomb += 1;
+          this.isBomb = true;
+
+        } else if (this.inChance == 98) {
+          console.log("AUTOHEAL");
+          this.isBufMiners = true;
+
+        } else if (this.inChance == 99) {
+          console.log("BUFMINER");
+          this.isAutoHeal = true;
+
         };
       };
     },
@@ -396,7 +446,32 @@ export default {
         this.isEnemyLife = true;
         this.isGold = false;
         this.isPoint = false;
+        this.isBomb = false;
+        this.isBufMiners = false;
+        this.isAutoHeal = false;
       }
+    },
+
+    buyBomb() {
+      this.goldCount -= 5000;
+      this.countBomb += 1;
+    },
+    useBomb() {
+      this.enemyHp = 0;
+      this.defaultEnemyHP = 100;
+      this.enemyDmg = 10;
+      this.fEnemyLvl = 0;
+      this.killCount += 1;
+      this.countBomb -= 1;
+    },
+    useKill() {
+      this.fastKillChance += 1;
+      this.spellPoints -= 1;
+    },
+    fastKill() {
+      this.enemyHp = 0;
+      this.isFastKill = true;
+      setTimeout(() => { this.isFastKill = false; }, 1000);
     }
   },
   watch: {
@@ -452,6 +527,14 @@ export default {
         this.killCountText = "Enemy kills";
         this.levelText = "Hero's level";
         this.critText = "CRIT";
+      }
+    },
+
+    spellPoints(newValue) {
+      if (this.spellPoints != 0) {
+        this.isSpellPoints = true;
+      } else {
+        this.isSpellPoints = false;
       }
     }
   },

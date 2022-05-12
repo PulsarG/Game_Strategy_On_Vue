@@ -47,24 +47,40 @@
         </div>
 
         <div v-show="isHeroSpellsOpen" class="herospells">
+
             <div class="htext">
                 <h1>{{ spellsText }}</h1>
             </div>
+
             <!-- <button @click="setShield" class="btnfd">{{ useShieldText }} {{ shieldTimeSec }} sec for {{ useShieldPrice }} gold</button> -->
             <div class="spellbtn">
                 <button @click="setShield" class="spell">{{ useShieldText }} {{ shieldTimeSec }} sec for {{
                         useShieldPrice
                 }} gold</button>
-                <button @click="upCrit" class="spell">Up crit-chance for 1 point</button>
-                <button class="spell"></button>
+                <button @click="upCrit" class="spell" v-bind:class="{ nospell: isNoSpellPoint }">{{ upCritChanceText
+                }}</button>
+                <button class="spell" v-bind:class="{ nospell: isNoSpellPoint }" @click="useKill">{{ oneShotKillText }}</button>
+                <button class="spell" v-bind:class="{ isnotbomb: isNotBomb }" @click="useBomb">Use Bomb</button>
             </div>
-            <h2>Spell points: {{ spellPoints }}</h2>
+
+            <h2>{{ spellPointsText }}: {{ spellPoints }}</h2>
+
             <h1>Items: </h1>
             <div class="spellbtn">
-                <button class="spell"></button>
-                <button class="spell"></button>
+                <button class="spell">
+                    <h1 class="noitm">?</h1>
+                </button>
+                <button class="spell">
+                    <h1 class="noitm">?</h1>
+                </button>
+                <button class="spell" v-bind:class="{ cantbuybomb: !isCanBuyBomb }" @click="buyBomb">
+                    Buy psy-bomb for 5000
+                    <p>Have: {{ countBomb }}</p>
+                </button>
             </div>
+
         </div>
+
     </div>
 </template>
 
@@ -83,6 +99,10 @@ export default {
 
             shieldTime: 5,
 
+            isNoSpellPoint: true,
+            isCanBuyBomb: false,
+            isNotBomb: true,
+
             goldText: "Gold",
             hpText: "HP",
             damageText: "Damage",
@@ -99,9 +119,12 @@ export default {
             speedText: "Up atackSpeed for",
             shieldText: "Upgrade shield for",
             buyTavernText: "Build tavern for",
+
             spellsText: "Hero's spells",
             useShieldText: "Use shield",
-
+            upCritChanceText: "Up crit-chance for 1 point",
+            spellPointsText: "Spell points",
+            oneShotKillText: "One shot kill for 1 point",
 
         }
     },
@@ -121,6 +144,8 @@ export default {
         useShieldPrice: Number,
         shieldTimeSec: Number,
         spellPoints: Number,
+        bombPrice: Number,
+        countBomb: Number,
         isItemMenu: {
             type: Boolean,
         },
@@ -203,6 +228,21 @@ export default {
                 this.$emit('upCrit');
             }
         },
+
+        buyBomb() {
+            if (this.goldCount >= this.bombPrice) {
+                this.$emit('buyBomb');
+            }
+        },
+        useBomb() {
+            this.$emit('useBomb');
+        },
+        useKill() {
+             if (this.spellPoints >= 1) {
+                this.$emit('useKill');
+            }
+        }
+
     },
     watch: {
         countUpSpeed(newValue) {
@@ -210,6 +250,32 @@ export default {
                 this.isSpeedMax = true;
             }
         },
+
+        spellPoints(newValue) {
+            if (newValue != 0) {
+                this.isNoSpellPoint = false;
+            } else {
+                this.isNoSpellPoint = true;
+            }
+        },
+
+        goldCount(newValue) {
+            if (newValue >= 5000) {
+                this.isCanBuyBomb = true;
+            } else {
+                this.isCanBuyBomb = false;
+            }
+        },
+
+        countBomb(newValue) {
+            if (newValue > 0) {
+                this.isNotBomb = false;
+            
+            } else {
+                this.isNotBomb = true;
+            }
+        },
+
         isEng(newValue) {
             if (!newValue) {
                 this.goldText = "Золото";
@@ -230,6 +296,9 @@ export default {
                 this.buyTavernText = "Построить таверну за";
                 this.spellsText = "Способности героя";
                 this.useShieldText = "Использовать щит";
+                this.upCritChanceText = "Увеличить шанс крит.удара за 1 оч. навыка";
+                this.spellPointsText = "Очки навыков";
+                this.oneShotKillText = "Моментальное убийство за 1 оч. навыка";
             } else {
                 this.goldText = "Gold";
                 this.hpText = "HP";
@@ -249,6 +318,9 @@ export default {
                 this.buyTavernText = "Build tavern for";
                 this.spellsText = "Hero's spells";
                 this.useShieldText = "Use shield";
+                this.upCritChanceText = "Up crit-chance for 1 point";
+                this.spellPointsText = "Spell points";
+                this.oneShotKillText = "One shot kill for 1 point";
             }
         }
     },
@@ -319,7 +391,7 @@ h1 {
 
 .htext {
     justify-self: flex-start;
-   /*  position: absolute;
+    /*  position: absolute;
     top: 0;
     margin-top: 10px; */
     margin-bottom: 10px;
@@ -375,7 +447,24 @@ h1 {
 }
 
 .spell {
+    opacity: 1;
     width: 100px;
     height: 100px;
+}
+
+.nospell {
+    opacity: 0.4;
+}
+
+.noitm {
+    opacity: 0.4;
+}
+
+.cantbuybomb {
+    opacity: 0.4;
+}
+
+.isnotbomb {
+    opacity: 0.4;
 }
 </style>
