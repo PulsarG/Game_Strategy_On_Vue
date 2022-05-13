@@ -1,7 +1,7 @@
 <template>
     <div class="allmenu">
         <div class="menu">
-            <p> <strong>{{ menuText }}</strong></p>
+            <p style="margin-bottom: 3px;"><strong>{{ menuText }}</strong><br>ALFA TEST / ver 0.15</p>
             <div class="menubtns">
                 <button class="mbtn" @click="setLearn">Learn</button>
                 <button class="mbtn" @click="setLor">LOR</button>
@@ -119,7 +119,7 @@
         <div class="botbtn">
 
             <div class="btn">
-                <button class="btnstart" v-bind:class="{ deletestart: isStart }" @click="toSetGold">{{ startBtn
+                <button class="btnstart" v-bind:class="{ deletestart: isStart }" @click="toStartGame">{{ startBtn
                 }}</button>
                 <div class="btnstop" id="btnstop">
                     <button class="rpbtns" @click="setPause">{{ pauseText }}</button>
@@ -160,7 +160,7 @@ export default {
 
             isStart: false,
 
-            isHideLearn: false,
+            isHideLearn: true,
             isLadder: true,
             isHideLor: true,
             hideText: "Hide/Show learn",
@@ -172,8 +172,8 @@ export default {
 
     methods: {
 
-        toSetGold() {
-            this.$emit('setGold');
+        toStartGame() {
+            this.$emit('toStartGame');
             this.isStart = true;
 
             setTimeout(() => { document.getElementById('btnstop').style.display = 'block'; }, 2000);
@@ -253,7 +253,6 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: relative;
 }
 
 .menubtns {

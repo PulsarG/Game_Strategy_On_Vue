@@ -11,10 +11,18 @@
       :countBomb="countBomb" :useShieldPrice="useShieldPrice" @setUseShield="setUseShield" @upCrit="upCrit"
       @useKill="useKill" class="infoblock" ref="infoblock" />
 
+
     <div v-show="isFail" class="fail">
+      <h1>----------</h1>
       <h1>YOU DIED</h1>
+      <h1>----------</h1>
       <h1> {{ killCountText }}: {{ killCount }}</h1>
       <h1> {{ levelText }}: {{ heroLvl }} </h1>
+      <h1> {{ totalGoldText }}: {{ totalGoldCount }}</h1>
+      <h1> {{ critChanceText }}: {{ chanceCrit }}%</h1>
+      <h1> {{ fastkillChanceText }}: {{ fastKillChance }}%</h1>
+      <h1>{{ totalSpellPoints }} {{ totalSpellPointsText }}</h1>
+      <h1 v-if="countUseBomb > 0"> {{ countUseBomb }} {{ useBombText }}</h1>
     </div>
 
     <div v-show="!isFail" class="field">
@@ -26,11 +34,11 @@
           <button class="chestbtn" @click="useChest"> <img class="chestimg"
               src="@/assets/Loot_Bag_without_background.webp" alt="">
           </button>
-          <h1 v-show="isGold">{{ chestGold }} gold!</h1>
-          <h1 v-show="isPoint">Spell point</h1>
-          <h1 v-show="isBomb">Bomb</h1>
-          <h1 v-show="isBufMiners">Buf for Miners</h1>
-          <h1 v-show="isAutoHeal">Autoheal</h1>
+          <h1 v-show="isGold">{{ chestGold }} {{ chestGoldText }}</h1>
+          <h1 v-show="isPoint">+1 {{ chestSpellText }}</h1>
+          <h1 v-show="isBomb">{{ chestBombText }}</h1>
+          <h3 v-show="isBufMiners" style="color: #FF4500;">{{ chestBufMinersText }}</h3>
+          <h3 v-show="isAutoHeal" style="color: #FF4500;">{{ chestAutohealText }}</h3>
         </div>
       </div>
 
@@ -42,12 +50,12 @@
           <button @click="setOpenHeroSpells" class="herobtn">
             <img src="@/assets/59503_1_b.jpg" alt="">
           </button>
-          <h1 v-show="isShield">SHIELD</h1>
-          <h2 v-show="isSpellPoints">+ {{ spellPoints }} spell point(s)</h2>
+          <h1 v-show="isShield">{{ shieldUsedText }}</h1>
+          <h2 v-show="isSpellPoints">+ {{ spellPoints }} {{ chestSpellText }}</h2>
         </div>
 
         <h1 class="crit" v-show="isCrit">{{ critText }}</h1>
-        <h1 class="crit" v-show="isFastKill">FAST KILL</h1>
+        <h1 class="crit" v-show="isFastKill">{{ fastKillActiveText }}</h1>
 
         <div v-show="isEnemyLife" class="enemy">
           <h1>{{ fEnemyName }} {{ fEnemyLvl }}</h1>
@@ -64,7 +72,7 @@
         :countMiners="countMiners" />
 
     </div>
-    <menu-block @setGold="setGold" class="menublock" :isEng="isEng" @setLang="setLang" @setPause="setPause" />
+    <menu-block @toStartGame="toStartGame" class="menublock" :isEng="isEng" @setLang="setLang" @setPause="setPause" />
   </div>
 </template>
 
@@ -81,7 +89,8 @@ export default {
 
   data() {
     return {
-      goldCount: 999999999,
+      goldCount: 0,
+      totalGoldCount: 0,
       goldPlus: 1,
       priceGoldMiner: 10,
       minerAddGold: 1,
@@ -89,16 +98,17 @@ export default {
 
       forgePrice: 5,
       priceTavern: 5,
-      healingPrice: 50,
+      healingPrice: 500,
       speedPrice: 20,
       shieldPrice: 50,
       useShieldPrice: 100,
       shieldTime: 5000,
       shieldTimeSec: 5,
       bombPrice: 5000,
+      countUseBomb: 0,
 
       heroHp: 1800,
-      heroDmg: 200,
+      heroDmg: 100,
       heroArmor: 0,
       atackSpeed: 2000,
       killCount: 0,
@@ -106,6 +116,7 @@ export default {
       critChance: 0,
       chanceCrit: 10,
       spellPoints: 0,
+      totalSpellPoints: 0,
       countBomb: 0,
       fastKillChance: 1,
       rollChanceFastKill: 0,
@@ -132,6 +143,18 @@ export default {
       killCountText: "Enemy kills",
       levelText: "Hero's level",
       critText: "CRIT",
+      totalGoldText: "Total gold",
+      critChanceText: "Crit chance",
+      fastkillChanceText: "Fast kill chance",
+      totalSpellPointsText: "spell points",
+      useBombtext: "bomb used",
+      chestGoldText: "gold!",
+      chestSpellText: "spell point!",
+      chestBombText: "+1 psy-bomb!",
+      chestBufMinersText: "Unique technology: accelerator for Miners (+100% to earnings)",
+      chestAutohealText: "Unique technology: auto-regeneration system (periodic recovery of health)",
+      shieldUsedText: "SHIELD",
+      fastKillActiveText: "FAST KILL",
 
       isItemMenu: false,
       isForgeMenu: false,
@@ -160,10 +183,11 @@ export default {
   },
 
   methods: {
-    setGold() {
+    toStartGame() {
       setInterval(() => {
         if (!this.isFail && !this.isPause) {
           this.goldCount += this.goldPlus;
+          this.totalGoldCount += this.goldPlus;
         }
       }, 1000);
 
@@ -390,11 +414,13 @@ export default {
           console.log("GOLD");
           this.chestGold = Math.floor((Math.random() * 99) + 1);
           this.goldCount += this.chestGold;
+          this.totalGoldCount += this.chestGold;
           this.isGold = true;
 
         } else if (this.inChance > 70 && this.inChance <= 90) {
           console.log("UP");
-          this.spellPoints += 1;
+          this.spellPoints++;
+          this.totalSpellPoints++;
           this.isPoint = true;
 
         } else if (this.inChance > 90 && this.inChance < 98) {
@@ -437,6 +463,7 @@ export default {
       this.fEnemyLvl = 0;
       this.killCount += 1;
       this.countBomb -= 1;
+      this.countUseBomb++;
     },
     useKill() {
       this.fastKillChance += 1;
@@ -473,7 +500,8 @@ export default {
     heroLvl(newValue) {
       let b = newValue % 2;
       if (b != 0) {
-        this.spellPoints += 1;
+        this.spellPoints++;
+        this.totalSpellPoints++;
       };
     },
 
@@ -497,11 +525,35 @@ export default {
         this.killCountText = "Врагов повержено";
         this.levelText = "Уровень героя";
         this.critText = "КРИТ. УРОН";
+        this.totalGoldText = "Всего заработано золота";
+        this.critChanceText = "Шанс крита";
+        this.fastkillChanceText = "Шанс моментального убийства";
+        this.totalSpellPointsText = "очков навыка";
+        this.useBombtext = "бобм использовано";
+        this.chestGoldText = "золота!";
+        this.chestSpellText = "оч. навыка!";
+        this.chestBombText = "+1 пси-бомба!";
+        this.chestBufMinersText = "Уникальная технология: ускоритель майнеров (+100% к заработку)";
+        this.chestAutohealText = "Уникальная технология: система авто-регенерации (периодическое восстановление здоровья)";
+        this.shieldUsedText = "ЩИТ АКТИВЕН";
+        this.fastKillActiveText = "МОМЕНТАЛЬНОЕ УБИЙСТВО";
       } else {
         this.fEnemyName = "Enemy lvl";
         this.killCountText = "Enemy kills";
         this.levelText = "Hero's level";
         this.critText = "CRIT";
+        this.totalGoldText = "Total gold";
+        this.critChanceText = "Crit chance";
+        this.fastkillChanceText = "Fast kill chance";
+        this.totalSpellPointsText = "spell points";
+        this.useBombtext = "bomb used";
+        this.chestGoldText = "gold!";
+        this.chestSpellText = "spell point!";
+        this.chestBombText = "+1 psy-bomb!";
+        this.chestBufMinersText = "Unique technology: Accelerator for Miners (+100% to earnings)";
+        this.chestAutohealText = "Unique technology: auto-regeneration system (periodic recovery of health)";
+        this.shieldUsedText = "SHIELD";
+        this.fastKillActiveText = "FAST KILL";
       }
     },
 
@@ -520,6 +572,7 @@ export default {
 .mainpage {
   display: flex;
   flex-direction: row;
+  justify-content: center;
 }
 
 .gamezone {
@@ -538,8 +591,8 @@ export default {
   display: flex;
   justify-self: center;
   align-self: center;
-  height: 150px;
-  width: 150px;
+  height: auto;
+  width: auto;
   flex-direction: column;
   /* border: 2px solid blue; */
 }
@@ -613,27 +666,27 @@ img {
 }
 
 .fail {
-  height: 900px;
-  width: 900px;
-  /* border: 2px solid red; */
+  height: auto;
+  width: auto;
+  border: 10px double red;
   justify-content: center;
   align-items: center;
-  position: relative;
   display: flex;
-  left: 25%;
-  right: 25%;
+  /* position: absolute;
+  left: 40%;
+  top: 5%; */
   flex-direction: column;
 }
 
 .field {
   height: 900px;
   width: 800px;
- /*  border: 2px solid red; */
+  /*  border: 2px solid red; */
   justify-self: center;
   align-self: center;
-  position: relative;
-  left: 30%;
- /*  right: 25%; */
+  /*  position: relative;
+  left: 30%; */
+  /*  right: 25%; */
   display: flex;
   flex-direction: column;
 }
@@ -654,6 +707,6 @@ img {
   position: absolute;
   right: 0;
   margin-right: 3%;
-  align-self: flex-end;
+  /* align-self: flex-end; */
 }
 </style>

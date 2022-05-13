@@ -13,7 +13,8 @@
             <div class="htext">
                 <h1 class="hitemmenu">{{ goldrushText }}</h1>
             </div>
-            <button class="bmbtn" id="btnbuyminer" @click="buyGoldMiner">{{ buyMinerText }} {{ priceGoldMiner }}</button>
+            <button class="bmbtn" id="btnbuyminer" @click="buyGoldMiner">{{ buyMinerText }} {{ priceGoldMiner
+            }}</button>
         </div>
 
         <div v-show="isForgeMenu" class="forgemenu">
@@ -57,11 +58,15 @@
                 <button @click="setShield" class="spell">{{ useShieldText }} {{ shieldTimeSec }} sec for {{
                         useShieldPrice
                 }} gold</button>
-                <button @click="upCrit" class="spell" v-bind:class="{ nospell: isNoSpellPoint }">{{ upCritChanceText
-                }}</button>
+                <button @click="upCrit" class="spell" v-bind:class="{ nospell: isNoSpellPoint }">
+                    {{ upCritChanceText }} <br> <br>
+                    [{{ countUpCrit }}]
+                </button>
                 <button class="spell" v-bind:class="{ nospell: isNoSpellPoint }" @click="useKill">{{ oneShotKillText
-                }}</button>
-                <button class="spell" v-bind:class="{ isnotbomb: isNotBomb }" @click="useBomb">Use Bomb <br><br> Have {{countBomb}} </button>
+                }} <br> <br> [{{ countUpFastKill }}]</button>
+                <button class="spell" v-bind:class="{ cantbuybomb: !isCanBuyBomb }" @click="buyBomb">
+                    Buy psy-bomb for 5000
+                </button>
             </div>
 
             <h2>{{ spellPointsText }}: {{ spellPoints }}</h2>
@@ -74,9 +79,8 @@
                 <button class="spell">
                     <h1 class="noitm">?</h1>
                 </button>
-                <button class="spell" v-bind:class="{ cantbuybomb: !isCanBuyBomb }" @click="buyBomb">
-                    Buy psy-bomb for 5000
-                </button>
+                <button class="spell" v-bind:class="{ isnotbomb: isNotBomb }" @click="useBomb">Use Bomb <br><br> Have
+                    {{ countBomb }} </button>
             </div>
 
         </div>
@@ -98,6 +102,9 @@ export default {
 
             countUpSpeed: 0,
             isSpeedMax: false,
+
+            countUpCrit: 0,
+            countUpFastKill: 0,
 
             shieldTime: 5,
 
@@ -232,6 +239,7 @@ export default {
         upCrit() {
             if (this.spellPoints >= 1) {
                 this.$emit('upCrit');
+                this.countUpCrit++;
             }
         },
 
@@ -246,6 +254,7 @@ export default {
         useKill() {
             if (this.spellPoints >= 1) {
                 this.$emit('useKill');
+                this.countUpFastKill++;
             }
         },
 
