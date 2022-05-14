@@ -114,6 +114,15 @@
                     </tr>
                 </table>
             </div>
+
+            <div class="about" v-show="!isAbout">
+                <form @submit.prevent>
+                    <textarea class="reporttext" :v-model="msg" name="" id="" cols="30" rows="10">Report</textarea>
+                    <input class="reportemail" type="email">
+                    <!-- <input :value="report" @input="report = $event.target.value" type="text" name="" id=""> -->
+                    <button id="repbtn" type="submit" @click="sendMsg">Send</button>
+                </form>
+            </div>
         </div>
 
         <div class="botbtn">
@@ -130,7 +139,8 @@
 
             <div class="langbtn">
                 <button class="btnl" @click="setLang">{{ lang }}</button>
-                <button class="btnl" @click="setLang">{{ aboutText }}</button>
+                <!-- <button class="btnl" @click="$router.push('/q')">{{ aboutText }}</button> -->
+                <button class="btnl" @click="openAbout">{{ aboutText }}</button>
             </div>
         </div>
 
@@ -138,7 +148,9 @@
 </template>
 
 <script>
+
 export default {
+
     name: 'menu-block',
     props: {
         isEng: {
@@ -147,6 +159,8 @@ export default {
     },
     data() {
         return {
+            msg: "",
+            reports: [],
             startBtn: "Start game",
             lang: "RUS",
             menuText: "Evans. Autho-shoot game",
@@ -163,14 +177,37 @@ export default {
             isHideLearn: true,
             isLadder: true,
             isHideLor: true,
+            isAbout: true,
             hideText: "Hide/Show learn",
 
             stopBtnText: "Resset",
             pauseText: "Pause",
+
+            report: '',
         }
     },
 
     methods: {
+        sendMsg() {
+            const msg = document.querySelector('.reporttext');
+            const emailfrom = document.querySelector('.reportemail');
+            this.$loadScript("https://smtpjs.com/v3/smtp.js")
+                .then(() => {
+                    window.Email && window.Email.send({
+                        SecureToken: "7d841a7f-c9ef-4020-8daa-920e7c4a446d",
+                        To: 'furylonzero@gmail.com',
+                        From: emailfrom.value,
+                        Subject: "This is the subject",
+                        Body: msg.value
+                    }).then(
+                        message => alert(message)
+                    );
+                })
+                .catch(() => {
+                    // Failed to fetch script
+                });
+        },
+
 
         toStartGame() {
             this.$emit('toStartGame');
@@ -206,6 +243,7 @@ export default {
                 this.isHideLearn = false;
                 this.isHideLor = true;
                 this.isLadder = true;
+                this.isAbout = true;
             }
         },
         setLor() {
@@ -215,6 +253,7 @@ export default {
                 this.isHideLor = false;
                 this.isHideLearn = true;
                 this.isLadder = true;
+                this.isAbout = true;
             }
         },
         setLadder() {
@@ -224,13 +263,36 @@ export default {
                 this.isLadder = false;
                 this.isHideLearn = true;
                 this.isHideLor = true;
+                this.isAbout = true;
+            }
+        },
+        openAbout() {
+            if (!this.isAbout) {
+                this.isAbout = true;
+            } else {
+                this.isAbout = false;
+                this.isLadder = true;
+                this.isHideLearn = true;
+                this.isHideLor = true;
             }
         },
 
+
         setPause() {
             this.$emit('setPause');
+        },
+
+        sendReport() {
+            const newReport = {
+                id: Date.now(),
+                report: this.report,
+            };
+            // this.reports.push(newReport);
+            console.log(newReport);
+            this.report = '';
         }
     },
+
 }
 </script>
 

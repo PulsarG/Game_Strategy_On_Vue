@@ -8,4 +8,7 @@
 </script>
 
 <style>
+. {
+  min-width: 1920;
+}
 </style>

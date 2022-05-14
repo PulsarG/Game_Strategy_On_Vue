@@ -9,7 +9,8 @@
       :heroHp="heroHp" :shieldTimeSec="shieldTimeSec" :healingPrice="healingPrice" :isTavernBuy="isTavernBuy"
       :bombPrice="bombPrice" @buyBomb="buyBomb" :enemyDmg="enemyDmg" :heroArmor="heroArmor" @useBomb="useBomb"
       :countBomb="countBomb" :useShieldPrice="useShieldPrice" @setUseShield="setUseShield" @upCrit="upCrit"
-      @useKill="useKill" class="infoblock" ref="infoblock" />
+      :countBufMiners="countBufMiners" :countAutoheal="countAutoheal" @useKill="useKill" class="infoblock"
+      ref="infoblock" />
 
 
     <div v-show="isFail" class="fail">
@@ -21,8 +22,10 @@
       <h1> {{ totalGoldText }}: {{ totalGoldCount }}</h1>
       <h1> {{ critChanceText }}: {{ chanceCrit }}%</h1>
       <h1> {{ fastkillChanceText }}: {{ fastKillChance }}%</h1>
-      <h1>{{ totalSpellPoints }} {{ totalSpellPointsText }}</h1>
+      <h1>{{ totalSpellPoints }} {{ totalSpellPointsText }}</h1>*
       <h1 v-if="countUseBomb > 0"> {{ countUseBomb }} {{ useBombText }}</h1>
+      <h1 v-if="countAutoheal > 0">x{{ countAutoheal }} mod autoheal</h1>
+      <h1 v-if="countBufMiners > 1">x{{ countBufMiners - 1 }} mod miners</h1>
     </div>
 
     <div v-show="!isFail" class="field">
@@ -46,23 +49,23 @@
       <div class="gamezone" id="gamezone">
 
         <div class="hero">
-          <h1>{{ levelText }}: {{ heroLvl }}</h1>
-          <button @click="setOpenHeroSpells" class="herobtn">
-            <img src="@/assets/59503_1_b.jpg" alt="">
-          </button>
           <h1 v-show="isShield">{{ shieldUsedText }}</h1>
           <h2 v-show="isSpellPoints">+ {{ spellPoints }} {{ chestSpellText }}</h2>
+          <button @click="setOpenHeroSpells" class="herobtn">
+            <img class="imghero" src="@/assets/fca20ca686df78242e7f5faf65ef4041.jpg" alt="">
+          </button>
+          <h1>{{ levelText }} {{ heroLvl }}</h1>
         </div>
 
         <h1 class="crit" v-show="isCrit">{{ critText }}</h1>
         <h1 class="crit" v-show="isFastKill">{{ fastKillActiveText }}</h1>
 
         <div v-show="isEnemyLife" class="enemy">
-          <h1>{{ fEnemyName }} {{ fEnemyLvl }}</h1>
-          <img src="@/assets/images.jpg" alt="">
           <div>
             <h1>{{ enemyHp }}</h1>
           </div>
+          <img class="imgenemy" src="@/assets/borg-star-trek-the-next-generation-statula-.jpg" alt="">
+          <h1>{{ fEnemyName }} {{ fEnemyLvl }}</h1>
         </div>
 
       </div>
@@ -81,6 +84,7 @@ import HeroBase from "@/components/HeroBase.vue";
 import InfoBlock from "@/components/InfoBlock.vue";
 import MenuBlock from "@/components/MenuBlock.vue";
 import { switchCase } from "@babel/types";
+//import { ref } from "vue";
 
 export default {
   components: {
@@ -89,7 +93,7 @@ export default {
 
   data() {
     return {
-      goldCount: 0,
+      goldCount: 99999,
       totalGoldCount: 0,
       goldPlus: 1,
       priceGoldMiner: 10,
@@ -136,14 +140,14 @@ export default {
       enemyHp: 200,
       defaultEnemyHP: 200,
       enemyDmg: 10,
-      fEnemyName: "Enemy lvl",
+      fEnemyName: "Enemy level",
       fEnemyLvl: 1,
       isEnemyLife: true,
 
       killCountText: "Enemy kills",
-      levelText: "Hero's level",
+      levelText: "Level",
       critText: "CRIT",
-      totalGoldText: "Total gold",
+      totalGoldText: "Total credits",
       critChanceText: "Crit chance",
       fastkillChanceText: "Fast kill chance",
       totalSpellPointsText: "spell points",
@@ -177,6 +181,10 @@ export default {
       isBomb: false,
       isBufMiners: false,
       isAutoHeal: false,
+      countAutoheal: 0,
+      showAutoheal: false,
+      countBufMiners: 1,
+      showBufMiners: false,
 
       isPause: false,
     }
@@ -325,7 +333,8 @@ export default {
     afterBuyMiner() {
       this.countMiners++;
       this.goldCount -= this.priceGoldMiner;
-      this.goldPlus += this.minerAddGold;
+      /* this.goldPlus += this.minerAddGold; */
+      this.goldPlus = this.countMiners * this.countBufMiners;
       this.priceGoldMiner += 5;
     },
 
@@ -404,41 +413,47 @@ export default {
     },
 
     setChest() {
-      this.chestChance = Math.floor(Math.random() * 3);  // 25% chance 0-3
+      this.chestChance = Math.floor(Math.random() * 2);  // 25% chance 0-3
       if (this.chestChance == 1) {
         this.isChest = true;
         this.isPause = true;
-        this.inChance = Math.floor(Math.random() * 100);
+        this.inChance = Math.floor(Math.random() * 1000);
         // chance 0-99 
         if (this.inChance <= 70) {
-          console.log("GOLD");
           this.chestGold = Math.floor((Math.random() * 99) + 1);
           this.goldCount += this.chestGold;
           this.totalGoldCount += this.chestGold;
           this.isGold = true;
 
         } else if (this.inChance > 70 && this.inChance <= 90) {
-          console.log("UP");
           this.spellPoints++;
           this.totalSpellPoints++;
           this.isPoint = true;
 
         } else if (this.inChance > 90 && this.inChance < 98) {
-          console.log("BOMB");
-          this.countBomb += 1;
+          this.countBomb++;
           this.isBomb = true;
 
-        } else if (this.inChance == 98) {
-          console.log("AUTOHEAL");
+        } else if (this.inChance > 98 && this.inChance < 999) {
           this.isBufMiners = true;
+          this.countBufMiners++;
+          /* this.goldPlus *= 2; */
+          this.goldPlus = this.countMiners * this.countBufMiners;
 
         } else if (this.inChance == 99) {
-          console.log("BUFMINER");
           this.isAutoHeal = true;
-
+          this.countAutoheal++;
+          this.startAutoheal();
         };
       };
     },
+
+    startAutoheal() {
+      if (!this.isPause) {
+        setInterval(() => { this.heroHp += 10; }, 10000);
+      }
+    },
+
     useChest() {
       if (this.isChest) {
         this.isChest = false;
@@ -523,14 +538,14 @@ export default {
       if (!newValue) {
         this.fEnemyName = "Враг ур.";
         this.killCountText = "Врагов повержено";
-        this.levelText = "Уровень героя";
+        this.levelText = "Уровень";
         this.critText = "КРИТ. УРОН";
-        this.totalGoldText = "Всего заработано золота";
+        this.totalGoldText = "Всего заработано кредитов";
         this.critChanceText = "Шанс крита";
         this.fastkillChanceText = "Шанс моментального убийства";
         this.totalSpellPointsText = "очков навыка";
         this.useBombtext = "бобм использовано";
-        this.chestGoldText = "золота!";
+        this.chestGoldText = "кредитов!";
         this.chestSpellText = "оч. навыка!";
         this.chestBombText = "+1 пси-бомба!";
         this.chestBufMinersText = "Уникальная технология: ускоритель майнеров (+100% к заработку)";
@@ -538,16 +553,16 @@ export default {
         this.shieldUsedText = "ЩИТ АКТИВЕН";
         this.fastKillActiveText = "МОМЕНТАЛЬНОЕ УБИЙСТВО";
       } else {
-        this.fEnemyName = "Enemy lvl";
+        this.fEnemyName = "Enemy level";
         this.killCountText = "Enemy kills";
-        this.levelText = "Hero's level";
+        this.levelText = "Level";
         this.critText = "CRIT";
-        this.totalGoldText = "Total gold";
+        this.totalGoldText = "Total credits";
         this.critChanceText = "Crit chance";
         this.fastkillChanceText = "Fast kill chance";
         this.totalSpellPointsText = "spell points";
         this.useBombtext = "bomb used";
-        this.chestGoldText = "gold!";
+        this.chestGoldText = "credits!";
         this.chestSpellText = "spell point!";
         this.chestBombText = "+1 psy-bomb!";
         this.chestBufMinersText = "Unique technology: Accelerator for Miners (+100% to earnings)";
@@ -573,6 +588,10 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: center;
+}
+
+h1 {
+  height: auto;
 }
 
 .gamezone {
@@ -658,11 +677,17 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-bottom: 60px;
 }
 
-img {
+.imghero {
   height: 300px;
   width: 200px;
+}
+
+.imgenemy {
+  height: 290px;
+  width: 180px;
 }
 
 .fail {
@@ -692,7 +717,7 @@ img {
 }
 
 .herobase {
-
+  /*  border-top: 10px double black; */
   /*  border: 2px solid red; */
 }
 

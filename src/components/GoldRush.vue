@@ -1,19 +1,21 @@
 <template>
     <div class="main">
         <div class="row">
-            <div v-show="isVisibleGoldMiner2" class="item"><img src="@/assets/simple_pickaxe.png" alt=""></div>
-            <div class="item"><img src="@/assets/simple_pickaxe.png" alt=""></div>
-            <div v-show="isVisibleGoldMiner1" class="item"><img src="@/assets/simple_pickaxe.png" alt=""></div>
+            <div v-show="isVisibleGoldMiner2" class="item"><img src="@/assets/imagesminer.jpg" alt=""></div>
+            <div class="item"><img src="@/assets/imagesminer.jpg" alt=""></div>
+            <div v-show="isVisibleGoldMiner1" class="item"><img src="@/assets/imagesminer.jpg" alt=""></div>
         </div>
         <div class="row">
-            <div v-show="isVisibleGoldMiner3" class="item"><img src="@/assets/simple_pickaxe.png" alt=""></div>
-            <button @click="setShowItemMenu" class="goldbtn"><img src="@/assets/1987372.png" alt=""></button>
-            <div v-show="isVisibleGoldMiner4" class="item"><img src="@/assets/simple_pickaxe.png" alt=""></div>
+            <div v-show="isVisibleGoldMiner3" class="item"><img src="@/assets/imagesminer.jpg" alt=""></div>
+            <button @click="setShowItemMenu" class="goldbtn"><img class="imgbtn"
+                    src="@/assets/29719-processor-integralnye_mikroshemy-mnogoyadernyj_processor-sinij_cvet-liniya-x750.jpg"
+                    alt=""></button>
+            <div v-show="isVisibleGoldMiner4" class="item"><img src="@/assets/imagesminer.jpg" alt=""></div>
         </div>
         <div class="row">
-            <div v-show="isVisibleGoldMiner5" class="item"><img src="@/assets/simple_pickaxe.png" alt=""></div>
-            <div v-show="isVisibleGoldMiner7" class="item"><img src="@/assets/simple_pickaxe.png" alt=""></div>
-            <div v-show="isVisibleGoldMiner6" class="item"><img src="@/assets/simple_pickaxe.png" alt=""></div>
+            <div v-show="isVisibleGoldMiner5" class="item"><img src="@/assets/imagesminer.jpg" alt=""></div>
+            <div v-show="isVisibleGoldMiner7" class="item"><img src="@/assets/imagesminer.jpg" alt=""></div>
+            <div v-show="isVisibleGoldMiner6" class="item"><img src="@/assets/imagesminer.jpg" alt=""></div>
         </div>
     </div>
 </template>
@@ -42,7 +44,7 @@ export default {
         }
     },
     watch: {
-        countMiners(newValue) {          
+        countMiners(newValue) {
             switch (newValue) {
                 case 2:
                     this.isVisibleGoldMiner1 = true;
@@ -98,11 +100,17 @@ export default {
     flex-direction: column;
     width: 150px;
     height: 150px;
+    border: 5px dotted black;
 }
 
 img {
     border-radius: 100px;
     width: 50px;
     height: 50px;
+}
+
+.imgbtn {
+    width: 43px;
+    height: 45px;
 }
 </style>

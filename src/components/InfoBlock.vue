@@ -73,13 +73,16 @@
 
             <h1>Items: </h1>
             <div class="spellbtn">
-                <button class="spell">
-                    <h1 class="noitm">?</h1>
+                <button style="background: none; border: 1px solid black;" class="spell">
+                    <h1 v-show="countAutoheal === 0" class="noitm">?</h1>
+                    <h4 v-show="countAutoheal > 0">AUTOHEAL <br><br> [{{ countAutoheal }}]</h4>
                 </button>
-                <button class="spell">
-                    <h1 class="noitm">?</h1>
+                <button style="background: none; border: 1px solid black;" class="spell">
+                    <h1 v-show="countBufMiners === 1" class="noitm">?</h1>
+                    <h4 v-show="countBufMiners > 1">UPGRADE MINERS <br><br> [{{ countBufMiners - 1 }}]</h4>
                 </button>
-                <button class="spell" v-bind:class="{ isnotbomb: isNotBomb }" @click="useBomb">Use Bomb <br><br> Have
+                <button class="spell" style="border: 1px solid black;" v-bind:class="{ isnotbomb: isNotBomb }"
+                    @click="useBomb">Use Bomb <br><br> Have
                     {{ countBomb }} </button>
             </div>
 
@@ -112,22 +115,22 @@ export default {
             isCanBuyBomb: false,
             isNotBomb: true,
 
-            goldText: "Gold",
+            goldText: "Credits",
             hpText: "HP",
             damageText: "Damage",
             armorText: "Armor",
-            buyMinerText: "Buy Miner for",
-            buildForgeText: "Build Forge for",
+            buyMinerText: "Buy Miner-Modul for",
+            buildForgeText: "Hire an engineer",
             upDmgText: "Up Damage for",
             upArmorText: "Up Armor for",
-            forgeText: "Forge",
-            goldrushText: "Gold Rush",
+            forgeText: "Support Engineer",
+            goldrushText: "Mining sistem",
             enemyText: "Enemy Dmg",
-            tavernText: "Tavern",
+            tavernText: "Supply base",
             healingText: "Healing for",
             speedText: "Up atackSpeed for",
             shieldText: "Upgrade shield for",
-            buyTavernText: "Build tavern for",
+            buyTavernText: "Order Express Delivery Ways",
 
             spellsText: "Hero's spells",
             useShieldText: "Use shield",
@@ -155,6 +158,8 @@ export default {
         spellPoints: Number,
         bombPrice: Number,
         countBomb: Number,
+        countAutoheal: Number,
+        countBufMiners: Number,
         isItemMenu: {
             type: Boolean,
         },
@@ -196,8 +201,8 @@ export default {
         buyGoldMiner() {
             if (this.goldCount >= this.priceGoldMiner) {
                 this.$emit('afterBuyMiner');
+                this.countBuyMiners++;
             };
-            this.countBuyMiners++;
             if (this.countBuyMiners == 7) {
                 document.getElementById('btnbuyminer').setAttribute('disabled', true);
             }
@@ -293,44 +298,44 @@ export default {
 
         isEng(newValue) {
             if (!newValue) {
-                this.goldText = "Золото";
+                this.goldText = "Кредиты";
                 this.hpText = "Здоровье";
                 this.damageText = "Урон";
                 this.armorText = "Броня";
-                this.forgeText = "Кузница";
+                this.forgeText = "Инженер поддержки";
                 this.upArmorText = "Улучшить броню за";
                 this.upDmgText = "Улучшить урон за";
-                this.buildForgeText = "Построить кузницу за";
-                this.buyMinerText = "Нанять шахтера за";
-                this.goldrushText = "Золотой рудник";
+                this.buildForgeText = "Нанять инженера за";
+                this.buyMinerText = "Купить модуль для майнинга за";
+                this.goldrushText = "Система майнинга";
                 this.enemyText = "Урон противника";
-                this.tavernText = "Таверна";
+                this.tavernText = "База снабжения";
                 this.healingText = "Восстановить здоровье за";
                 this.speedText = "Повысить скорость атаки за";
                 this.shieldText = "Улучшить щит за";
-                this.buyTavernText = "Построить таверну за";
+                this.buyTavernText = "Заказать пути срочной доставки за";
                 this.spellsText = "Способности героя";
                 this.useShieldText = "Использовать щит";
                 this.upCritChanceText = "Увеличить шанс крит.удара за 1 оч. навыка";
                 this.spellPointsText = "Очки навыков";
                 this.oneShotKillText = "Увеличить шанс моментального убийства за 1 оч. навыка";
             } else {
-                this.goldText = "Gold";
+                this.goldText = "Credits";
                 this.hpText = "HP";
                 this.damageText = "Damage";
                 this.armorText = "Armor";
-                this.forgeText = "Forge";
+                this.forgeText = "Support Engineer";
                 this.upArmorText = "Up Armor for";
                 this.upDmgText = "Up Damage for";
-                this.buildForgeText = "Build Forge for";
-                this.buyMinerText = "Buy Miner for";
-                this.goldrushText = "Gold Rush";
+                this.buildForgeText = "Hire an engineer";
+                this.buyMinerText = "Buy Miner-Modul for";
+                this.goldrushText = "Mining sistem";
                 this.enemyText = "Enemy Dmg";
-                this.tavernText = "Tavern";
+                this.tavernText = "Supply base";
                 this.healingText = "Healing for";
                 this.speedText = "Up atackSpeed for";
                 this.shieldText = "Upgrade shield for";
-                this.buyTavernText = "Build tavern for";
+                this.buyTavernText = "Order Express Delivery Ways";
                 this.spellsText = "Hero's spells";
                 this.useShieldText = "Use shield";
                 this.upCritChanceText = "Up crit-chance for 1 point";
