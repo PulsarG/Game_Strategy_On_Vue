@@ -102,12 +102,18 @@
                 </p>
             </div>
 
-            <div class="ladder" v-show="!isLadder">
+            <div class="ladder" id="laddertab" v-show="!isLadder">
                 <table>
-                    <th>Nick</th>
-                    <th>Score</th>
-                    <th>Kills</th>
-                    <tr v-for="user in users" :key="user">
+                    <th>
+                        NICK
+                    </th>
+                    <th @click="sortByScore">
+                        <button style="width: 50px">Score</button>
+                    </th>
+                    <th @click="moreSort">
+                        <button style="width: 50px">KILLS</button>
+                    </th>
+                    <tr v-for="user in users" :key="user.nick">
                         <td>{{ user.nick }}</td>
                         <td>{{ user.heroHp }}</td>
                         <td>{{ user.heroDmg }}</td>
@@ -163,7 +169,7 @@ export default {
     data() {
         return {
             msg: "",
-            reports: [],
+
             startBtn: "Start game",
             lang: "RUS",
             menuText: "Evans. Autho-shoot game",
@@ -219,7 +225,13 @@ export default {
                         }
                     });
                 this.countOpenLadder++;
+                this.users.sort((a, b) => b.heroHp - a.heroHp);
             }
+
+        },
+
+        sortByScore() {
+            this.users.sort((a, b) => b.heroHp - a.heroHp);
         },
 
         sendMsg() {
