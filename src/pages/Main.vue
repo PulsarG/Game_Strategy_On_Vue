@@ -9,23 +9,24 @@
       :heroHp="heroHp" :shieldTimeSec="shieldTimeSec" :healingPrice="healingPrice" :isTavernBuy="isTavernBuy"
       :bombPrice="bombPrice" @buyBomb="buyBomb" :enemyDmg="enemyDmg" :heroArmor="heroArmor" @useBomb="useBomb"
       :countBomb="countBomb" :useShieldPrice="useShieldPrice" @setUseShield="setUseShield" @upCrit="upCrit"
-      :countBufMiners="countBufMiners" :countAutoheal="countAutoheal" @useKill="useKill" class="infoblock"
-      ref="infoblock" />
+      :turretPrice="turretPrice" @useTurret="useTurret" :countBufMiners="countBufMiners" :countAutoheal="countAutoheal"
+      @useKill="useKill" class="infoblock" ref="infoblock" />
 
 
     <div v-show="isFail" class="fail">
       <h1>----------</h1>
       <h1>YOU DIED</h1>
       <h1>----------</h1>
-      <h1> {{ killCountText }}: {{ killCount }}</h1>
-      <h1> {{ levelText }}: {{ heroLvl }} </h1>
-      <h1> {{ totalGoldText }}: {{ totalGoldCount }}</h1>
-      <h1> {{ critChanceText }}: {{ chanceCrit }}%</h1>
-      <h1> {{ fastkillChanceText }}: {{ fastKillChance }}%</h1>
-      <h1>{{ totalSpellPoints }} {{ totalSpellPointsText }}</h1>*
-      <h1 v-if="countUseBomb > 0"> {{ countUseBomb }} {{ useBombText }}</h1>
-      <h1 v-if="countAutoheal > 0">x{{ countAutoheal }} mod autoheal</h1>
-      <h1 v-if="countBufMiners > 1">x{{ countBufMiners - 1 }} mod miners</h1>
+      <h3> {{ killCountText }}: {{ killCount }}</h3>
+      <h3> {{ levelText }}: {{ heroLvl }} </h3>
+      <h3> {{ totalGoldText }}: {{ totalGoldCount }}</h3>
+      <h3> {{ critChanceText }}: {{ chanceCrit }}%</h3>
+      <h3>{{ fastkillChanceText }}: {{ fastKillChance }}%</h3>
+      <h3>{{ totalSpellPoints }} {{ totalSpellPointsText }}</h3>
+      <h3 v-if="countTurrets > 0">Use turret {{ countTurrets }}</h3>
+      <h3 v-if="countUseBomb > 0"> {{ countUseBomb }} {{ useBombText }}</h3>
+      <h3 v-if="countAutoheal > 0">x{{ countAutoheal }} mod autoheal</h3>
+      <h3 v-if="countBufMiners > 1">x{{ countBufMiners - 1 }} mod miners</h3>
     </div>
 
     <div v-show="!isFail" class="field">
@@ -57,8 +58,10 @@
           <h1>{{ levelText }} {{ heroLvl }}</h1>
         </div>
 
+        <h1 class="crit" v-show="chanceCritAfterShield" style="color: red;">ENEMY CRIT</h1>
         <h1 class="crit" v-show="isCrit">{{ critText }}</h1>
         <h1 class="crit" v-show="isFastKill">{{ fastKillActiveText }}</h1>
+        <h1 class="crit" v-show="isTurretUse">TURRET <br> {{ turretHp }}</h1>
 
         <div v-show="isEnemyLife" class="enemy">
           <div>
@@ -110,6 +113,7 @@ export default {
       shieldTimeSec: 5,
       bombPrice: 5000,
       countUseBomb: 0,
+      turretPrice: 500,
 
       heroHp: 1800,
       heroDmg: 100,
@@ -124,6 +128,10 @@ export default {
       countBomb: 0,
       fastKillChance: 1,
       rollChanceFastKill: 0,
+
+      turretHp: 300,
+      turretDmg: 100,
+      defaultTurretHp: 300,
 
       isSpellPoints: false,
 
@@ -143,6 +151,8 @@ export default {
       fEnemyName: "Enemy level",
       fEnemyLvl: 1,
       isEnemyLife: true,
+      chanceCritAfterShield: false,
+      rollChanceCritAfterShield: 0,
 
       killCountText: "Enemy kills",
       levelText: "Level",
@@ -151,7 +161,7 @@ export default {
       critChanceText: "Crit chance",
       fastkillChanceText: "Fast kill chance",
       totalSpellPointsText: "spell points",
-      useBombtext: "bomb used",
+      useBombText: "bomb used",
       chestGoldText: "gold!",
       chestSpellText: "spell point!",
       chestBombText: "+1 psy-bomb!",
@@ -185,6 +195,8 @@ export default {
       showAutoheal: false,
       countBufMiners: 1,
       showBufMiners: false,
+      isTurretUse: false,
+      countTurrets: 0,
 
       isPause: false,
     }
@@ -290,7 +302,17 @@ export default {
         }
       }, 1000);
 
-      setInterval(() => { if (!this.isFail && !this.isPause && !this.isShield) { this.heroHp -= (this.enemyDmg - this.heroArmor); } }, 2000);
+      setInterval(() => {
+        if (!this.isFail && !this.isPause && !this.isShield && !this.isTurretUse) {
+          if (this.chanceCritAfterShield) {
+            this.heroHp -= (this.enemyDmg - this.heroArmor);
+            console.log("CRIIIIIT");
+          }
+          this.heroHp -= (this.enemyDmg - this.heroArmor);
+        }
+      }, 2000);
+
+      setInterval(() => { if (!this.isFail && !this.isPause && this.isTurretUse) { this.turretHp -= this.enemyDmg; } }, 2000);
 
       setInterval(() => { if (!this.isFail && !this.isPause) { this.enemyDmg += 5 } }, 10000);
 
@@ -384,13 +406,22 @@ export default {
 
     setUseShield() {
       this.isShield = true;
+      this.rollChanceCritAfterShield = Math.floor(Math.random() * 2);
       setTimeout(() => { this.isShield = false; }, this.shieldTime);
+
+      setTimeout(() => {
+        if (this.rollChanceCritAfterShield == 1) {
+          this.chanceCritAfterShield = true;
+          setTimeout(() => { this.chanceCritAfterShield = false; this.rollChanceCritAfterShield = 0;}, 2000);
+        }
+      }, this.shieldTime);
       this.useShieldPrice += 100;
     },
     upShield() {
       this.shieldPrice += 50;
       this.shieldTime += 5000;
       this.shieldTimeSec += 5;
+
     },
 
     healUp() {
@@ -488,6 +519,24 @@ export default {
       this.enemyHp = 0;
       this.isFastKill = true;
       setTimeout(() => { this.isFastKill = false; }, 1000);
+    },
+
+    useTurret() {
+      this.isTurretUse = true;
+      this.turretHp = this.defaultTurretHp;
+      this.countTurrets++;
+      let turretDamage = setInterval(() => {
+
+        if (this.isTurretUse && !this.isPause) {
+          this.enemyHp -= this.turretDmg;
+          console.log("turret");
+
+          if (this.turretHp <= 0) {
+            this.isTurretUse = false;
+            clearInterval(turretDamage);
+          }
+        }
+      }, 1000);
     },
 
   },

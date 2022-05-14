@@ -3,9 +3,9 @@
         <div class="menu">
             <p style="margin-bottom: 3px;"><strong>{{ menuText }}</strong><br>ALFA TEST / ver 0.15</p>
             <div class="menubtns">
-                <button class="mbtn" @click="setLearn">Learn</button>
-                <button class="mbtn" @click="setLor">LOR</button>
-                <button class="mbtn" @click="setLadder">Ladder</button>
+                <button class="mbtn" @click="setLearn">{{ learnText }}</button>
+                <button class="mbtn" @click="setLor">{{ lorText }}</button>
+                <button class="mbtn" @click="setLadder">{{ ladderText }}</button>
             </div>
         </div>
 
@@ -116,10 +116,12 @@
             </div>
 
             <div class="about" v-show="!isAbout">
-                <form @submit.prevent>
-                    <textarea class="reporttext" :v-model="msg" name="" id="" cols="30" rows="10">Report</textarea>
-                    <input class="reportemail" type="email">
-                    <!-- <input :value="report" @input="report = $event.target.value" type="text" name="" id=""> -->
+                <form class="report" @submit.prevent>
+                    <h4>Обратная звязь</h4>
+                    <textarea style="max-width: 300px; min-width: 100px; max-height: 500px; min-height: 100px;" class="reporttext" cols="30"
+                        rows="10">{{ inreportText }}</textarea>
+                    <input style="width: 220px" class="reportemail" type="email"
+                        placeholder="Email (necessarily / обязательно)">
                     <button id="repbtn" type="submit" @click="sendMsg">Send</button>
                 </form>
             </div>
@@ -165,9 +167,15 @@ export default {
             lang: "RUS",
             menuText: "Evans. Autho-shoot game",
             aboutText: "About",
+            inreportText: "Bug report or other message",
+            urEmailText: "You'r Email (necessarily)",
 
             ruStart: "Начать игру",
             enStart: "Start game",
+
+            learnText: "Learn",
+            lorText: "LOR",
+            ladderText: "Ladder",
 
             enLang: "ENG",
             ruLang: "RUS",
@@ -200,7 +208,7 @@ export default {
                         Subject: "This is the subject",
                         Body: msg.value
                     }).then(
-                        message => alert(message)
+                        alert("Сообщение отправлено / Message sent")
                     );
                 })
                 .catch(() => {
@@ -226,6 +234,10 @@ export default {
                 this.stopBtnText = "Resset";
                 this.pauseText = "Pause";
                 this.aboutText = "About";
+                this.learnText = "Learn";
+                this.lorText = "LOR";
+                this.ladderText = "Ladder";
+                this.inreportText = "Bug report or other message";
             } else {
                 this.startBtn = this.ruStart;
                 this.menuText = "Evans. Autho-shoot game";
@@ -234,6 +246,10 @@ export default {
                 this.stopBtnText = "Заново";
                 this.pauseText = "Пауза";
                 this.aboutText = "Инфо";
+                this.learnText = "Обучение";
+                this.lorText = "ЛОР";
+                this.ladderText = "Ладдер";
+                this.inreportText = "Ваше сообщение или баг-репорт";
             }
         },
         setLearn() {
@@ -414,5 +430,19 @@ p {
     justify-self: flex-end;
     flex-direction: column;
     align-items: center;
+}
+
+.about {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.report {
+    /*  border: 1px solid red; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
 }
 </style>

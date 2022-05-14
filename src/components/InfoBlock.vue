@@ -28,6 +28,7 @@
             </button>
             <button class="fbtn" v-bind:class="{ active: isForgeBuy }" @click="upArmor">{{ upArmorText }}
                 {{ priceArmorUp }}</button>
+            <button class="fbtn" v-bind:class="{ active: isForgeBuy }" @click="useTurret">Поставить туррель</button>
         </div>
 
         <div v-show="isTavernOpen" class="tavern">
@@ -55,9 +56,8 @@
 
             <!-- <button @click="setShield" class="btnfd">{{ useShieldText }} {{ shieldTimeSec }} sec for {{ useShieldPrice }} gold</button> -->
             <div class="spellbtn">
-                <button @click="setShield" class="spell">{{ useShieldText }} {{ shieldTimeSec }} sec for {{
-                        useShieldPrice
-                }} gold</button>
+                <button @click="" class="spell" v-bind:class="{ nospell: isNoSpellPoint }">Up engineer skill for up
+                    turret's damage</button>
                 <button @click="upCrit" class="spell" v-bind:class="{ nospell: isNoSpellPoint }">
                     {{ upCritChanceText }} <br> <br>
                     [{{ countUpCrit }}]
@@ -73,6 +73,9 @@
 
             <h1>Items: </h1>
             <div class="spellbtn">
+                <button @click="setShield" class="spell">{{ useShieldText }} {{ shieldTimeSec }} sec for {{
+                        useShieldPrice
+                }} gold</button>
                 <button style="background: none; border: 1px solid black;" class="spell">
                     <h1 v-show="countAutoheal === 0" class="noitm">?</h1>
                     <h4 v-show="countAutoheal > 0">AUTOHEAL <br><br> [{{ countAutoheal }}]</h4>
@@ -160,6 +163,7 @@ export default {
         countBomb: Number,
         countAutoheal: Number,
         countBufMiners: Number,
+        turretPrice: Number,
         isItemMenu: {
             type: Boolean,
         },
@@ -260,6 +264,12 @@ export default {
             if (this.spellPoints >= 1) {
                 this.$emit('useKill');
                 this.countUpFastKill++;
+            }
+        },
+
+        useTurret() {
+            if (this.goldCount >= this.turretPrice) {
+                this.$emit('useTurret');
             }
         },
 
