@@ -3,6 +3,7 @@ import router from '@/router/router';
 import App from '@/App.vue';
 import { initializeApp } from "firebase/app";
 import LoadScript from 'vue-plugin-load-script';
+
 const aps = createApp(App)
 
 aps.use(router).use(LoadScript);
@@ -16,5 +17,6 @@ const firebaseConfig = {
     messagingSenderId: "708542517274",
     appId: "1:708542517274:web:9a996cbe7083da743641a3"
 };
+
 
 const app = initializeApp(firebaseConfig);

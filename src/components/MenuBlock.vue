@@ -5,7 +5,7 @@
             <div class="menubtns">
                 <button class="mbtn" @click="setLearn">{{ learnText }}</button>
                 <button class="mbtn" @click="setLor">{{ lorText }}</button>
-                <button class="mbtn" @click="setLadder">{{ ladderText }}</button>
+                <button class="mbtn" @click="goLadderFuncs">{{ ladderText }}</button>
             </div>
         </div>
 
@@ -105,12 +105,12 @@
             <div class="ladder" v-show="!isLadder">
                 <table>
                     <th>Nick</th>
-                    <th>Hero lvl</th>
+                    <th>Score</th>
                     <th>Kills</th>
-                    <tr>
-                        <td>Admin</td>
-                        <td>over9000</td>
-                        <td>over9000</td>
+                    <tr v-for="user in users" :key="user">
+                        <td>{{ user.nick }}</td>
+                        <td>{{ user.heroHp }}</td>
+                        <td>{{ user.heroDmg }}</td>
                     </tr>
                 </table>
             </div>
@@ -118,8 +118,8 @@
             <div class="about" v-show="!isAbout">
                 <form class="report" @submit.prevent>
                     <h4>Обратная звязь</h4>
-                    <textarea style="max-width: 300px; min-width: 100px; max-height: 500px; min-height: 100px;" class="reporttext" cols="30"
-                        rows="10">{{ inreportText }}</textarea>
+                    <textarea style="max-width: 300px; min-width: 100px; max-height: 500px; min-height: 100px;"
+                        class="reporttext" cols="30" rows="10">{{ inreportText }}</textarea>
                     <input style="width: 220px" class="reportemail" type="email"
                         placeholder="Email (necessarily / обязательно)">
                     <button id="repbtn" type="submit" @click="sendMsg">Send</button>
@@ -150,14 +150,15 @@
 </template>
 
 <script>
+import axios from "axios";
 
 export default {
-
     name: 'menu-block',
     props: {
         isEng: {
             type: Boolean
-        }
+        },
+
     },
     data() {
         return {
@@ -192,10 +193,35 @@ export default {
             pauseText: "Pause",
 
             report: '',
+
+            users: [],
+            countOpenLadder: 0,
         }
     },
 
     methods: {
+        goLadderFuncs() {
+            this.getFromApi();
+            this.setLadder();
+        },
+
+        async getFromApi() {
+            if (this.countOpenLadder == 0) {
+                axios.get("https://testgame-59bd1-default-rtdb.europe-west1.firebasedatabase.app/ladder.json")
+                    .then((response) => {
+                        let array = [];
+                        for (var i in response.data)
+                            array.push([i, response.data[i]]);
+                        let j = array.length;
+
+                        for (let i = 0; i < j; i++) {
+                            this.users.push(array[i][1]);
+                        }
+                    });
+                this.countOpenLadder++;
+            }
+        },
+
         sendMsg() {
             const msg = document.querySelector('.reporttext');
             const emailfrom = document.querySelector('.reportemail');

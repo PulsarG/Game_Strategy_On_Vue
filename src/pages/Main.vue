@@ -63,6 +63,8 @@
         <h1 class="crit" v-show="isFastKill">{{ fastKillActiveText }}</h1>
         <h1 class="crit" v-show="isTurretUse">TURRET <br> {{ turretHp }}</h1>
 
+        <button @click="sendToApi" style="height: 50px;">POST</button>     <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+
         <div v-show="isEnemyLife" class="enemy">
           <div>
             <h1>{{ enemyHp }}</h1>
@@ -86,8 +88,9 @@
 import HeroBase from "@/components/HeroBase.vue";
 import InfoBlock from "@/components/InfoBlock.vue";
 import MenuBlock from "@/components/MenuBlock.vue";
-import { switchCase } from "@babel/types";
+import { assertExpressionStatement, switchCase } from "@babel/types";
 //import { ref } from "vue";
+import axios from "axios";
 
 export default {
   components: {
@@ -199,10 +202,36 @@ export default {
       countTurrets: 0,
 
       isPause: false,
+
+      user: "cheater",
+      users: [],
     }
   },
 
   methods: {
+    async getToApi() {
+      /*  axios.get("https://testgame-59bd1-default-rtdb.europe-west1.firebasedatabase.app/ladder.json")
+         .then((response) => {
+           let array = [];
+           for (var i in response.data)
+             array.push([i, response.data[i]]);
+           let j = array.length;
+ 
+           for (let i = 0; i < j; i++) {
+             this.users.push(array[i][1]);
+           }
+         }) */
+    },
+
+    async sendToApi() {
+      await axios.post("https://testgame-59bd1-default-rtdb.europe-west1.firebasedatabase.app/ladder.json", {
+        nick: this.user,
+        heroHp: this.heroHp,
+        heroDmg: this.heroDmg,
+      });
+    },
+
+
     toStartGame() {
       setInterval(() => {
         if (!this.isFail && !this.isPause) {
@@ -412,7 +441,7 @@ export default {
       setTimeout(() => {
         if (this.rollChanceCritAfterShield == 1) {
           this.chanceCritAfterShield = true;
-          setTimeout(() => { this.chanceCritAfterShield = false; this.rollChanceCritAfterShield = 0;}, 2000);
+          setTimeout(() => { this.chanceCritAfterShield = false; this.rollChanceCritAfterShield = 0; }, 2000);
         }
       }, this.shieldTime);
       this.useShieldPrice += 100;
