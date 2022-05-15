@@ -1,7 +1,7 @@
 <template>
     <div class="allmenu">
         <div class="menu">
-            <p style="margin-bottom: 3px;"><strong>{{ menuText }}</strong><br>ALFA TEST / ver 0.15</p>
+            <p style="margin-bottom: 3px;"><strong>{{ menuText }}</strong><br>ver 0.21 Alpha test</p>
             <div class="menubtns">
                 <button class="mbtn" @click="setLearn">{{ learnText }}</button>
                 <button class="mbtn" @click="setLor">{{ lorText }}</button>
@@ -110,13 +110,17 @@
                     <th @click="sortByScore">
                         <button style="width: 100px">Score</button>
                     </th>
-                    <th @click="moreSort">
-                        <button style="width: 100px">KILLS</button>
+                    <th @click="sortByLevel">
+                        <button style="width: 100px">Level</button>
+                    </th>
+                    <th @click="sortByKills">
+                        <button style="width: 100px">Kills</button>
                     </th>
                     <tr v-for="user in users" :key="user.id">
                         <td>{{ user.nick }}</td>
-                        <td>{{ user.heroHp }}</td>
-                        <td>{{ user.heroDmg }}</td>
+                        <td>{{ user.score }}</td>
+                        <td>{{ user.level }}</td>
+                        <td>{{ user.kills }}</td>
                     </tr>
                 </table>
             </div>
@@ -137,11 +141,14 @@
 
         <div class="botbtn">
 
-            <div class="btn">
+            <div class="btn" style="margin-bottom: 3px;">
                 <button class="btnstart" v-bind:class="{ deletestart: isStart }" @click="toStartGame">{{ startBtn
                 }}</button>
                 <div class="btnstop" id="btnstop">
-                    <button class="rpbtns" @click="setPause">{{ pauseText }}</button>
+                    <button class="rpbtns" @click="useAutogame"
+                        v-bind:class="{ btnautog: isAutogame }">Autogame</button>
+                    <button class="rpbtns" @click="setPause" v-bind:class="{ btnautog: isPause }">{{ pauseText
+                    }}</button>
                     <form action=""><button class="rpbtns">{{ stopBtnText }}</button></form>
                 </div>
             </div>
@@ -166,6 +173,7 @@ export default {
         isEng: {
             type: Boolean
         },
+        isPause: Boolean,
 
     },
     data() {
@@ -197,6 +205,7 @@ export default {
             isHideLor: true,
             isAbout: true,
             hideText: "Hide/Show learn",
+            isAutogame: false,
 
             stopBtnText: "Resset",
             pauseText: "Pause",
@@ -233,7 +242,13 @@ export default {
         },
 
         sortByScore() {
-            this.users.sort((a, b) => b.heroHp - a.heroHp);
+            this.users.sort((a, b) => b.score - a.score);
+        },
+        sortByLevel() {
+            this.users.sort((a, b) => b.level - a.level);
+        },
+        sortByKills() {
+            this.users.sort((a, b) => b.kills - a.kills);
         },
 
         sendMsg() {
@@ -254,6 +269,15 @@ export default {
                 .catch(() => {
                     // Failed to fetch script
                 });
+        },
+
+        useAutogame() {
+            this.$emit('useAutogame');
+            if (this.isAutogame) {
+                this.isAutogame = false;
+            } else {
+                this.isAutogame = true;
+            }
         },
 
 
@@ -433,12 +457,12 @@ export default {
 }
 
 .btnstop {
-    height: 100px;
+    height: auto;
     width: auto;
     /* border: 1px solid red; */
     display: none;
-    position: relative;
-    bottom: 0;
+    /*  position: relative;
+    bottom: 0; */
     margin-bottom: 10px;
 }
 
@@ -470,6 +494,7 @@ p {
     justify-self: flex-end;
     flex-direction: column;
     align-items: center;
+    height: auto;
 }
 
 .about {
@@ -498,5 +523,9 @@ table tr td:first-child::before {
     content: counter(rowNumber);
     min-width: 1em;
     margin-right: 0.5em;
+}
+
+.btnautog {
+    background-color: darkturquoise;
 }
 </style>

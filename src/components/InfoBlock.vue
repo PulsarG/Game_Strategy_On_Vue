@@ -9,6 +9,10 @@
             <h2>{{ enemyText }}: {{ enemyDmg }}</h2>
         </div>
 
+        <div>
+            <h2>{{ scorePoints }}</h2>
+        </div>
+
         <div v-show="isItemMenu" class="itemmenu">
             <div class="htext">
                 <h1 class="hitemmenu">{{ goldrushText }}</h1>
@@ -164,6 +168,7 @@ export default {
         countAutoheal: Number,
         countBufMiners: Number,
         turretPrice: Number,
+        scorePoints: Number,
         isItemMenu: {
             type: Boolean,
         },

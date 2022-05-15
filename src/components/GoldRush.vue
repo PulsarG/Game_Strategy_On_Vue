@@ -1,21 +1,21 @@
 <template>
-    <div class="main">
+    <div class="main" v-bind:class="{buf: bufMiners}">
         <div class="row">
-            <div v-show="isVisibleGoldMiner2" class="item"><img src="@/assets/imagesminer.jpg" alt=""></div>
-            <div class="item"><img src="@/assets/imagesminer.jpg" alt=""></div>
-            <div v-show="isVisibleGoldMiner1" class="item"><img src="@/assets/imagesminer.jpg" alt=""></div>
+            <div v-show="isVisibleGoldMiner2" class="item"><img src="@/assets/cheap.png" alt=""></div>
+            <div class="item"><img src="@/assets/cheap.png" alt=""></div>
+            <div v-show="isVisibleGoldMiner1" class="item"><img src="@/assets/cheap.png" alt=""></div>
         </div>
         <div class="row">
-            <div v-show="isVisibleGoldMiner3" class="item"><img src="@/assets/imagesminer.jpg" alt=""></div>
+            <div v-show="isVisibleGoldMiner3" class="item"><img src="@/assets/cheap.png" alt=""></div>
             <button @click="setShowItemMenu" class="goldbtn"><img class="imgbtn"
                     src="@/assets/29719-processor-integralnye_mikroshemy-mnogoyadernyj_processor-sinij_cvet-liniya-x750.jpg"
                     alt=""></button>
-            <div v-show="isVisibleGoldMiner4" class="item"><img src="@/assets/imagesminer.jpg" alt=""></div>
+            <div v-show="isVisibleGoldMiner4" class="item"><img src="@/assets/cheap.png" alt=""></div>
         </div>
         <div class="row">
-            <div v-show="isVisibleGoldMiner5" class="item"><img src="@/assets/imagesminer.jpg" alt=""></div>
-            <div v-show="isVisibleGoldMiner7" class="item"><img src="@/assets/imagesminer.jpg" alt=""></div>
-            <div v-show="isVisibleGoldMiner6" class="item"><img src="@/assets/imagesminer.jpg" alt=""></div>
+            <div v-show="isVisibleGoldMiner5" class="item"><img src="@/assets/cheap.png" alt=""></div>
+            <div v-show="isVisibleGoldMiner7" class="item"><img src="@/assets/cheap.png" alt=""></div>
+            <div v-show="isVisibleGoldMiner6" class="item"><img src="@/assets/cheap.png" alt=""></div>
         </div>
     </div>
 </template>
@@ -25,6 +25,7 @@ export default {
     name: 'gold-rush',
     props: {
         countMiners: Number,
+        bufMiners: Boolean,
     },
     data() {
         return {
@@ -112,5 +113,9 @@ img {
 .imgbtn {
     width: 43px;
     height: 45px;
+}
+
+.buf {
+    border-color: orangered;
 }
 </style>

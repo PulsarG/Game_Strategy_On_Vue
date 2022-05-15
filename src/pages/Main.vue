@@ -10,7 +10,7 @@
       :bombPrice="bombPrice" @buyBomb="buyBomb" :enemyDmg="enemyDmg" :heroArmor="heroArmor" @useBomb="useBomb"
       :countBomb="countBomb" :useShieldPrice="useShieldPrice" @setUseShield="setUseShield" @upCrit="upCrit"
       :turretPrice="turretPrice" @useTurret="useTurret" :countBufMiners="countBufMiners" :countAutoheal="countAutoheal"
-      @useKill="useKill" class="infoblock" ref="infoblock" />
+      @useKill="useKill" class="infoblock" ref="infoblock" :scorePoints="scorePoints" />
 
 
     <div v-show="isFail" class="fail">
@@ -51,10 +51,8 @@
         </div>
       </div>
 
-
       <div class="gamezone" id="gamezone">
 
-        <h2>Score: {{ heroExp }}</h2>
         <div class="hero">
 
           <h1 v-show="isShield">{{ shieldUsedText }}</h1>
@@ -82,10 +80,11 @@
 
       <hero-base @setShowItemMenu="setShowItemMenu" @setOpenTavern="setOpenTavern" :isTavernBuy="isTavernBuy"
         @setShowForgeMenu="setShowForgeMenu" :isForgeBuy="isForgeBuy" class="herobase" ref="herobase"
-        :countMiners="countMiners" />
+        :countMiners="countMiners" :bufMiners="bufMiners" />
 
     </div>
-    <menu-block @toStartGame="toStartGame" class="menublock" :isEng="isEng" @setLang="setLang" @setPause="setPause" />
+    <menu-block @toStartGame="toStartGame" class="menublock" :isEng="isEng" @setLang="setLang" @setPause="setPause"
+      @useAutogame="setAutogame" :isPause="isPause" />
   </div>
 </template>
 
@@ -132,7 +131,7 @@ export default {
       killCount: 0,
       heroLvl: 1,
       critChance: 0,
-      chanceCrit: 10,
+      chanceCrit: 5,
       spellPoints: 0,
       totalSpellPoints: 0,
       countBomb: 0,
@@ -207,9 +206,10 @@ export default {
       showBufMiners: false,
       isTurretUse: false,
       countTurrets: 0,
+      bufMiners: false,
 
       isPause: false,
-      isAutoGame: true,
+      isAutoGame: false,
 
       user: "",
       users: [],
@@ -423,7 +423,7 @@ export default {
     },
 
     upCrit() {
-      this.chanceCrit += 5;
+      this.chanceCrit += 3;
       this.spellPoints -= 1;
     },
 
@@ -539,13 +539,23 @@ export default {
         this.isPause = true;
       } else {
         this.isPause = false;
+        this.useChest();
       }
+    },
+
+    setAutogame() {
+      if (!this.isAutoGame) {
+        this.isAutoGame = true;
+      }
+      else { this.isAutoGame = false };
     },
 
     setChest() {
       this.chestChance = Math.floor(Math.random() * 2);  // 25% chance 0-3
+
       if (this.chestChance == 1) {
         this.isChest = true;
+
         this.isPause = true;
 
         this.inChance = Math.floor(Math.random() * 100);
@@ -556,17 +566,18 @@ export default {
           this.totalGoldCount += this.chestGold;
           this.isGold = true;
 
-        } else if (this.inChance > 70 && this.inChance <= 90) {
-          this.spellPoints++;
-          this.totalSpellPoints++;
-          this.isPoint = true;
-
-        } else if (this.inChance > 90 && this.inChance < 98) {
-          this.countBomb++;
-          this.isBomb = true;
+          } else if (this.inChance > 70 && this.inChance <= 90) {
+            this.spellPoints++;
+            this.totalSpellPoints++;
+            this.isPoint = true;
+  
+          } else if (this.inChance > 90 && this.inChance < 98) {
+            this.countBomb++;
+            this.isBomb = true;
 
         } else if (this.inChance == 98) {
           this.isBufMiners = true;
+          this.bufMiners = true;
           this.countBufMiners++;
           /* this.goldPlus *= 2; */
           this.goldPlus = this.countMiners * this.countBufMiners;
@@ -576,7 +587,14 @@ export default {
           this.countAutoheal++;
           this.startAutoheal();
         };
+
+        this.autoUseChest();
       };
+    },
+
+    autoUseChest() {
+      if (this.isAutoGame)
+        setTimeout(() => { this.useChest(); console.log("autoUseChest") }, 1000);
     },
 
     startAutoheal() {
@@ -671,9 +689,8 @@ export default {
       }
     },
 
-    heroLvl(newValue) {
-      let b = newValue % 2;
-      if (b != 0) {
+    heroLvl(newValue, oldValue) {
+      if (newValue > oldValue) {
         this.spellPoints++;
         this.totalSpellPoints++;
       };
