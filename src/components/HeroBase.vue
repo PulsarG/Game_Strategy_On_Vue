@@ -1,6 +1,6 @@
 <template>
   <div class="base">
-    <gold-rush  @setShowItemMenu="setShowItemMenu" :countMiners="countMiners" :bufMiners="bufMiners"/>
+    <gold-rush  @setShowMinersMenu="setShowMinersMenu" :countMiners="countMiners" :bufMiners="bufMiners"/>
 
     <forge-house :isForgeBuy="isForgeBuy" @setShowForgeMenu="setShowForgeMenu" />
 
@@ -32,8 +32,8 @@ export default {
     }
   },
   methods: {
-    setShowItemMenu() {
-      this.$emit('setShowItemMenu');
+    setShowMinersMenu() {
+      this.$emit('setShowMinersMenu');
     },
     setShowForgeMenu() {
       this.$emit('setShowForgeMenu');

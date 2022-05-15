@@ -30,7 +30,8 @@
       <h3 v-if="countBufMiners > 1">x{{ countBufMiners - 1 }} mod miners</h3>
 
       <input type="text" v-model="user" name="" style="width: 200px; height: 35px;" id="" placeholder="Nickname">
-      <button @click="sendToApi" style="height: 35px; width: 200px; margin-top: 3px; background-color: tomato;">Send to
+      <button @click="sendToApi" style="height: 35px; width: 200px; margin-top: 3px; background-color: tomato;"
+        v-bind:class="{ deletesendbtn: isSend }">Send to
         Ladder?</button>
     </div>
 
@@ -78,7 +79,7 @@
 
       </div>
 
-      <hero-base @setShowItemMenu="setShowItemMenu" @setOpenTavern="setOpenTavern" :isTavernBuy="isTavernBuy"
+      <hero-base @setShowMinersMenu="setShowMinersMenu" @setOpenTavern="setOpenTavern" :isTavernBuy="isTavernBuy"
         @setShowForgeMenu="setShowForgeMenu" :isForgeBuy="isForgeBuy" class="herobase" ref="herobase"
         :countMiners="countMiners" :bufMiners="bufMiners" />
 
@@ -130,7 +131,7 @@ export default {
       atackSpeed: 2000,
       killCount: 0,
       heroLvl: 1,
-      critChance: 0,
+      rollChanceCrit: 0,
       chanceCrit: 5,
       spellPoints: 0,
       totalSpellPoints: 0,
@@ -213,6 +214,8 @@ export default {
 
       user: "",
       users: [],
+
+      isSend: false,
     }
   },
 
@@ -264,6 +267,7 @@ export default {
         });
         this.user = "";
         alert("Отправлено");
+        this.deleteSendButton();
         /* axios.get("https://testgame-59bd1-default-rtdb.europe-west1.firebasedatabase.app/ladder.json")
           .then((response) => {
             let array = [];
@@ -302,122 +306,72 @@ export default {
 
 
     toStartGame() {
+      this.startGold();
+      this.startDmgHeroToEnemy();
+      this.startDmgEnemyToHero();
+      this.upEnemyDmg();
+      this.startDmgEnemyToTurret();
+    },
 
+    startGold() {
       setInterval(() => {
         if (!this.isFail && !this.isPause) {
           this.goldCount += this.goldPlus;
           this.totalGoldCount += this.goldPlus;
         }
       }, 1000);
+    },
 
-      setInterval(() => {
-        if (this.atackSpeed == 2000 && !this.isFail && !this.isPause) {
-          this.critChance = Math.floor(Math.random() * 99);
-          this.rollChanceFastKill = Math.floor(Math.random() * 99);
-          if (this.critChance <= this.chanceCrit) {
-            this.setCrit();
-            this.enemyHp -= this.heroDmg * 2;
-          } else {
-            this.enemyHp -= this.heroDmg;
-          };
-          if (this.fastKillChance >= this.rollChanceFastKill) {
-            this.fastKill();
-          }
-        }
+    startDmgHeroToEnemy() {
+
+      if (!this.isFail && !this.isPause) {
+
+        this.rollFastKill();
+
+        this.rollChanceCrit = Math.floor(Math.random() * 99);
+        if (this.rollChanceCrit <= this.chanceCrit) {
+          this.showCritInfo();
+          this.enemyHp -= this.heroDmg * 2;
+        } else {
+          this.enemyHp -= this.heroDmg;
+        };
+      }
+
+      setTimeout(() => {
+        this.startDmgHeroToEnemy();
       }, this.atackSpeed);
-
-      setInterval(() => {
-        if (this.atackSpeed == 1800 && !this.isFail && !this.isPause) {
-          this.critChance = Math.floor(Math.random() * 99);
-          if (this.critChance <= this.chanceCrit) {
-            this.setCrit();
-            this.enemyHp -= this.heroDmg * 2;
-          } else {
-            this.enemyHp -= this.heroDmg;
-          };
-          if (this.fastKillChance >= this.rollChanceFastKill) {
-            this.fastKill();
-          }
-        }
-      }, 1800);
-
-      setInterval(() => {
-        if (this.atackSpeed == 1600 && !this.isFail && !this.isPause) {
-          this.critChance = Math.floor(Math.random() * 99);
-          if (this.critChance <= this.chanceCrit) {
-            this.setCrit();
-            this.enemyHp -= this.heroDmg * 2;
-          } else {
-            this.enemyHp -= this.heroDmg;
-          };
-          if (this.fastKillChance >= this.rollChanceFastKill) {
-            this.fastKill();
-          }
-        }
-      }, 1600);
-
-      setInterval(() => {
-        if (this.atackSpeed == 1400 && !this.isFail && !this.isPause) {
-          this.critChance = Math.floor(Math.random() * 99);
-          if (this.critChance <= this.chanceCrit) {
-            this.setCrit();
-            this.enemyHp -= this.heroDmg * 2;
-          } else {
-            this.enemyHp -= this.heroDmg;
-          };
-          if (this.fastKillChance >= this.rollChanceFastKill) {
-            this.fastKill();
-          }
-        }
-      }, 1400);
-
-      setInterval(() => {
-        if (this.atackSpeed == 1200 && !this.isFail && !this.isPause) {
-          this.critChance = Math.floor(Math.random() * 99);
-          if (this.critChance <= this.chanceCrit) {
-            this.setCrit();
-            this.enemyHp -= this.heroDmg * 2;
-          } else {
-            this.enemyHp -= this.heroDmg;
-          };
-          if (this.fastKillChance >= this.rollChanceFastKill) {
-            this.fastKill();
-          }
-        }
-      }, 1200);
-
-      setInterval(() => {
-        if (this.atackSpeed == 1000 && !this.isFail && !this.isPause) {
-          this.critChance = Math.floor(Math.random() * 99);
-          if (this.critChance <= this.chanceCrit) {
-            this.setCrit();
-            this.enemyHp -= this.heroDmg * 2;
-          } else {
-            this.enemyHp -= this.heroDmg;
-          };
-          if (this.fastKillChance >= this.rollChanceFastKill) {
-            this.fastKill();
-          }
-        }
-      }, 1000);
-
-      setInterval(() => {
-        if (!this.isFail && !this.isPause && !this.isShield && !this.isTurretUse) {
-          if (this.chanceCritAfterShield) {
-            this.heroHp -= (this.enemyDmg - this.heroArmor);
-            console.log("CRIIIIIT");
-          }
-          this.heroHp -= (this.enemyDmg - this.heroArmor);
-        }
-      }, 2000);
-
-      setInterval(() => { if (!this.isFail && !this.isPause && this.isTurretUse) { this.turretHp -= this.enemyDmg; } }, 2000);
-
-      setInterval(() => { if (!this.isFail && !this.isPause) { this.enemyDmg += 5 } }, 10000);
 
     },
 
-    setCrit() {
+    startDmgEnemyToHero() {
+      setInterval(() => {
+        if (!this.isFail && !this.isPause && !this.isShield && !this.isTurretUse) {
+
+          if (this.chanceCritAfterShield) {
+            this.heroHp -= (this.enemyDmg - this.heroArmor);
+          }
+
+          this.heroHp -= (this.enemyDmg - this.heroArmor);
+        }
+      }, 2000);
+    },
+
+    startDmgEnemyToTurret() {
+      setInterval(() => { if (!this.isFail && !this.isPause && this.isTurretUse) { this.turretHp -= this.enemyDmg; } }, 2000);
+    },
+
+    upEnemyDmg() {
+      setInterval(() => { if (!this.isFail && !this.isPause) { this.enemyDmg += 5 } }, 10000);
+    },
+
+    rollFastKill() {
+      this.rollChanceFastKill = Math.floor(Math.random() * 99);
+      if (this.fastKillChance >= this.rollChanceFastKill) {
+        this.fastKill();
+      }
+    },
+
+    showCritInfo() {
       this.isCrit = true;
       setTimeout(() => { this.isCrit = false }, 500);
     },
@@ -427,26 +381,46 @@ export default {
       this.spellPoints -= 1;
     },
 
-    setShowItemMenu() {
-      if (this.isItemMenu == true) {
+    setHiddenMenus() {
+      this.isItemMenu = false;
+      this.isForgeMenu = false;
+      this.isTavernOpen = false;
+      this.isHeroSpellsOpen = false;
+    },
+
+    setShowMinersMenu() {
+      if (this.isItemMenu) {
         this.isItemMenu = false;
       }
       else {
+        this.setHiddenMenus();
         this.isItemMenu = true;
-        this.isForgeMenu = false;
-        this.isTavernOpen = false;
-        this.isHeroSpellsOpen = false;
       }
     },
 
     setShowForgeMenu() {
-      if (this.isForgeMenu == true) {
+      if (this.isForgeMenu) {
         this.isForgeMenu = false;
       } else {
+        this.setHiddenMenus();
         this.isForgeMenu = true;
-        this.isItemMenu = false;
+      }
+    },
+
+    setOpenTavern() {
+      if (this.isTavernOpen) {
         this.isTavernOpen = false;
+      } else {
+        this.setHiddenMenus();
+        this.isTavernOpen = true;
+      }
+    },
+    setOpenHeroSpells() {
+      if (this.isHeroSpellsOpen) {
         this.isHeroSpellsOpen = false;
+      } else {
+        this.setHiddenMenus();
+        this.isHeroSpellsOpen = true;
       }
     },
 
@@ -482,40 +456,27 @@ export default {
         this.isEng = true;
       }
     },
-    setOpenTavern() {
-      if (this.isTavernOpen) {
-        this.isTavernOpen = false;
-      } else {
-        this.isTavernOpen = true;
-        this.isItemMenu = false;
-        this.isForgeMenu = false;
-        this.isHeroSpellsOpen = false;
-      }
-    },
-    setOpenHeroSpells() {
-      if (this.isHeroSpellsOpen) {
-        this.isHeroSpellsOpen = false;
-      } else {
-        this.isHeroSpellsOpen = true;
-        this.isItemMenu = false;
-        this.isForgeMenu = false;
-        this.isTavernOpen = false;
-      }
-    },
 
     setUseShield() {
       this.isShield = true;
-      this.rollChanceCritAfterShield = Math.floor(Math.random() * 2);
+
       setTimeout(() => { this.isShield = false; }, this.shieldTime);
 
+      this.setEnemyCritAfterShield();
+
+      this.useShieldPrice += 100;
+    },
+
+    setEnemyCritAfterShield() {
+      this.rollChanceCritAfterShield = Math.floor(Math.random() * 2);
       setTimeout(() => {
         if (this.rollChanceCritAfterShield == 1) {
           this.chanceCritAfterShield = true;
           setTimeout(() => { this.chanceCritAfterShield = false; this.rollChanceCritAfterShield = 0; }, 2000);
         }
       }, this.shieldTime);
-      this.useShieldPrice += 100;
     },
+
     upShield() {
       this.shieldPrice += 50;
       this.shieldTime += 5000;
@@ -558,37 +519,40 @@ export default {
 
         this.isPause = true;
 
-        this.inChance = Math.floor(Math.random() * 100);
-        // chance 0-99 
-        if (this.inChance <= 70) {
-          this.chestGold = Math.floor((Math.random() * 99) + 1);
-          this.goldCount += this.chestGold;
-          this.totalGoldCount += this.chestGold;
-          this.isGold = true;
-
-          } else if (this.inChance > 70 && this.inChance <= 90) {
-            this.spellPoints++;
-            this.totalSpellPoints++;
-            this.isPoint = true;
-  
-          } else if (this.inChance > 90 && this.inChance < 98) {
-            this.countBomb++;
-            this.isBomb = true;
-
-        } else if (this.inChance == 98) {
-          this.isBufMiners = true;
-          this.bufMiners = true;
-          this.countBufMiners++;
-          /* this.goldPlus *= 2; */
-          this.goldPlus = this.countMiners * this.countBufMiners;
-
-        } else if (this.inChance == 99) {
-          this.isAutoHeal = true;
-          this.countAutoheal++;
-          this.startAutoheal();
-        };
+        this.rollItemsInChest();
 
         this.autoUseChest();
+      };
+    },
+
+    rollItemsInChest() {
+      this.inChance = Math.floor(Math.random() * 100);
+      // chance 0-99 
+      if (this.inChance <= 70) {
+        this.chestGold = Math.floor((Math.random() * 99) + 1);
+        this.goldCount += this.chestGold;
+        this.totalGoldCount += this.chestGold;
+        this.isGold = true;
+
+      } else if (this.inChance > 70 && this.inChance <= 90) {
+        this.spellPoints++;
+        this.totalSpellPoints++;
+        this.isPoint = true;
+
+      } else if (this.inChance > 90 && this.inChance < 98) {
+        this.countBomb++;
+        this.isBomb = true;
+
+      } else if (this.inChance == 98) {
+        this.isBufMiners = true;
+        this.bufMiners = true;
+        this.countBufMiners++;
+        this.goldPlus = this.countMiners * this.countBufMiners;
+
+      } else if (this.inChance == 99) {
+        this.isAutoHeal = true;
+        this.countAutoheal++;
+        this.startAutoheal();
       };
     },
 
@@ -599,7 +563,7 @@ export default {
 
     startAutoheal() {
       if (!this.isPause) {
-        setInterval(() => { this.heroHp += 10; }, 10000);
+        setInterval(() => { this.heroHp += 100; }, 10000);
       }
     },
 
@@ -662,7 +626,11 @@ export default {
     },
     upHeroExp() {
       this.heroExp += this.fEnemyLvl + 2;
-    }
+    },
+
+    deleteSendButton() {
+      this.isSend = true;
+    },
 
   },
   watch: {
@@ -946,5 +914,9 @@ h1 {
   right: 0;
   margin-right: 3%;
   /* align-self: flex-end; */
+}
+
+.deletesendbtn {
+  display: none;
 }
 </style>

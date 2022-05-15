@@ -108,13 +108,13 @@
                         NICK
                     </th>
                     <th @click="sortByScore">
-                        <button style="width: 100px">Score</button>
+                        <button style="width: 60px">Score</button>
                     </th>
                     <th @click="sortByLevel">
-                        <button style="width: 100px">Level</button>
+                        <button style="width: 60px">Level</button>
                     </th>
                     <th @click="sortByKills">
-                        <button style="width: 100px">Kills</button>
+                        <button style="width: 60px">Kills</button>
                     </th>
                     <tr v-for="user in users" :key="user.id">
                         <td>{{ user.nick }}</td>

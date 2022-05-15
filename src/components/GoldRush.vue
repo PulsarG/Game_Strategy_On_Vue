@@ -7,7 +7,7 @@
         </div>
         <div class="row">
             <div v-show="isVisibleGoldMiner3" class="item"><img src="@/assets/cheap.png" alt=""></div>
-            <button @click="setShowItemMenu" class="goldbtn"><img class="imgbtn"
+            <button @click="setShowMinersMenu" class="goldbtn"><img class="imgbtn"
                     src="@/assets/29719-processor-integralnye_mikroshemy-mnogoyadernyj_processor-sinij_cvet-liniya-x750.jpg"
                     alt=""></button>
             <div v-show="isVisibleGoldMiner4" class="item"><img src="@/assets/cheap.png" alt=""></div>
@@ -40,8 +40,8 @@ export default {
         }
     },
     methods: {
-        setShowItemMenu() {
-            this.$emit('setShowItemMenu');
+        setShowMinersMenu() {
+            this.$emit('setShowMinersMenu');
         }
     },
     watch: {
