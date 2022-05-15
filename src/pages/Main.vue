@@ -16,6 +16,7 @@
     <div v-show="isFail" class="fail">
       <h1>----------</h1>
       <h1>YOU DIED</h1>
+      <h2>Score: {{ scorePoints }}</h2>
       <h1>----------</h1>
       <h3> {{ killCountText }}: {{ killCount }}</h3>
       <h3> {{ levelText }}: {{ heroLvl }} </h3>
@@ -27,6 +28,10 @@
       <h3 v-if="countUseBomb > 0"> {{ countUseBomb }} {{ useBombText }}</h3>
       <h3 v-if="countAutoheal > 0">x{{ countAutoheal }} mod autoheal</h3>
       <h3 v-if="countBufMiners > 1">x{{ countBufMiners - 1 }} mod miners</h3>
+
+      <input type="text" v-model="user" name="" style="width: 200px; height: 35px;" id="" placeholder="Nickname">
+      <button @click="sendToApi" style="height: 35px; width: 200px; margin-top: 3px; background-color: tomato;">Send to
+        Ladder?</button>
     </div>
 
     <div v-show="!isFail" class="field">
@@ -49,7 +54,9 @@
 
       <div class="gamezone" id="gamezone">
 
+        <h2>Score: {{ heroExp }}</h2>
         <div class="hero">
+
           <h1 v-show="isShield">{{ shieldUsedText }}</h1>
           <h2 v-show="isSpellPoints">+ {{ spellPoints }} {{ chestSpellText }}</h2>
           <button @click="setOpenHeroSpells" class="herobtn">
@@ -62,8 +69,6 @@
         <h1 class="crit" v-show="isCrit">{{ critText }}</h1>
         <h1 class="crit" v-show="isFastKill">{{ fastKillActiveText }}</h1>
         <h1 class="crit" v-show="isTurretUse">TURRET <br> {{ turretHp }}</h1>
-
-        <button @click="sendToApi" style="height: 50px;">POST</button>     <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 
         <div v-show="isEnemyLife" class="enemy">
           <div>
@@ -99,6 +104,8 @@ export default {
 
   data() {
     return {
+      scorePoints: 0,
+
       goldCount: 99999,
       totalGoldCount: 0,
       goldPlus: 1,
@@ -202,8 +209,9 @@ export default {
       countTurrets: 0,
 
       isPause: false,
+      isAutoGame: true,
 
-      user: "cheater",
+      user: "",
       users: [],
     }
   },
@@ -223,16 +231,78 @@ export default {
          }) */
     },
 
+    findRecords() {
+      axios.get("https://testgame-59bd1-default-rtdb.europe-west1.firebasedatabase.app/ladder.json")
+        .then((response) => {
+          let array = [];
+          for (var i in response.data)
+            array.push([i, response.data[i]]);
+          let j = array.length;
+
+          for (let i = 0; i < j; i++) {
+            this.users.push(array[i][1]);
+          }
+        });
+
+      for (let i = 0; i < this.users.length; i++) {
+        if (this.users[i].heroHp < this.heroHp) {
+          console.log("Вы установили рекорд!");
+        }
+      }
+    },
+
+
     async sendToApi() {
-      await axios.post("https://testgame-59bd1-default-rtdb.europe-west1.firebasedatabase.app/ladder.json", {
+      if (this.user == "") {
+        alert("Поле с ником пустое");
+      } else {
+        await axios.post("https://testgame-59bd1-default-rtdb.europe-west1.firebasedatabase.app/ladder.json", {
+          nick: this.user,
+          score: this.scorePoints,
+          level: this.heroLvl,
+          kills: this.killCount,
+        });
+        this.user = "";
+        alert("Отправлено");
+        /* axios.get("https://testgame-59bd1-default-rtdb.europe-west1.firebasedatabase.app/ladder.json")
+          .then((response) => {
+            let array = [];
+            for (var i in response.data)
+              array.push([i, response.data[i]]);
+            let j = array.length;
+  
+            for (let i = 0; i < j; i++) {
+              this.users.push(array[i][1]);
+            } */
+      }
+
+      /* for (let i = 0; i < this.users.length; i++) {
+        if (this.users[i].nick == this.user) {
+          alert("Такой ник уже есть");
+        } else {
+          await axios.post("https://testgame-59bd1-default-rtdb.europe-west1.firebasedatabase.app/ladder.json", {
+            nick: this.user,
+            heroHp: this.heroHp,
+            heroDmg: this.heroDmg,
+          });
+          this.user = "";
+          alert("Отправлено");
+        }
+      }
+    } */
+
+      /* await axios.post("https://testgame-59bd1-default-rtdb.europe-west1.firebasedatabase.app/ladder.json", {
         nick: this.user,
         heroHp: this.heroHp,
         heroDmg: this.heroDmg,
       });
+      this.user = "";
+      alert("Отправлено"); */
     },
 
 
     toStartGame() {
+
       setInterval(() => {
         if (!this.isFail && !this.isPause) {
           this.goldCount += this.goldPlus;
@@ -477,7 +547,8 @@ export default {
       if (this.chestChance == 1) {
         this.isChest = true;
         this.isPause = true;
-        this.inChance = Math.floor(Math.random() * 1000);
+
+        this.inChance = Math.floor(Math.random() * 100);
         // chance 0-99 
         if (this.inChance <= 70) {
           this.chestGold = Math.floor((Math.random() * 99) + 1);
@@ -494,7 +565,7 @@ export default {
           this.countBomb++;
           this.isBomb = true;
 
-        } else if (this.inChance > 98 && this.inChance < 999) {
+        } else if (this.inChance == 98) {
           this.isBufMiners = true;
           this.countBufMiners++;
           /* this.goldPlus *= 2; */
@@ -568,12 +639,21 @@ export default {
       }, 1000);
     },
 
+    upScore() {
+      this.scorePoints += this.killCount + this.fEnemyLvl;
+    },
+    upHeroExp() {
+      this.heroExp += this.fEnemyLvl + 2;
+    }
+
   },
   watch: {
     enemyHp(newValue) {
       if (newValue <= 0) {
+        this.upScore();
         this.killCount += 1;
-        this.heroExp += 1;
+        this.upHeroExp();
+        // this.heroExp += 1;
         this.defaultEnemyHP += 100;
         this.enemyHp = this.defaultEnemyHP;
         this.fEnemyLvl += 1;
@@ -582,6 +662,7 @@ export default {
 
         this.isPause = true;
         this.isEnemyLife = false;
+
         setTimeout(() => {
           if (!this.isChest) {
             this.isPause = false; this.isEnemyLife = true
@@ -599,10 +680,46 @@ export default {
     },
 
     heroExp(newValue) {
-      if (newValue == this.expMult) {
-        this.heroLvl += 1;
-        this.expMult *= 2;
-        this.heroExp = 0;
+      if (newValue >= 3 && newValue < 9) {
+        this.heroLvl = 2;
+        //  this.expMult *= 2;
+        //  this.heroExp = 0;
+      } else if ((newValue >= 9 && newValue < 27)) {
+        this.heroLvl = 3;
+      } else if ((newValue >= 27 && newValue < 65)) {
+        this.heroLvl = 4;
+      } else if ((newValue >= 65 && newValue < 140)) {
+        this.heroLvl = 5;
+      } else if ((newValue >= 140 && newValue < 230)) {
+        this.heroLvl = 6;
+      } else if ((newValue >= 230 && newValue < 340)) {
+        this.heroLvl = 7;
+      } else if ((newValue >= 340 && newValue < 480)) {
+        this.heroLvl = 8;
+      } else if ((newValue >= 480 && newValue < 640)) {
+        this.heroLvl = 9;
+      } else if ((newValue >= 640 && newValue < 850)) {
+        this.heroLvl = 10;
+      } else if ((newValue >= 850 && newValue < 1000)) {
+        this.heroLvl = 11;
+      } else if ((newValue >= 1000 && newValue < 1200)) {
+        this.heroLvl = 12;
+      } else if ((newValue >= 1200 && newValue < 1400)) {
+        this.heroLvl = 13;
+      } else if ((newValue >= 1400 && newValue < 1650)) {
+        this.heroLvl = 14;
+      } else if ((newValue >= 1650 && newValue < 1950)) {
+        this.heroLvl = 15;
+      } else if ((newValue >= 1950 && newValue < 2250)) {
+        this.heroLvl = 16;
+      } else if ((newValue >= 2250 && newValue < 2650)) {
+        this.heroLvl = 17;
+      } else if ((newValue >= 2650 && newValue < 3050)) {
+        this.heroLvl = 18;
+      } else if ((newValue >= 3050 && newValue < 3550)) {
+        this.heroLvl = 19;
+      } else if (newValue <= 3550) {
+        this.heroLvl = 20;
       }
     },
 
@@ -656,7 +773,8 @@ export default {
       } else {
         this.isSpellPoints = false;
       }
-    }
+    },
+
   },
 }
 </script>

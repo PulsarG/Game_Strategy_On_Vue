@@ -104,16 +104,16 @@
 
             <div class="ladder" id="laddertab" v-show="!isLadder">
                 <table>
-                    <th>
+                    <th style="width: 100px">
                         NICK
                     </th>
                     <th @click="sortByScore">
-                        <button style="width: 50px">Score</button>
+                        <button style="width: 100px">Score</button>
                     </th>
                     <th @click="moreSort">
-                        <button style="width: 50px">KILLS</button>
+                        <button style="width: 100px">KILLS</button>
                     </th>
-                    <tr v-for="user in users" :key="user.nick">
+                    <tr v-for="user in users" :key="user.id">
                         <td>{{ user.nick }}</td>
                         <td>{{ user.heroHp }}</td>
                         <td>{{ user.heroDmg }}</td>
@@ -124,11 +124,13 @@
             <div class="about" v-show="!isAbout">
                 <form class="report" @submit.prevent>
                     <h4>Обратная звязь</h4>
+
                     <textarea style="max-width: 300px; min-width: 100px; max-height: 500px; min-height: 100px;"
-                        class="reporttext" cols="30" rows="10">{{ inreportText }}</textarea>
-                    <input style="width: 220px" class="reportemail" type="email"
-                        placeholder="Email (necessarily / обязательно)">
+                        class="reporttext" cols="30" rows="10" v-model="this.inreportText"></textarea>
+                    <!-- <input style="width: 220px" class="reportemail" type="email"
+                        placeholder="Email (necessarily / обязательно)"> -->
                     <button id="repbtn" type="submit" @click="sendMsg">Send</button>
+
                 </form>
             </div>
         </div>
@@ -169,12 +171,13 @@ export default {
     data() {
         return {
             msg: "",
+            iD: 1,
 
             startBtn: "Start game",
             lang: "RUS",
             menuText: "Evans. Autho-shoot game",
             aboutText: "About",
-            inreportText: "Bug report or other message",
+            inreportText: "Bug report or other message. Anonim or add you'r Email.",
             urEmailText: "You'r Email (necessarily)",
 
             ruStart: "Начать игру",
@@ -225,9 +228,8 @@ export default {
                         }
                     });
                 this.countOpenLadder++;
-                this.users.sort((a, b) => b.heroHp - a.heroHp);
             }
-
+            setTimeout(() => { this.sortByScore(); }, 500);
         },
 
         sortByScore() {
@@ -241,9 +243,9 @@ export default {
                 .then(() => {
                     window.Email && window.Email.send({
                         SecureToken: "7d841a7f-c9ef-4020-8daa-920e7c4a446d",
-                        To: 'furylonzero@gmail.com',
-                        From: emailfrom.value,
-                        Subject: "This is the subject",
+                        To: 'furylonzero@gmail.com',   // На какую почту отправить
+                        From: 'furylonzero@gmail.com',              // должно совпадать с аккаунтом сервиса
+                        Subject: "Обратная связь от EvansGame.ru",
                         Body: msg.value
                     }).then(
                         alert("Сообщение отправлено / Message sent")
@@ -275,7 +277,7 @@ export default {
                 this.learnText = "Learn";
                 this.lorText = "LOR";
                 this.ladderText = "Ladder";
-                this.inreportText = "Bug report or other message";
+                this.inreportText = "Bug report or other message. Anonim or add you'r Email.";
             } else {
                 this.startBtn = this.ruStart;
                 this.menuText = "Evans. Autho-shoot game";
@@ -287,7 +289,7 @@ export default {
                 this.learnText = "Обучение";
                 this.lorText = "ЛОР";
                 this.ladderText = "Ладдер";
-                this.inreportText = "Ваше сообщение или баг-репорт";
+                this.inreportText = "Ваше сообщение или баг-репорт. Анонимно или добавте ваш Email";
             }
         },
         setLearn() {
@@ -482,5 +484,19 @@ p {
     align-items: center;
     justify-content: center;
     flex-direction: column;
+}
+
+table tr:nth-child(2) {
+    counter-reset: rowNumber;
+}
+
+table tr {
+    counter-increment: rowNumber;
+}
+
+table tr td:first-child::before {
+    content: counter(rowNumber);
+    min-width: 1em;
+    margin-right: 0.5em;
 }
 </style>
