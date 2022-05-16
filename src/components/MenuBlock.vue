@@ -103,26 +103,29 @@
             </div>
 
             <div class="ladder" id="laddertab" v-show="!isLadder">
-                <table>
-                    <th style="width: 100px">
-                        NICK
-                    </th>
-                    <th @click="sortByScore">
-                        <button style="width: 60px">Score</button>
-                    </th>
-                    <th @click="sortByLevel">
-                        <button style="width: 60px">Level</button>
-                    </th>
-                    <th @click="sortByKills">
-                        <button style="width: 60px">Kills</button>
-                    </th>
-                    <tr v-for="user in users" :key="user.id">
-                        <td>{{ user.nick }}</td>
-                        <td>{{ user.score }}</td>
-                        <td>{{ user.level }}</td>
-                        <td>{{ user.kills }}</td>
-                    </tr>
-                </table>
+                        <table v-if="!isLoad">
+                            <th style="width: 100px">
+                                NICK
+                            </th>
+                            <th @click="sortByScore">
+                                <button style="width: 60px">Score</button>
+                            </th>
+                            <th @click="sortByLevel">
+                                <button style="width: 60px">Level</button>
+                            </th>
+                            <th @click="sortByKills">
+                                <button style="width: 60px">Kills</button>
+                            </th>
+                            <tr v-for="user in users" :key="user.id">
+                                <td>{{ user.nick }}</td>
+                                <td>{{ user.score }}</td>
+                                <td>{{ user.level }}</td>
+                                <td>{{ user.kills }}</td>
+                            </tr>
+                        </table>
+                        <div v-else>
+                            <p>Load...</p>
+                        </div>
             </div>
 
             <div class="about" v-show="!isAbout">
@@ -214,6 +217,7 @@ export default {
 
             users: [],
             countOpenLadder: 0,
+            isLoad: false,
         }
     },
 
@@ -225,6 +229,7 @@ export default {
 
         async getFromApi() {
             if (this.countOpenLadder == 0) {
+                this.isLoad = true;
                 axios.get("https://testgame-59bd1-default-rtdb.europe-west1.firebasedatabase.app/ladder.json")
                     .then((response) => {
                         let array = [];
@@ -238,7 +243,8 @@ export default {
                     });
                 this.countOpenLadder++;
             }
-            setTimeout(() => { this.sortByScore(); }, 500);
+            /* setTimeout(() => { this.sortByScore(); }, 500); */
+            setTimeout(() => { this.sortByScore(); this.isLoad = false; }, 500);
         },
 
         sortByScore() {
