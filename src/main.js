@@ -4,6 +4,7 @@ import App from '@/App.vue';
 import { initializeApp } from "firebase/app";
 import LoadScript from 'vue-plugin-load-script';
 
+
 const aps = createApp(App)
 
 aps.use(router).use(LoadScript);

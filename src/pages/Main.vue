@@ -10,7 +10,9 @@
       :bombPrice="bombPrice" @buyBomb="buyBomb" :enemyDmg="enemyDmg" :heroArmor="heroArmor" @useBomb="useBomb"
       :countBomb="countBomb" :useShieldPrice="useShieldPrice" @setUseShield="setUseShield" @upCrit="upCrit"
       :turretPrice="turretPrice" @useTurret="useTurret" :countBufMiners="countBufMiners" :countAutoheal="countAutoheal"
-      @useKill="useKill" class="infoblock" ref="infoblock" :scorePoints="scorePoints" />
+      @testPlusSkill="testPlusSkill" @testMinusEnemyDmg="testMinusEnemyDmg" @testPlusHeroHp="testPlusHeroHp"
+      @upTurret="upTurret" @testPlusGold="testPlusGold" @useKill="useKill" class="infoblock" ref="infoblock"
+      :scorePoints="scorePoints" />
 
 
     <div v-show="isFail" class="fail">
@@ -56,10 +58,12 @@
 
         <div class="hero">
 
-          <h1 v-show="isShield">{{ shieldUsedText }}</h1>
+          <!--  <h1 v-show="isShield">{{ shieldUsedText }}</h1> -->
+
           <h2 v-show="isSpellPoints">+ {{ spellPoints }} {{ chestSpellText }}</h2>
-          <button @click="setOpenHeroSpells" class="herobtn">
+          <button @click="setOpenHeroSpells" class="herobtn" style="display: flex; flex-direction: row;">
             <img class="imghero" src="@/assets/fca20ca686df78242e7f5faf65ef4041.jpg" alt="">
+            <img class="imgshield" v-show="isShield" src="@/assets/energy-shield(1).png" alt="">
           </button>
           <h1>{{ levelText }} {{ heroLvl }}</h1>
         </div>
@@ -67,7 +71,10 @@
         <h1 class="crit" v-show="chanceCritAfterShield" style="color: red;">ENEMY CRIT</h1>
         <h1 class="crit" v-show="isCrit">{{ critText }}</h1>
         <h1 class="crit" v-show="isFastKill">{{ fastKillActiveText }}</h1>
-        <h1 class="crit" v-show="isTurretUse">TURRET <br> {{ turretHp }}</h1>
+        <div style="display: flex; flex-direction: column;">
+          <h1 class="crit" v-show="isTurretUse">{{ turretHp }} </h1>
+          <img class="turret" v-show="isTurretUse" src="@/assets/turel-iz-tf2.jpg" alt="">
+        </div>
 
         <div v-show="isEnemyLife" class="enemy">
           <div>
@@ -93,7 +100,6 @@
 import HeroBase from "@/components/HeroBase.vue";
 import InfoBlock from "@/components/InfoBlock.vue";
 import MenuBlock from "@/components/MenuBlock.vue";
-import { assertExpressionStatement, switchCase } from "@babel/types";
 //import { ref } from "vue";
 import axios from "axios";
 
@@ -106,7 +112,7 @@ export default {
     return {
       scorePoints: 0,
 
-      goldCount: 99999,
+      goldCount: 0,
       totalGoldCount: 0,
       goldPlus: 1,
       priceGoldMiner: 10,
@@ -121,12 +127,12 @@ export default {
       useShieldPrice: 100,
       shieldTime: 5000,
       shieldTimeSec: 5,
-      bombPrice: 5000,
+      bombPrice: 3000,
       countUseBomb: 0,
-      turretPrice: 500,
+      turretPrice: 100,
 
       heroHp: 1800,
-      heroDmg: 100,
+      heroDmg: 10,
       heroArmor: 0,
       atackSpeed: 2000,
       killCount: 0,
@@ -139,9 +145,9 @@ export default {
       fastKillChance: 1,
       rollChanceFastKill: 0,
 
-      turretHp: 300,
-      turretDmg: 100,
-      defaultTurretHp: 300,
+      turretHp: 100,
+      turretDmg: 50,
+      defaultTurretHp: 100,
 
       isSpellPoints: false,
 
@@ -346,12 +352,15 @@ export default {
     startDmgEnemyToHero() {
       setInterval(() => {
         if (!this.isFail && !this.isPause && !this.isShield && !this.isTurretUse) {
+          if (this.heroArmor <= this.enemyDmg) {
+            if (this.chanceCritAfterShield) {
+              this.heroHp -= (this.enemyDmg - this.heroArmor);
+            }
 
-          if (this.chanceCritAfterShield) {
             this.heroHp -= (this.enemyDmg - this.heroArmor);
-          }
-
-          this.heroHp -= (this.enemyDmg - this.heroArmor);
+          } else {
+            this.heroArmor -= 1;
+          };
         }
       }, 2000);
     },
@@ -443,11 +452,11 @@ export default {
     },
     upDmg(priceDmgUp) {
       this.goldCount -= priceDmgUp;
-      this.heroDmg += 1;
+      this.heroDmg += 5;
     },
     upArmor(priceArmorUp) {
       this.goldCount -= priceArmorUp;
-      this.heroArmor += 10;
+      this.heroArmor += 5;
     },
     setLang() {
       if (this.isEng) {
@@ -628,9 +637,28 @@ export default {
       this.heroExp += this.fEnemyLvl + 2;
     },
 
+    upTurret() {
+      this.defaultTurretHp += 100;
+      this.spellPoints -= 1;
+    },
+
     deleteSendButton() {
       this.isSend = true;
     },
+
+    testPlusGold() {
+      this.goldCount += 1000;
+    },
+    testPlusSkill() {
+      this.spellPoints += 1;
+    },
+    testMinusEnemyDmg() {
+      this.enemyDmg -= 10;
+    },
+    testPlusHeroHp() {
+      this.heroHp += 100;
+    }
+
 
   },
   watch: {
@@ -918,5 +946,16 @@ h1 {
 
 .deletesendbtn {
   display: none;
+}
+
+.imgshield {
+  width: 50px;
+  height: 300px;
+  opacity: 0.4;
+}
+
+.turret {
+  width: 150px;
+  height: 150px;
 }
 </style>

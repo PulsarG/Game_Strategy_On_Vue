@@ -9,9 +9,28 @@
             <h2>{{ enemyText }}: {{ enemyDmg }}</h2>
         </div>
 
-        <div>
+        <!--  <div>
             <h2>{{ scorePoints }}</h2>
+        </div> -->
+
+
+        <div class="testskills">
+            <div>
+                <h3>Навыки тестировщика</h3>
+            </div>
+
+            <div style="display: flex; flex-direction: row; margin-bottom: 25px;">
+                <button style="height: 50px; width: 100px;" @click="testPlusGold">+1000 кредитов</button>
+                <button style="height: 50px; margin-left: 10px; width: 80px;" @click="testPlusSkill">+1 оч.
+                    навыка</button>
+                <button style="height: 50px; margin-left: 10px; width: 80px;" @click="testMinusEnemyDmg">-10 урона
+                    врагу</button>
+                <button style="height: 50px; margin-left: 10px; width: 80px;" @click="testPlusHeroHp">+100 здоровья
+                    герою</button>
+            </div>
+
         </div>
+
 
         <div v-show="isItemMenu" class="itemmenu">
             <div class="htext">
@@ -32,7 +51,8 @@
             </button>
             <button class="fbtn" v-bind:class="{ active: isForgeBuy }" @click="upArmor">{{ upArmorText }}
                 {{ priceArmorUp }}</button>
-            <button class="fbtn" v-bind:class="{ active: isForgeBuy }" @click="useTurret">Поставить туррель</button>
+            <button class="fbtn" v-bind:class="{ active: isForgeBuy }" @click="useTurret">Поставить туррель за
+                {{ turretPrice }}</button>
         </div>
 
         <div v-show="isTavernOpen" class="tavern">
@@ -60,8 +80,8 @@
 
             <!-- <button @click="setShield" class="btnfd">{{ useShieldText }} {{ shieldTimeSec }} sec for {{ useShieldPrice }} gold</button> -->
             <div class="spellbtn">
-                <button @click="" class="spell" v-bind:class="{ nospell: isNoSpellPoint }">Up engineer skill for up
-                    turret's damage</button>
+                <button @click="upTurret" class="spell" v-bind:class="{ nospell: isNoSpellPoint }">Up engineer skill for
+                    turret for 1 point <br><br> [{{ countUpTurret }}]</button>
                 <button @click="upCrit" class="spell" v-bind:class="{ nospell: isNoSpellPoint }">
                     {{ upCritChanceText }} <br> <br>
                     [{{ countUpCrit }}]
@@ -115,6 +135,7 @@ export default {
 
             countUpCrit: 0,
             countUpFastKill: 0,
+            countUpTurret: 0,
 
             shieldTime: 5,
 
@@ -136,7 +157,7 @@ export default {
             tavernText: "Supply base",
             healingText: "Healing for",
             speedText: "Up atackSpeed for",
-            shieldText: "Upgrade shield for",
+            shieldText: "Up shield (+5 sec) for",
             buyTavernText: "Order Express Delivery Ways",
 
             spellsText: "Hero's spells",
@@ -277,6 +298,25 @@ export default {
                 this.$emit('useTurret');
             }
         },
+        upTurret() {
+            if (this.spellPoints >= 1) {
+                this.$emit('upTurret');
+                this.countUpTurret++;
+            }
+        },
+
+        testPlusGold() {
+            this.$emit('testPlusGold');
+        },
+        testPlusSkill() {
+            this.$emit('testPlusSkill');
+        },
+        testMinusEnemyDmg() {
+            this.$emit('testMinusEnemyDmg');
+        },
+        testPlusHeroHp() {
+            this.$emit('testPlusHeroHp');
+        }
 
     },
     watch: {
@@ -327,7 +367,7 @@ export default {
                 this.tavernText = "База снабжения";
                 this.healingText = "Восстановить здоровье за";
                 this.speedText = "Повысить скорость атаки за";
-                this.shieldText = "Улучшить щит за";
+                this.shieldText = "Заказать улучшенный щит (+5 сек) за";
                 this.buyTavernText = "Заказать пути срочной доставки за";
                 this.spellsText = "Способности героя";
                 this.useShieldText = "Использовать щит";
@@ -349,7 +389,7 @@ export default {
                 this.tavernText = "Supply base";
                 this.healingText = "Healing for";
                 this.speedText = "Up atackSpeed for";
-                this.shieldText = "Upgrade shield for";
+                this.shieldText = "Up shield (+5 sec) for";
                 this.buyTavernText = "Order Express Delivery Ways";
                 this.spellsText = "Hero's spells";
                 this.useShieldText = "Use shield";
@@ -503,5 +543,16 @@ h1 {
 
 .isnotbomb {
     opacity: 0.4;
+}
+
+.testskills {
+    width: 380px;
+    height: 100px;
+    border: 5px double black;
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 </style>

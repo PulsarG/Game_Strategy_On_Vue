@@ -9,16 +9,66 @@
             </div>
         </div>
 
-        <div class="menublock">
-            <div class="learn" v-show="!isHideLearn">
-                <p>
-                    Кликните на Золотой рудник, Кузницу или Таверну
-                    для взаимодействия.
-                </p>
-                <p>Урон противника переодически растет.</p>
-                <p>Улучшайте свои оружие и броню, покупайте услуги
-                    лекаря, изучайте способности.</p>
-                <p>Нажмите еще раз, чтобы скрыть обучение</p>
+        <div class="menublock" style="overflow: auto;">
+            <div class="learn" v-show="!isHideLearn" style="width: auto">
+
+                <div class="acc" style="display: flex; flex-direction: column; width: auto; margin-top: 20px;">
+
+                    <div class="acc-item" style="display: flex; flex-direction: column;">
+                        <div class="acc-item__trigger"><button><strong style="font-size: 20px;">Майнинг /
+                                    Заработок</strong></button></div>
+                        <div class="acc-item__content" style="width: auto;">Lorem ipsum dolor sit amet consectetur,
+                            adipisicing elit. Dolor voluptatum quibusdam inventore rerum quod cum tempora autem velit at
+                            quidem commodi nulla necessitatibus dignissimos repellat minus aut, nihil animi quae.</div>
+                    </div>
+
+                    <div class="acc-item" style="margin-top: 20px;">
+                        <div class="acc-item__trigger"><button><strong style="font-size: 20px;">Окно персонажа / Меню навыков</strong></button></div>
+                        <div class="acc-item__content">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ratione
+                            repellat atque aut natus nobis, tempore quam qui quas voluptate deleniti expedita
+                            voluptatibus laudantium eveniet harum impedit magni suscipit cum. Nostrum aperiam at omnis
+                            deserunt numquam optio. Tempore, sequi facilis? Neque ipsa quo eligendi consequatur qui
+                            exercitationem culpa debitis eos necessitatibus?</div>
+                    </div>
+
+                    <div class="acc-item" style="margin-top: 20px;">
+                        <div class="acc-item__trigger"><button><strong style="font-size: 20px;">Инженер / Навыки инженера</strong></button></div>
+                        <div class="acc-item__content">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ratione
+                            repellat atque aut natus nobis, tempore quam qui quas voluptate deleniti expedita
+                            voluptatibus laudantium eveniet harum impedit magni suscipit cum. Nostrum aperiam at omnis
+                            deserunt numquam optio. Tempore, sequi facilis? Neque ipsa quo eligendi consequatur qui
+                            exercitationem culpa debitis eos necessitatibus?</div>
+                    </div>
+
+                    <div class="acc-item" style="margin-top: 20px;">
+                        <div class="acc-item__trigger"><button><strong style="font-size: 20px;">База Снабжения / Окно доставки</strong></button></div>
+                        <div class="acc-item__content">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ratione
+                            repellat atque aut natus nobis, tempore quam qui quas voluptate deleniti expedita
+                            voluptatibus laudantium eveniet harum impedit magni suscipit cum. Nostrum aperiam at omnis
+                            deserunt numquam optio. Tempore, sequi facilis? Neque ipsa quo eligendi consequatur qui
+                            exercitationem culpa debitis eos necessitatibus?</div>
+                    </div>
+
+                    <div class="acc-item" style="margin-top: 20px;">
+                        <div class="acc-item__trigger"><button><strong style="font-size: 20px;">Ход боя</strong></button></div>
+                        <div class="acc-item__content">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ratione
+                            repellat atque aut natus nobis, tempore quam qui quas voluptate deleniti expedita
+                            voluptatibus laudantium eveniet harum impedit magni suscipit cum. Nostrum aperiam at omnis
+                            deserunt numquam optio. Tempore, sequi facilis? Neque ipsa quo eligendi consequatur qui
+                            exercitationem culpa debitis eos necessitatibus?</div>
+                    </div>
+
+                    <div class="acc-item" style="margin-top: 20px;">
+                        <div class="acc-item__trigger"><button><strong style="font-size: 20px;">Добыча</strong></button></div>
+                        <div class="acc-item__content">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ratione
+                            repellat atque aut natus nobis, tempore quam qui quas voluptate deleniti expedita
+                            voluptatibus laudantium eveniet harum impedit magni suscipit cum. Nostrum aperiam at omnis
+                            deserunt numquam optio. Tempore, sequi facilis? Neque ipsa quo eligendi consequatur qui
+                            exercitationem culpa debitis eos necessitatibus?</div>
+                    </div>
+
+                </div>
+
             </div>
 
             <div class="lor" v-show="!isHideLor">
@@ -103,32 +153,32 @@
             </div>
 
             <div class="ladder" id="laddertab" v-show="!isLadder">
-                        <table v-if="!isLoad">
-                            <th style="width: 100px">
-                                NICK
-                            </th>
-                            <th @click="sortByScore">
-                                <button style="width: 60px">Score</button>
-                            </th>
-                            <th @click="sortByLevel">
-                                <button style="width: 60px">Level</button>
-                            </th>
-                            <th @click="sortByKills">
-                                <button style="width: 60px">Kills</button>
-                            </th>
-                            <tr v-for="user in users" :key="user.id">
-                                <td>{{ user.nick }}</td>
-                                <td>{{ user.score }}</td>
-                                <td>{{ user.level }}</td>
-                                <td>{{ user.kills }}</td>
-                            </tr>
-                        </table>
-                        <div v-else>
-                            <p>Load...</p>
-                        </div>
+                <table v-if="!isLoad">
+                    <th style="width: 100px">
+                        NICK
+                    </th>
+                    <th @click="sortByScore">
+                        <button style="width: 60px">Score</button>
+                    </th>
+                    <th @click="sortByLevel">
+                        <button style="width: 60px">Level</button>
+                    </th>
+                    <th @click="sortByKills">
+                        <button style="width: 60px">Kills</button>
+                    </th>
+                    <tr v-for="user in users" :key="user.id">
+                        <td>{{ user.nick }}</td>
+                        <td>{{ user.score }}</td>
+                        <td>{{ user.level }}</td>
+                        <td>{{ user.kills }}</td>
+                    </tr>
+                </table>
+                <div v-else>
+                    <p>Load...</p>
+                </div>
             </div>
 
-            <div class="about" v-show="!isAbout">
+            <div class="about" style="display: flex; flex-direction:column;" v-show="!isAbout">
                 <form class="report" @submit.prevent>
                     <h4>Обратная звязь</h4>
 
@@ -139,6 +189,8 @@
                     <button id="repbtn" type="submit" @click="sendMsg">Send</button>
 
                 </form>
+
+                <h4 style="margin-top: 50px;"><a href="https://github.com/PulsarG">github.com/PulsarG</a> / 2022</h4>
             </div>
         </div>
 
@@ -171,16 +223,35 @@
 import axios from "axios";
 
 export default {
+
     name: 'menu-block',
     props: {
         isEng: {
             type: Boolean
         },
         isPause: Boolean,
-
     },
     data() {
         return {
+
+            myItems: [
+                {
+                    title: 'How many time zones are there in all?',
+                    value: 'Given a 24-hour day and 360 degrees of longitude around the Earth',
+                    category: 'Tab-1'
+                },
+                {
+                    title: 'How long is a day and year on Venus?',
+                    value: 'Venus takes 224.7 Earth days to complete one orbit around the Sun.',
+                    category: 'Tab-2'
+                },
+                {
+                    title: 'What animal smells like popcorn?',
+                    value: 'Binturongs smell like popcorn.',
+                    category: 'Tab-2'
+                }
+            ],
+
             msg: "",
             iD: 1,
 
@@ -323,6 +394,14 @@ export default {
             }
         },
         setLearn() {
+            document.querySelectorAll('.acc-item__trigger').forEach((item) =>
+
+                item.addEventListener('click', () => {
+                    const parent = item.parentNode;
+
+                    parent.classList.toggle('acc-item--active');
+                }));
+
             if (!this.isHideLearn) {
                 this.isHideLearn = true;
             } else {
@@ -378,7 +457,6 @@ export default {
             this.report = '';
         }
     },
-
 }
 </script>
 
@@ -417,6 +495,8 @@ export default {
 
 .learn {
     height: auto;
+    width: auto;
+   
 }
 
 .menublock {
@@ -533,5 +613,34 @@ table tr td:first-child::before {
 
 .btnautog {
     background-color: darkturquoise;
+}
+
+.acc-item {
+    margin-bottom: 20px;
+}
+
+.acc-item--active .acc-item__trigger {
+    /*  background-color: rgb(166, 233, 202); */
+}
+
+.acc-item--active .acc-item__content {
+    display: block;
+    background-color: rgb(233, 231, 255);
+}
+
+.acc-item__trigger {
+    /* padding: 5px; */
+
+    /* border-bottom: 1px solid black; */
+    /* position: absolute;
+    left: 0%; */
+}
+
+.acc-item__content {
+    /* border: 1px solid black; */
+    border-top: none;
+    display: none;
+    width: auto;
+    margin-top: 20px;
 }
 </style>
