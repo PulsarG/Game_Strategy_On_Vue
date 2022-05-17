@@ -1,8 +1,9 @@
 <template>
     <div class="allmenu">
         <div class="menu">
-            <p style="margin-bottom: 3px;"><strong>{{ menuText }}</strong><br>ver 0.21 Alpha test</p>
+            <p style="margin-bottom: 3px;"><strong>{{ menuText }}</strong><br>ver 0.9.3 Beta-test</p>
             <div class="menubtns">
+                <button class="mbtn" @click="openNews">News</button>
                 <button class="mbtn" @click="setLearn">{{ learnText }}</button>
                 <button class="mbtn" @click="setLor">{{ lorText }}</button>
                 <button class="mbtn" @click="goLadderFuncs">{{ ladderText }}</button>
@@ -10,6 +11,19 @@
         </div>
 
         <div class="menublock" style="overflow: auto;">
+
+            <div style="display: flex; flex-direction: column-reverse; overflow: auto; margin-top: 5px;"
+                v-show="isNews">
+                <div style="border-bottom: 5px double black;" class="newsesblock" v-for="newses in news"
+                    :key="newses.id">
+                    <div style="border-top: 3px;">
+                        <h3 style="border-top: 3px;"><strong>{{ newses.title }}</strong></h3>
+                        <p><i>{{ newses.date }}</i></p>
+                        <p>{{ newses.body }}</p>
+                    </div>
+                </div>
+            </div>
+
             <div class="learn" v-show="!isHideLearn" style="width: auto">
 
                 <div class="acc" style="display: flex; flex-direction: column; width: auto; margin-top: 20px;">
@@ -17,54 +31,124 @@
                     <div class="acc-item" style="display: flex; flex-direction: column;">
                         <div class="acc-item__trigger"><button><strong style="font-size: 20px;">Майнинг /
                                     Заработок</strong></button></div>
-                        <div class="acc-item__content" style="width: auto;">Lorem ipsum dolor sit amet consectetur,
-                            adipisicing elit. Dolor voluptatum quibusdam inventore rerum quod cum tempora autem velit at
-                            quidem commodi nulla necessitatibus dignissimos repellat minus aut, nihil animi quae.</div>
+                        <div class="acc-item__content" style="width: auto;">
+                            <p class="leartextmenu"> Кликните на Систему Майнинга <img class="learnimg"
+                                    src="@/assets/29719-processor-integralnye_mikroshemy-mnogoyadernyj_processor-sinij_cvet-liniya-x750.jpg"
+                                    alt=""> чтобы купить Модули Майнинга <img class="learnimg" src="@/assets/cheap.png"
+                                    alt=""> <br><br> Каждый Модуль приносит +1 Кредит в секунду. <br><br> Кредиты так же
+                                можно
+                                получить в Награде <img class="learnimg" src="@/assets/cosmochest.jpg" alt=""> после
+                                смерти врага.
+                            </p>
+                        </div>
                     </div>
 
                     <div class="acc-item" style="margin-top: 20px;">
-                        <div class="acc-item__trigger"><button><strong style="font-size: 20px;">Окно персонажа / Меню навыков</strong></button></div>
-                        <div class="acc-item__content">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ratione
-                            repellat atque aut natus nobis, tempore quam qui quas voluptate deleniti expedita
-                            voluptatibus laudantium eveniet harum impedit magni suscipit cum. Nostrum aperiam at omnis
-                            deserunt numquam optio. Tempore, sequi facilis? Neque ipsa quo eligendi consequatur qui
-                            exercitationem culpa debitis eos necessitatibus?</div>
+                        <div class="acc-item__trigger"><button><strong style="font-size: 20px;">Окно персонажа / Меню
+                                    навыков</strong></button></div>
+                        <div class="acc-item__content">
+                            <p class="leartextmenu"> Кликните на Персонажа, чтобы открыть меню Навыков и Инвентарь.
+                                <br><br>
+                                Имея Очки Навыков можно: <br><br> улучшить систему прицеливания, что поспособствует
+                                более
+                                частым попаданиям в слабые зоны врага и будет наносить Критический урон; <br><br>
+                                улучшить систему "авто-выстрела по слабым местам", что даст шанс нанести смертельный
+                                урон одним выстрелом; <br><br>
+                                придать уверенности в собственных силах вашему Инженеру, что благоприятно скажется на
+                                его личных навыках, благодаря которым он сможет улучшить Турель. <br>
+                                <br> В этом же окне можно использовать Щит (просто купив новую батарею), купить и
+                                использовать Пси-бомбы, которые
+                                моментально уничтожат ближайшего врага и сбросят Характеристики следующего противника до
+                                минимальных (см. ЛОР) <br>
+                                А так же отображаются иные имеющиеся у персонажа предметы.
+                            </p>
+                        </div>
                     </div>
 
                     <div class="acc-item" style="margin-top: 20px;">
-                        <div class="acc-item__trigger"><button><strong style="font-size: 20px;">Инженер / Навыки инженера</strong></button></div>
-                        <div class="acc-item__content">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ratione
-                            repellat atque aut natus nobis, tempore quam qui quas voluptate deleniti expedita
-                            voluptatibus laudantium eveniet harum impedit magni suscipit cum. Nostrum aperiam at omnis
-                            deserunt numquam optio. Tempore, sequi facilis? Neque ipsa quo eligendi consequatur qui
-                            exercitationem culpa debitis eos necessitatibus?</div>
+                        <div class="acc-item__trigger"><button><strong style="font-size: 20px;">Инженер / Навыки
+                                    инженера</strong></button></div>
+                        <div class="acc-item__content">
+                            <p class="leartextmenu">Кликните на Меню Инженера, чтобы открыть окно взаимодейтсвия с ним.
+                                <br><br>
+                                Здесь можно нанять инженера (не противоречит правилам соревнования. см. ЛОР), который за
+                                хорошую плату готов рискнуть жизнью и постоять вместе с вами. Правда за вашей спиной.
+                                <br><br>
+                                Благодаря его навыкам можно улучшить модуль концентрирования заряда, что поднимет урон
+                                каждого выстрела. <br><br>
+                                Он так же сможет заменять и добавлять съемную кевларовую броню. <br><br>
+                                Ну и конечно, отвалив ему немало Кредитов, он установит Турель, которая мало того, что
+                                наносит
+                                урон, так еще и отвлекает внимание противника на себя, пока не будет уничтожена.
+                            </p>
+                        </div>
                     </div>
 
                     <div class="acc-item" style="margin-top: 20px;">
-                        <div class="acc-item__trigger"><button><strong style="font-size: 20px;">База Снабжения / Окно доставки</strong></button></div>
-                        <div class="acc-item__content">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ratione
-                            repellat atque aut natus nobis, tempore quam qui quas voluptate deleniti expedita
-                            voluptatibus laudantium eveniet harum impedit magni suscipit cum. Nostrum aperiam at omnis
-                            deserunt numquam optio. Tempore, sequi facilis? Neque ipsa quo eligendi consequatur qui
-                            exercitationem culpa debitis eos necessitatibus?</div>
+                        <div class="acc-item__trigger"><button><strong style="font-size: 20px;">База Снабжения / Окно
+                                    доставки</strong></button></div>
+                        <div class="acc-item__content">
+                            <p class="leartextmenu">Кликните на Меню Базы Снабжения, чтобы открыть окно Быстрой
+                                Доставки. <br><br>
+                                Здесь, первым делом, следует сообщить на Корабль-Базу, что вы просите создать трек
+                                моментальной доставки, т.к. вступили в соревнование. <br><br>
+                                Это позволит заказывать препараты экстренного заживления организма, которые стоят
+                                немало, и если вы "вредите здоровью по своей прихоти", то покупайте данные препараты за
+                                свой счет.
+                                <br>Они восстановят ваше здоровье на определенное колличество. <br><br>
+                                Вы можете заказать новые Модули Накопления Заряда для вашей винтовки, котрые позволят
+                                стрелять быстрее. <br><br>
+                                А так же есть возможность купить более продолжительные по времени Щиты.
+                            </p>
+                        </div>
                     </div>
 
                     <div class="acc-item" style="margin-top: 20px;">
-                        <div class="acc-item__trigger"><button><strong style="font-size: 20px;">Ход боя</strong></button></div>
-                        <div class="acc-item__content">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ratione
-                            repellat atque aut natus nobis, tempore quam qui quas voluptate deleniti expedita
-                            voluptatibus laudantium eveniet harum impedit magni suscipit cum. Nostrum aperiam at omnis
-                            deserunt numquam optio. Tempore, sequi facilis? Neque ipsa quo eligendi consequatur qui
-                            exercitationem culpa debitis eos necessitatibus?</div>
+                        <div class="acc-item__trigger"><button><strong style="font-size: 20px;">Ход
+                                    боя</strong></button></div>
+                        <div class="acc-item__content">
+                            <p class="leartextmenu">
+                                Переодически Персонаж наносит урон врагу, а Враг по Персонажу, или Щиту, или Турели.
+                                <br><br>
+                                Со временем урон Противника возрастает. А каждый следующий Противник имеет больше
+                                здоровья,
+                                чем предыдущий. <br><br>
+                                Броня Персонажа способна уменьшать входящий урон. А если Брони больше, чем урон Врага,
+                                то
+                                она полностью поглощает входящий урон, при этом теряя в прочности. <br><br>
+                                Каждый враг приносит определенное количество Очков Опыта (зависит от уровня Противника),
+                                благодаря которому повышается уровень персонажа. Каждый новый уровень дает +1 Очко
+                                Навыка (см. Окно
+                                Персонажа). <br><br>
+                                Главное: каждый убитый противник повышает ваш общий Счет для ладдера. Количество
+                                зачисляемых
+                                очков в Счет зависит от Уровня Врага и Продолжительности боя. <br><br>
+                                Когда Здоровье персонажа падает до 0, он впадает в кому, а его товарищи используют
+                                Пси-бомбу, чтобы уничтожить угрозу. <br><br>
+                                В конце Вам будет предоставлен полный отчет о ходе боя. Вам будет предложено отправить
+                                ваш результат в таблицу Ладдера.
+                            </p>
+                        </div>
                     </div>
 
                     <div class="acc-item" style="margin-top: 20px;">
-                        <div class="acc-item__trigger"><button><strong style="font-size: 20px;">Добыча</strong></button></div>
-                        <div class="acc-item__content">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ratione
-                            repellat atque aut natus nobis, tempore quam qui quas voluptate deleniti expedita
-                            voluptatibus laudantium eveniet harum impedit magni suscipit cum. Nostrum aperiam at omnis
-                            deserunt numquam optio. Tempore, sequi facilis? Neque ipsa quo eligendi consequatur qui
-                            exercitationem culpa debitis eos necessitatibus?</div>
+                        <div class="acc-item__trigger"><button><strong style="font-size: 20px;">Добыча</strong></button>
+                        </div>
+                        <div class="acc-item__content">
+                            <p class="leartextmenu">
+                                Время от времени, после победы над очередным противником, "в его карманах" можно
+                                обнаружить различную добычу. <br><br>
+                                Зачастую это просто некое количество Кредитов. <br><br>
+                                Иногда Очко Навыка. <br><br>
+                                Реже Пси-бомбу. <br><br>
+                                В самых редких случаях можно обнаружить Уникальные Технологии, которые Персонаж
+                                незамедлительно приспособит для себя. <br>
+                                Или иные предметы.
+                                <br><br>
+                                <strong>Кликните на Ящик с добычей (если не стоит Автоигра), чтобы подтвердить получение
+                                    награды и продолжить.</strong>
+                            </p>
+                        </div>
                     </div>
 
                 </div>
@@ -121,28 +205,6 @@
                     <br>
                     Вы - новичок в элитной группе "Evans", который только что заступил на пост и решил включится в
                     соревнование со своими товарищами.
-                    <br>
-                    <br>
-                    Зарабатывайте Кредиты, тратьте их на
-                    <br>
-                    зарядку и улучшение энерго-щита,
-                    улучшение защитного поля костюма,
-                    <br>
-                    <br>
-                    улучшения системы наводки (что позволяет
-                    точнее целиться и наносит критический урон),
-                    <br>
-                    <br>
-                    модули накопления (которые позволяют быстрее
-                    <br>
-                    <br>
-                    накапливать заряд для выстрела, что повышает скорострельность оружия),
-                    <br>
-                    <br>
-                    покупку особых вещей.
-                    <br>
-                    <br>
-                    Иногда с убитого Барга можно поживиться кредитами, модулями улучшения и особыми предметами.
                     <br>
                     <br>
                     Удачи!
@@ -233,25 +295,6 @@ export default {
     },
     data() {
         return {
-
-            myItems: [
-                {
-                    title: 'How many time zones are there in all?',
-                    value: 'Given a 24-hour day and 360 degrees of longitude around the Earth',
-                    category: 'Tab-1'
-                },
-                {
-                    title: 'How long is a day and year on Venus?',
-                    value: 'Venus takes 224.7 Earth days to complete one orbit around the Sun.',
-                    category: 'Tab-2'
-                },
-                {
-                    title: 'What animal smells like popcorn?',
-                    value: 'Binturongs smell like popcorn.',
-                    category: 'Tab-2'
-                }
-            ],
-
             msg: "",
             iD: 1,
 
@@ -265,7 +308,7 @@ export default {
             ruStart: "Начать игру",
             enStart: "Start game",
 
-            learnText: "Learn",
+            learnText: "Handbook",
             lorText: "LOR",
             ladderText: "Ladder",
 
@@ -287,8 +330,14 @@ export default {
             report: '',
 
             users: [],
+            news: [],
             countOpenLadder: 0,
+            countOpenNews: 0,
             isLoad: false,
+            isNews: false,
+
+            dbLadder: "ladder",
+            dbNews: "news",
         }
     },
 
@@ -298,10 +347,9 @@ export default {
             this.setLadder();
         },
 
-        async getFromApi() {
-            if (this.countOpenLadder == 0) {
-                this.isLoad = true;
-                axios.get("https://testgame-59bd1-default-rtdb.europe-west1.firebasedatabase.app/ladder.json")
+        loadApiGet(string, outarray) {
+            try {
+                axios.get("https://testgame-59bd1-default-rtdb.europe-west1.firebasedatabase.app/" + string + ".json")
                     .then((response) => {
                         let array = [];
                         for (var i in response.data)
@@ -309,13 +357,38 @@ export default {
                         let j = array.length;
 
                         for (let i = 0; i < j; i++) {
-                            this.users.push(array[i][1]);
+                            outarray.push(array[i][1]);
                         }
                     });
+            } catch (e) {
+                alert(e);
+            } 
+        },
+
+        async getFromApi() {
+            if (this.countOpenLadder == 0) {
+                this.isLoad = true;
+                this.loadApiGet(this.dbLadder, this.users);
                 this.countOpenLadder++;
             }
-            /* setTimeout(() => { this.sortByScore(); }, 500); */
             setTimeout(() => { this.sortByScore(); this.isLoad = false; }, 500);
+        },
+
+        openNews() {
+            if (this.isNews) {
+                this.isNews = false;
+            } else {
+                this.isNews = true;
+                this.isLadder = true;
+                this.isHideLearn = true;
+                this.isHideLor = true;
+                this.isAbout = true;
+            }
+
+            if (this.countOpenNews == 0) {
+                this.loadApiGet(this.dbNews, this.news);
+                this.countOpenNews++
+            }
         },
 
         sortByScore() {
@@ -344,7 +417,7 @@ export default {
                     );
                 })
                 .catch(() => {
-                    // Failed to fetch script
+                  
                 });
         },
 
@@ -375,7 +448,7 @@ export default {
                 this.stopBtnText = "Resset";
                 this.pauseText = "Pause";
                 this.aboutText = "About";
-                this.learnText = "Learn";
+                this.learnText = "Handbook";
                 this.lorText = "LOR";
                 this.ladderText = "Ladder";
                 this.inreportText = "Bug report or other message. Anonim or add you'r Email.";
@@ -387,7 +460,7 @@ export default {
                 this.stopBtnText = "Заново";
                 this.pauseText = "Пауза";
                 this.aboutText = "Инфо";
-                this.learnText = "Обучение";
+                this.learnText = "Справочник";
                 this.lorText = "ЛОР";
                 this.ladderText = "Ладдер";
                 this.inreportText = "Ваше сообщение или баг-репорт. Анонимно или добавте ваш Email";
@@ -409,12 +482,14 @@ export default {
                 this.isHideLor = true;
                 this.isLadder = true;
                 this.isAbout = true;
+                this.isNews = false;
             }
         },
         setLor() {
             if (!this.isHideLor) {
                 this.isHideLor = true;
             } else {
+                this.isNews = false;
                 this.isHideLor = false;
                 this.isHideLearn = true;
                 this.isLadder = true;
@@ -425,6 +500,7 @@ export default {
             if (!this.isLadder) {
                 this.isLadder = true;
             } else {
+                this.isNews = false;
                 this.isLadder = false;
                 this.isHideLearn = true;
                 this.isHideLor = true;
@@ -435,6 +511,7 @@ export default {
             if (!this.isAbout) {
                 this.isAbout = true;
             } else {
+                this.isNews = false;
                 this.isAbout = false;
                 this.isLadder = true;
                 this.isHideLearn = true;
@@ -496,7 +573,7 @@ export default {
 .learn {
     height: auto;
     width: auto;
-   
+
 }
 
 .menublock {
@@ -642,5 +719,14 @@ table tr td:first-child::before {
     display: none;
     width: auto;
     margin-top: 20px;
+}
+
+.learnimg {
+    width: 25px;
+    height: 25px;
+}
+
+.learntextmenu {
+    font-size: 15px;
 }
 </style>

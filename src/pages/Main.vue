@@ -12,7 +12,7 @@
       :turretPrice="turretPrice" @useTurret="useTurret" :countBufMiners="countBufMiners" :countAutoheal="countAutoheal"
       @testPlusSkill="testPlusSkill" @testMinusEnemyDmg="testMinusEnemyDmg" @testPlusHeroHp="testPlusHeroHp"
       @upTurret="upTurret" @testPlusGold="testPlusGold" @useKill="useKill" class="infoblock" ref="infoblock"
-      :scorePoints="scorePoints" />
+      :scorePoints="scorePoints" :testArray="testArray" />
 
 
     <div v-show="isFail" class="fail">
@@ -43,8 +43,8 @@
           {{ killCountText }}: {{ killCount }}
         </h1>
         <div v-bind:class="{ activechest: isChest, nochest: !isChest }">
-          <button class="chestbtn" @click="useChest"> <img class="chestimg"
-              src="@/assets/Loot_Bag_without_background.webp" alt="">
+          <button class="chestbtn" @click="useChest"> <img class="chestimg" src="@/assets/cosmochest.jpg" alt="">
+            <p>Кликните, чтобы продолжить</p>
           </button>
           <h1 v-show="isGold">{{ chestGold }} {{ chestGoldText }}</h1>
           <h1 v-show="isPoint">+1 {{ chestSpellText }}</h1>
@@ -110,6 +110,11 @@ export default {
 
   data() {
     return {
+      testArray: {
+        one: 1,
+        two: 2,
+      },
+
       scorePoints: 0,
 
       goldCount: 0,
@@ -131,8 +136,8 @@ export default {
       countUseBomb: 0,
       turretPrice: 100,
 
-      heroHp: 1800,
-      heroDmg: 10,
+      heroHp: 50,
+      heroDmg: 50,
       heroArmor: 0,
       atackSpeed: 2000,
       killCount: 0,
@@ -226,36 +231,31 @@ export default {
   },
 
   methods: {
-    async getToApi() {
-      /*  axios.get("https://testgame-59bd1-default-rtdb.europe-west1.firebasedatabase.app/ladder.json")
-         .then((response) => {
-           let array = [];
-           for (var i in response.data)
-             array.push([i, response.data[i]]);
-           let j = array.length;
- 
-           for (let i = 0; i < j; i++) {
-             this.users.push(array[i][1]);
-           }
-         }) */
-    },
 
-    findRecords() {
-      axios.get("https://testgame-59bd1-default-rtdb.europe-west1.firebasedatabase.app/ladder.json")
-        .then((response) => {
-          let array = [];
-          for (var i in response.data)
-            array.push([i, response.data[i]]);
-          let j = array.length;
+    async findRecords() {
+      try {
+        await axios.get("https://testgame-59bd1-default-rtdb.europe-west1.firebasedatabase.app/ladder.json")
+          .then((response) => {
+            let array = [];
+            for (var i in response.data)
+              array.push([i, response.data[i]]);
+            let j = array.length;
 
-          for (let i = 0; i < j; i++) {
-            this.users.push(array[i][1]);
-          }
-        });
+            for (let i = 0; i < j; i++) {
+              this.users.push(array[i][1]);
+            }
+          });
+      } catch (e) {
+        alert("Произошла ошибка проверки рекорда");
+        console.log(e);
+      }
 
+      let k = 0;
       for (let i = 0; i < this.users.length; i++) {
-        if (this.users[i].heroHp < this.heroHp) {
-          console.log("Вы установили рекорд!");
+        if (this.users[i].score < this.scorePoints) {
+          k++;
+          if (k >= this.users.length)
+            alert("Вы установили мировой рекорд! / World Record!");
         }
       }
     },
@@ -265,49 +265,21 @@ export default {
       if (this.user == "") {
         alert("Поле с ником пустое");
       } else {
-        await axios.post("https://testgame-59bd1-default-rtdb.europe-west1.firebasedatabase.app/ladder.json", {
-          nick: this.user,
-          score: this.scorePoints,
-          level: this.heroLvl,
-          kills: this.killCount,
-        });
+        try {
+          await axios.post("https://testgame-59bd1-default-rtdb.europe-west1.firebasedatabase.app/ladder.json", {
+            nick: this.user,
+            score: this.scorePoints,
+            level: this.heroLvl,
+            kills: this.killCount,
+          });
+        } catch (e) {
+          alert("Error:");
+          alert(e);
+        };
         this.user = "";
         alert("Отправлено");
         this.deleteSendButton();
-        /* axios.get("https://testgame-59bd1-default-rtdb.europe-west1.firebasedatabase.app/ladder.json")
-          .then((response) => {
-            let array = [];
-            for (var i in response.data)
-              array.push([i, response.data[i]]);
-            let j = array.length;
-  
-            for (let i = 0; i < j; i++) {
-              this.users.push(array[i][1]);
-            } */
       }
-
-      /* for (let i = 0; i < this.users.length; i++) {
-        if (this.users[i].nick == this.user) {
-          alert("Такой ник уже есть");
-        } else {
-          await axios.post("https://testgame-59bd1-default-rtdb.europe-west1.firebasedatabase.app/ladder.json", {
-            nick: this.user,
-            heroHp: this.heroHp,
-            heroDmg: this.heroDmg,
-          });
-          this.user = "";
-          alert("Отправлено");
-        }
-      }
-    } */
-
-      /* await axios.post("https://testgame-59bd1-default-rtdb.europe-west1.firebasedatabase.app/ladder.json", {
-        nick: this.user,
-        heroHp: this.heroHp,
-        heroDmg: this.heroDmg,
-      });
-      this.user = "";
-      alert("Отправлено"); */
     },
 
 
@@ -590,8 +562,9 @@ export default {
     },
 
     buyBomb() {
-      this.goldCount -= 5000;
+      this.goldCount -= this.bombPrice;
       this.countBomb += 1;
+      this.bombPrice += 500;
     },
     useBomb() {
       this.enemyHp = 0;
@@ -616,6 +589,9 @@ export default {
       this.isTurretUse = true;
       this.turretHp = this.defaultTurretHp;
       this.countTurrets++;
+      this.goldCount -= this.turretPrice;
+      this.turretPrice += 100;
+
       let turretDamage = setInterval(() => {
 
         if (this.isTurretUse && !this.isPause) {
@@ -739,6 +715,7 @@ export default {
     heroHp(newValue) {
       if (newValue <= 0) {
         this.isFail = true;
+        this.findRecords();
       }
     },
 

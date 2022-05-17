@@ -16,7 +16,7 @@
 
         <div class="testskills">
             <div>
-                <h3>Навыки тестировщика</h3>
+                <h4>Навыки тестировщика (до релиза)</h4>
             </div>
 
             <div style="display: flex; flex-direction: row; margin-bottom: 25px;">
@@ -89,7 +89,7 @@
                 <button class="spell" v-bind:class="{ nospell: isNoSpellPoint }" @click="useKill">{{ oneShotKillText
                 }} <br> <br> [{{ countUpFastKill }}]</button>
                 <button class="spell" v-bind:class="{ cantbuybomb: !isCanBuyBomb }" @click="buyBomb">
-                    Buy psy-bomb for 5000
+                    Buy psy-bomb for {{ bombPrice }}
                 </button>
             </div>
 
@@ -114,7 +114,6 @@
             </div>
 
         </div>
-
     </div>
 </template>
 
@@ -190,6 +189,11 @@ export default {
         countBufMiners: Number,
         turretPrice: Number,
         scorePoints: Number,
+
+        testArray: {
+            type: Object,
+            required: true,
+        },
         isItemMenu: {
             type: Boolean,
         },

@@ -1,5 +1,5 @@
 import MainPage from "@/pages/Main";
-import TestPage from "@/pages/BugReports";
+import News from "@/pages/News";
 import { createRouter, createWebHistory } from 'vue-router';
 
 
@@ -12,8 +12,8 @@ const router = createRouter(
                 component: MainPage,
             },
             {
-                path: "/bugreports",
-                component: TestPage,
+                path: "/adminaddnews",
+                component: News,
             },
            /*  {
                 path: "*",
