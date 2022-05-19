@@ -1,7 +1,7 @@
 <template>
     <div class="tavern" v-bind:class="{ isbuy: isTavernBuy }">
         <button @click="setOpenTavern">
-            <img src="@/assets/imagestavern.png" alt="">
+            <img src="http://drive.google.com/uc?export=view&id=1oh39c1rRSbB78j2fIF7QJTX_IPk2xEvB" alt="">
         </button>
     </div>
 </template>

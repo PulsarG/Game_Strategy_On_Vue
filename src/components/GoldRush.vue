@@ -1,21 +1,28 @@
 <template>
-    <div class="main" v-bind:class="{buf: bufMiners}">
+    <div class="main" v-bind:class="{ buf: bufMiners }">
         <div class="row">
-            <div v-show="isVisibleGoldMiner2" class="item"><img src="@/assets/cheap.png" alt=""></div>
-            <div class="item"><img src="@/assets/cheap.png" alt=""></div>
-            <div v-show="isVisibleGoldMiner1" class="item"><img src="@/assets/cheap.png" alt=""></div>
+            <div v-show="isVisibleGoldMiner2" class="item"><img
+                    src="http://drive.google.com/uc?export=view&id=1JhvuJ-Vc6cx_h0DRwIjfTLwKd5k2NFSh" alt=""></div>
+            <div class="item"><img src="http://drive.google.com/uc?export=view&id=1JhvuJ-Vc6cx_h0DRwIjfTLwKd5k2NFSh"
+                    alt=""></div>
+            <div v-show="isVisibleGoldMiner1" class="item"><img
+                    src="http://drive.google.com/uc?export=view&id=1JhvuJ-Vc6cx_h0DRwIjfTLwKd5k2NFSh" alt=""></div>
         </div>
         <div class="row">
-            <div v-show="isVisibleGoldMiner3" class="item"><img src="@/assets/cheap.png" alt=""></div>
+            <div v-show="isVisibleGoldMiner3" class="item"><img
+                    src="http://drive.google.com/uc?export=view&id=1JhvuJ-Vc6cx_h0DRwIjfTLwKd5k2NFSh" alt=""></div>
             <button @click="setShowMinersMenu" class="goldbtn"><img class="imgbtn"
-                    src="@/assets/29719-processor-integralnye_mikroshemy-mnogoyadernyj_processor-sinij_cvet-liniya-x750.jpg"
-                    alt=""></button>
-            <div v-show="isVisibleGoldMiner4" class="item"><img src="@/assets/cheap.png" alt=""></div>
+                    src="http://drive.google.com/uc?export=view&id=1qLNKhbxt7Y9G-d40bsS3RVhyRh_sxZuw" alt=""></button>
+            <div v-show="isVisibleGoldMiner4" class="item"><img
+                    src="http://drive.google.com/uc?export=view&id=1JhvuJ-Vc6cx_h0DRwIjfTLwKd5k2NFSh" alt=""></div>
         </div>
         <div class="row">
-            <div v-show="isVisibleGoldMiner5" class="item"><img src="@/assets/cheap.png" alt=""></div>
-            <div v-show="isVisibleGoldMiner7" class="item"><img src="@/assets/cheap.png" alt=""></div>
-            <div v-show="isVisibleGoldMiner6" class="item"><img src="@/assets/cheap.png" alt=""></div>
+            <div v-show="isVisibleGoldMiner5" class="item"><img
+                    src="http://drive.google.com/uc?export=view&id=1JhvuJ-Vc6cx_h0DRwIjfTLwKd5k2NFSh" alt=""></div>
+            <div v-show="isVisibleGoldMiner7" class="item"><img
+                    src="http://drive.google.com/uc?export=view&id=1JhvuJ-Vc6cx_h0DRwIjfTLwKd5k2NFSh" alt=""></div>
+            <div v-show="isVisibleGoldMiner6" class="item"><img
+                    src="http://drive.google.com/uc?export=view&id=1JhvuJ-Vc6cx_h0DRwIjfTLwKd5k2NFSh" alt=""></div>
         </div>
     </div>
 </template>
@@ -24,7 +31,10 @@
 export default {
     name: 'gold-rush',
     props: {
-        countMiners: Number,
+        Credits: {
+            type: Object,
+            required: true,
+        },
         bufMiners: Boolean,
     },
     data() {
@@ -45,30 +55,33 @@ export default {
         }
     },
     watch: {
-        countMiners(newValue) {
-            switch (newValue) {
-                case 2:
-                    this.isVisibleGoldMiner1 = true;
-                    break;
-                case 3:
-                    this.isVisibleGoldMiner2 = true;
-                    break;
-                case 4:
-                    this.isVisibleGoldMiner3 = true;
-                    break;
-                case 5:
-                    this.isVisibleGoldMiner4 = true;
-                    break;
-                case 6:
-                    this.isVisibleGoldMiner5 = true;
-                    break;
-                case 7:
-                    this.isVisibleGoldMiner6 = true;
-                    break;
-                case 8:
-                    this.isVisibleGoldMiner7 = true;
-                    break;
-            }
+        Credits: {
+            handler(Credits) {
+                switch (Credits.CountMiners) {
+                    case 2:
+                        this.isVisibleGoldMiner1 = true;
+                        break;
+                    case 3:
+                        this.isVisibleGoldMiner2 = true;
+                        break;
+                    case 4:
+                        this.isVisibleGoldMiner3 = true;
+                        break;
+                    case 5:
+                        this.isVisibleGoldMiner4 = true;
+                        break;
+                    case 6:
+                        this.isVisibleGoldMiner5 = true;
+                        break;
+                    case 7:
+                        this.isVisibleGoldMiner6 = true;
+                        break;
+                    case 8:
+                        this.isVisibleGoldMiner7 = true;
+                        break;
+                }
+            },
+            deep: true,
         }
     }
 }

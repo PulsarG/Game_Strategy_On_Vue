@@ -1,6 +1,6 @@
 <template>
     <div class="main" v-bind:class="{ active: isForgeBuy}">
-        <button @click="setShowForgeMenu"> <img src="@/assets/png-transparent-gear-train-others-miscellaneous-logo-mechanics.png" alt=""> </button>
+        <button @click="setShowForgeMenu"> <img src="http://drive.google.com/uc?export=view&id=1nMw9Je2A2kA77ifQQDyCaFH5Di52BhcN" alt=""> </button>
     </div>
 </template>
 

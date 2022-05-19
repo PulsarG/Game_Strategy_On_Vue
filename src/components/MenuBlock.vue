@@ -1,7 +1,7 @@
 <template>
     <div class="allmenu">
         <div class="menu">
-            <p style="margin-bottom: 3px;"><strong>{{ menuText }}</strong><br>ver 0.9.3 Beta-test</p>
+            <p style="margin-bottom: 3px;"><strong>{{ menuText }}</strong><br>ver 0.9.5 Beta-test</p>
             <div class="menubtns">
                 <button class="mbtn" @click="openNews">News</button>
                 <button class="mbtn" @click="setLearn">{{ learnText }}</button>
@@ -18,8 +18,8 @@
                     :key="newses.id">
                     <div style="border-top: 3px;">
                         <h3 style="border-top: 3px;"><strong>{{ newses.title }}</strong></h3>
-                        <p><i>{{ newses.date }}</i></p>
-                        <p>{{ newses.body }}</p>
+                        <p style="margin: 0;"><i>{{ newses.date }}</i></p>
+                        <p style="margin: 0;">{{ newses.body }}</p>
                     </div>
                 </div>
             </div>
@@ -362,7 +362,7 @@ export default {
                     });
             } catch (e) {
                 alert(e);
-            } 
+            }
         },
 
         async getFromApi() {
@@ -417,7 +417,7 @@ export default {
                     );
                 })
                 .catch(() => {
-                  
+
                 });
         },
 

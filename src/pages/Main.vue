@@ -2,17 +2,14 @@
   <div class="mainpage">
 
     <info-block :isItemMenu="isItemMenu" :isForgeMenu="isForgeMenu" @afterBuyMiner="afterBuyMiner" @buyForge="buyForge"
-      @upDmg="upDmg" :isForgeBuy="isForgeBuy" :priceGoldMiner="priceGoldMiner" @upSpeed="upSpeed" @upShield="upShield"
-      :isHeroSpellsOpen="isHeroSpellsOpen" :shieldPrice="shieldPrice" @healUp="healUp" :goldCount="goldCount"
-      :heroDmg="heroDmg" :forgePrice="forgePrice" :isEng="isEng" @upArmor="upArmor" :speedPrice="speedPrice"
-      :spellPoints="spellPoints" :priceTavern="priceTavern" @buyTavern="buyTavern" :isTavernOpen="isTavernOpen"
-      :heroHp="heroHp" :shieldTimeSec="shieldTimeSec" :healingPrice="healingPrice" :isTavernBuy="isTavernBuy"
-      :bombPrice="bombPrice" @buyBomb="buyBomb" :enemyDmg="enemyDmg" :heroArmor="heroArmor" @useBomb="useBomb"
-      :countBomb="countBomb" :useShieldPrice="useShieldPrice" @setUseShield="setUseShield" @upCrit="upCrit"
-      :turretPrice="turretPrice" @useTurret="useTurret" :countBufMiners="countBufMiners" :countAutoheal="countAutoheal"
-      @testPlusSkill="testPlusSkill" @testMinusEnemyDmg="testMinusEnemyDmg" @testPlusHeroHp="testPlusHeroHp"
-      @upTurret="upTurret" @testPlusGold="testPlusGold" @useKill="useKill" class="infoblock" ref="infoblock"
-      :scorePoints="scorePoints" :testArray="testArray" />
+      @upDmg="upDmg" :isForgeBuy="isForgeBuy" @upSpeed="upSpeed" @upShield="upShield"
+      :isHeroSpellsOpen="isHeroSpellsOpen" @healUp="healUp" :isEng="isEng" @upArmor="upArmor" @buyTavern="buyTavern"
+      :isTavernOpen="isTavernOpen" :shieldTimeSec="shieldTimeSec" :isTavernBuy="isTavernBuy" @buyBomb="buyBomb"
+      @useBomb="useBomb" @setUseShield="setUseShield" @upCrit="upCrit" @useTurret="useTurret"
+      :countBufMiners="countBufMiners" :countAutoheal="countAutoheal" @testPlusSkill="testPlusSkill"
+      @testMinusEnemyDmg="testMinusEnemyDmg" @testPlusHeroHp="testPlusHeroHp" @upTurret="upTurret"
+      @testPlusGold="testPlusGold" @useKill="useKill" class="infoblock" ref="infoblock" :Hero="Hero" :Enemy="Enemy"
+      :Buy="Buy" :Turret="Turret" :Credits="Credits" />
 
 
     <div v-show="isFail" class="fail">
@@ -20,11 +17,11 @@
       <h1>YOU DIED</h1>
       <h2>Score: {{ scorePoints }}</h2>
       <h1>----------</h1>
-      <h3> {{ killCountText }}: {{ killCount }}</h3>
-      <h3> {{ levelText }}: {{ heroLvl }} </h3>
+      <h3> {{ killCountText }}: {{ Hero.KillCount }}</h3>
+      <h3> {{ levelText }}: {{ Hero.Lvl }} </h3>
       <h3> {{ totalGoldText }}: {{ totalGoldCount }}</h3>
-      <h3> {{ critChanceText }}: {{ chanceCrit }}%</h3>
-      <h3>{{ fastkillChanceText }}: {{ fastKillChance }}%</h3>
+      <h3> {{ critChanceText }}: {{ Hero.ChanceCrit }}%</h3>
+      <h3>{{ fastkillChanceText }}: {{ Hero.FastKillChance }}%</h3>
       <h3>{{ totalSpellPoints }} {{ totalSpellPointsText }}</h3>
       <h3 v-if="countTurrets > 0">Use turret {{ countTurrets }}</h3>
       <h3 v-if="countUseBomb > 0"> {{ countUseBomb }} {{ useBombText }}</h3>
@@ -40,10 +37,11 @@
     <div v-show="!isFail" class="field">
       <div class="level">
         <h1>
-          {{ killCountText }}: {{ killCount }}
+          {{ killCountText }}: {{ Hero.KillCount }}
         </h1>
         <div v-bind:class="{ activechest: isChest, nochest: !isChest }">
-          <button class="chestbtn" @click="useChest"> <img class="chestimg" src="@/assets/cosmochest.jpg" alt="">
+          <button class="chestbtn" @click="useChest"> <img class="chestimg"
+              src="http://drive.google.com/uc?export=view&id=1XfQ8U6e6dVIzbXKgQnZo35bEOGZ-TBBm" alt="">
             <p>Кликните, чтобы продолжить</p>
           </button>
           <h1 v-show="isGold">{{ chestGold }} {{ chestGoldText }}</h1>
@@ -60,35 +58,35 @@
 
           <!--  <h1 v-show="isShield">{{ shieldUsedText }}</h1> -->
 
-          <h2 v-show="isSpellPoints">+ {{ spellPoints }} {{ chestSpellText }}</h2>
+          <h2 v-show="isSpellPoints">+ {{ Hero.SpellPoints }} {{ chestSpellText }}</h2>
           <button @click="setOpenHeroSpells" class="herobtn" style="display: flex; flex-direction: row;">
-            <img class="imghero" src="@/assets/fca20ca686df78242e7f5faf65ef4041.jpg" alt="">
-            <img class="imgshield" v-show="isShield" src="@/assets/energy-shield(1).png" alt="">
+            <img class="imghero" src="http://drive.google.com/uc?export=view&id=11Iqj7exWGFh5uBlWIElPPrGhpWpHvOCB" alt="">
+            <img class="imgshield" v-show="isShield" src="http://drive.google.com/uc?export=view&id=1IYIeFLapRwb7Ptek-wEEkVcok2amBm8M" alt="">
           </button>
-          <h1>{{ levelText }} {{ heroLvl }}</h1>
+          <h1>{{ levelText }} {{ Hero.Lvl }}</h1>
         </div>
 
-        <h1 class="crit" v-show="chanceCritAfterShield" style="color: red;">ENEMY CRIT</h1>
+        <h1 class="crit" v-show="Enemy.ChanceCritAfterShield" style="color: red;">Enemy CRIT</h1>
         <h1 class="crit" v-show="isCrit">{{ critText }}</h1>
         <h1 class="crit" v-show="isFastKill">{{ fastKillActiveText }}</h1>
         <div style="display: flex; flex-direction: column;">
-          <h1 class="crit" v-show="isTurretUse">{{ turretHp }} </h1>
-          <img class="turret" v-show="isTurretUse" src="@/assets/turel-iz-tf2.jpg" alt="">
+          <h1 class="crit" v-show="isTurretUse">{{ Turret.Hp }} </h1>
+          <img class="turret" v-show="isTurretUse" src="http://drive.google.com/uc?export=view&id=1HR03pGuy5dMhT_CCjpFkuxohq6kKoCAq" alt="">
         </div>
 
-        <div v-show="isEnemyLife" class="enemy">
+        <div v-show="Enemy.IsLife" class="Enemy">
           <div>
-            <h1>{{ enemyHp }}</h1>
+            <h1>{{ Enemy.Hp }}</h1>
           </div>
-          <img class="imgenemy" src="@/assets/borg-star-trek-the-next-generation-statula-.jpg" alt="">
-          <h1>{{ fEnemyName }} {{ fEnemyLvl }}</h1>
+          <img class="imgEnemy" src="http://drive.google.com/uc?export=view&id=1AWCkr9BUTb6IrACiU8IRgYpJsnd-YyRD" alt="">
+          <h1>{{ Enemy.Name }} {{ Enemy.Lvl }}</h1>
         </div>
 
       </div>
 
       <hero-base @setShowMinersMenu="setShowMinersMenu" @setOpenTavern="setOpenTavern" :isTavernBuy="isTavernBuy"
         @setShowForgeMenu="setShowForgeMenu" :isForgeBuy="isForgeBuy" class="herobase" ref="herobase"
-        :countMiners="countMiners" :bufMiners="bufMiners" />
+        :bufMiners="bufMiners" :Credits="Credits" />
 
     </div>
     <menu-block @toStartGame="toStartGame" class="menublock" :isEng="isEng" @setLang="setLang" @setPause="setPause"
@@ -110,70 +108,74 @@ export default {
 
   data() {
     return {
-      testArray: {
-        one: 1,
-        two: 2,
+      scorePoints: 0,
+      totalSpellPoints: 0,
+      totalGoldCount: 0,
+      countUseBomb: 0,
+      countTurrets: 0,
+
+      Hero: {
+        Hp: 1800,
+        Dmg: 50,
+        Armor: 0,
+        AtackSpeed: 2000,
+        KillCount: 0,
+        Lvl: 1,
+        ChanceCrit: 5,
+        SpellPoints: 0,
+        CountBomb: 0,
+        FastKillChance: 1,
+        Exp: 0,
+        HealingPoints: 500,
       },
 
-      scorePoints: 0,
+      Enemy: {
+        Hp: 200,
+        DefaultHp: 200,
+        Dmg: 10,
+        Name: "Level",
+        Lvl: 1,
+        IsLife: true,
+        ChanceCritAfterShield: false,
+        RollChanceCritAfterShield: 0,
+      },
 
-      goldCount: 0,
-      totalGoldCount: 0,
-      goldPlus: 1,
-      priceGoldMiner: 10,
-      minerAddGold: 1,
-      countMiners: 1,
+      Credits: {
+        GoldCount: 0,
+        GoldPlus: 1,
+        PriceGoldMiner: 10,
+        MinerAddGold: 1,
+        CountMiners: 1,
+      },
 
-      forgePrice: 5,
-      priceTavern: 5,
-      healingPrice: 500,
-      speedPrice: 20,
-      shieldPrice: 50,
-      useShieldPrice: 100,
+      Turret: {
+        Hp: 100,
+        Dmg: 50,
+        DefaultHp: 100,
+        Price: 100,
+      },
+
+      Buy: {
+        ForgePrice: 5,
+        PriceTavern: 5,
+        HealingPrice: 500,
+        SpeedPrice: 20,
+        UpShieldPrice: 50,
+        UseShieldPrice: 100,
+        BombPrice: 3000,
+        PriceDmgUp: 5,
+        PriceArmorUp: 10,
+      },
+
+      upDmgCount: 1,
+
       shieldTime: 5000,
       shieldTimeSec: 5,
-      bombPrice: 3000,
-      countUseBomb: 0,
-      turretPrice: 100,
-
-      heroHp: 50,
-      heroDmg: 50,
-      heroArmor: 0,
-      atackSpeed: 2000,
-      killCount: 0,
-      heroLvl: 1,
-      rollChanceCrit: 0,
-      chanceCrit: 5,
-      spellPoints: 0,
-      totalSpellPoints: 0,
-      countBomb: 0,
-      fastKillChance: 1,
-      rollChanceFastKill: 0,
-
-      turretHp: 100,
-      turretDmg: 50,
-      defaultTurretHp: 100,
 
       isSpellPoints: false,
-
       isCrit: false,
       isFastKill: false,
-
       isShield: false,
-
-      heroExp: 0,
-      expMult: 1,
-
-      healingPoints: 500,
-
-      enemyHp: 200,
-      defaultEnemyHP: 200,
-      enemyDmg: 10,
-      fEnemyName: "Enemy level",
-      fEnemyLvl: 1,
-      isEnemyLife: true,
-      chanceCritAfterShield: false,
-      rollChanceCritAfterShield: 0,
 
       killCountText: "Enemy kills",
       levelText: "Level",
@@ -190,6 +192,7 @@ export default {
       chestAutohealText: "Unique technology: auto-regeneration system (periodic recovery of health)",
       shieldUsedText: "SHIELD",
       fastKillActiveText: "FAST KILL",
+
 
       isItemMenu: false,
       isForgeMenu: false,
@@ -217,7 +220,6 @@ export default {
       countBufMiners: 1,
       showBufMiners: false,
       isTurretUse: false,
-      countTurrets: 0,
       bufMiners: false,
 
       isPause: false,
@@ -227,6 +229,8 @@ export default {
       users: [],
 
       isSend: false,
+
+      urlimg: "http://drive.google.com/uc?export=view&id=",
     }
   },
 
@@ -269,8 +273,8 @@ export default {
           await axios.post("https://testgame-59bd1-default-rtdb.europe-west1.firebasedatabase.app/ladder.json", {
             nick: this.user,
             score: this.scorePoints,
-            level: this.heroLvl,
-            kills: this.killCount,
+            level: this.Hero.Lvl,
+            kills: this.Hero.KillCount,
           });
         } catch (e) {
           alert("Error:");
@@ -294,8 +298,8 @@ export default {
     startGold() {
       setInterval(() => {
         if (!this.isFail && !this.isPause) {
-          this.goldCount += this.goldPlus;
-          this.totalGoldCount += this.goldPlus;
+          this.Credits.GoldCount += this.Credits.GoldPlus;
+          this.totalGoldCount += this.Credits.GoldPlus;
         }
       }, 1000);
     },
@@ -306,48 +310,48 @@ export default {
 
         this.rollFastKill();
 
-        this.rollChanceCrit = Math.floor(Math.random() * 99);
-        if (this.rollChanceCrit <= this.chanceCrit) {
+        let rollChanceCrit = Math.floor(Math.random() * 99);
+        if (rollChanceCrit <= this.Hero.ChanceCrit) {
           this.showCritInfo();
-          this.enemyHp -= this.heroDmg * 2;
+          this.Enemy.Hp -= this.Hero.Dmg * 2;
         } else {
-          this.enemyHp -= this.heroDmg;
+          this.Enemy.Hp -= this.Hero.Dmg;
         };
       }
 
       setTimeout(() => {
         this.startDmgHeroToEnemy();
-      }, this.atackSpeed);
+      }, this.Hero.AtackSpeed);
 
     },
 
     startDmgEnemyToHero() {
       setInterval(() => {
         if (!this.isFail && !this.isPause && !this.isShield && !this.isTurretUse) {
-          if (this.heroArmor <= this.enemyDmg) {
-            if (this.chanceCritAfterShield) {
-              this.heroHp -= (this.enemyDmg - this.heroArmor);
+          if (this.Hero.Armor <= this.Enemy.Dmg) {
+            if (this.Enemy.ChanceCritAfterShield) {
+              this.Hero.Hp -= (this.Enemy.Dmg - this.Hero.Armor);
             }
 
-            this.heroHp -= (this.enemyDmg - this.heroArmor);
+            this.Hero.Hp -= (this.Enemy.Dmg - this.Hero.Armor);
           } else {
-            this.heroArmor -= 1;
+            this.Hero.Armor -= 1;
           };
         }
       }, 2000);
     },
 
     startDmgEnemyToTurret() {
-      setInterval(() => { if (!this.isFail && !this.isPause && this.isTurretUse) { this.turretHp -= this.enemyDmg; } }, 2000);
+      setInterval(() => { if (!this.isFail && !this.isPause && this.isTurretUse) { this.Turret.Hp -= this.Enemy.Dmg; } }, 2000);
     },
 
     upEnemyDmg() {
-      setInterval(() => { if (!this.isFail && !this.isPause) { this.enemyDmg += 5 } }, 10000);
+      setInterval(() => { if (!this.isFail && !this.isPause) { this.Enemy.Dmg += 5 } }, 10000);
     },
 
     rollFastKill() {
-      this.rollChanceFastKill = Math.floor(Math.random() * 99);
-      if (this.fastKillChance >= this.rollChanceFastKill) {
+      let rollChanceFastKill = Math.floor(Math.random() * 99);
+      if (this.Hero.FastKillChance >= rollChanceFastKill) {
         this.fastKill();
       }
     },
@@ -358,8 +362,8 @@ export default {
     },
 
     upCrit() {
-      this.chanceCrit += 3;
-      this.spellPoints -= 1;
+      this.Hero.ChanceCrit += 3;
+      this.Hero.SpellPoints -= 1;
     },
 
     setHiddenMenus() {
@@ -407,28 +411,31 @@ export default {
 
 
     afterBuyMiner() {
-      this.countMiners++;
-      this.goldCount -= this.priceGoldMiner;
+      this.Credits.CountMiners++;
+      this.Credits.GoldCount -= this.Credits.PriceGoldMiner;
       /* this.goldPlus += this.minerAddGold; */
-      this.goldPlus = this.countMiners * this.countBufMiners;
-      this.priceGoldMiner += 5;
+      this.Credits.GoldPlus = this.Credits.CountMiners * this.countBufMiners;
+      this.Credits.PriceGoldMiner += 5;
     },
 
     buyForge() {
       this.isForgeBuy = true;
-      this.goldCount -= 5;
+      this.Credits.GoldCount -= 5;
     },
     buyTavern() {
       this.isTavernBuy = true;
-      this.goldCount -= this.priceTavern;
+      this.Credits.GoldCount -= this.Buy.PriceTavern;
     },
-    upDmg(priceDmgUp) {
-      this.goldCount -= priceDmgUp;
-      this.heroDmg += 5;
+    upDmg() {
+      this.Credits.GoldCount -= this.Buy.PriceDmgUp;
+      this.Hero.Dmg += 50;
+      this.upDmgCount++;
+      this.Buy.PriceDmgUp *= this.upDmgCount;
     },
-    upArmor(priceArmorUp) {
-      this.goldCount -= priceArmorUp;
-      this.heroArmor += 5;
+    upArmor() {
+      this.Credits.GoldCount -= this.Buy.PriceArmorUp;
+      this.Hero.Armor += 5;
+      this.Buy.PriceArmorUp += 5;
     },
     setLang() {
       if (this.isEng) {
@@ -445,35 +452,35 @@ export default {
 
       this.setEnemyCritAfterShield();
 
-      this.useShieldPrice += 100;
+      this.Buy.UseShieldPrice += 100;
     },
 
     setEnemyCritAfterShield() {
-      this.rollChanceCritAfterShield = Math.floor(Math.random() * 2);
+      this.Enemy.RollChanceCritAfterShield = Math.floor(Math.random() * 2);
       setTimeout(() => {
-        if (this.rollChanceCritAfterShield == 1) {
-          this.chanceCritAfterShield = true;
-          setTimeout(() => { this.chanceCritAfterShield = false; this.rollChanceCritAfterShield = 0; }, 2000);
+        if (this.Enemy.RollChanceCritAfterShield == 1) {
+          this.Enemy.ChanceCritAfterShield = true;
+          setTimeout(() => { this.Enemy.ChanceCritAfterShield = false; this.Enemy.RollChanceCritAfterShield = 0; }, 2000);
         }
       }, this.shieldTime);
     },
 
     upShield() {
-      this.shieldPrice += 50;
+      this.Buy.UpShieldPrice += 50;
       this.shieldTime += 5000;
       this.shieldTimeSec += 5;
 
     },
 
     healUp() {
-      this.goldCount -= this.healingPrice;
-      this.heroHp += this.healingPoints;
-      this.healingPrice += 10;
+      this.Credits.GoldCount -= this.Buy.HealingPrice;
+      this.Hero.Hp += this.Hero.HealingPoints;
+      this.Buy.HealingPrice += 10;
     },
     upSpeed() {
-      this.goldCount -= this.speedPrice;
-      this.speedPrice += 20;
-      this.atackSpeed -= 200;
+      this.Credits.GoldCount -= this.Buy.SpeedPrice;
+      this.Buy.SpeedPrice += 20;
+      this.Hero.AtackSpeed -= 200;
     },
 
     setPause() {
@@ -492,7 +499,7 @@ export default {
       else { this.isAutoGame = false };
     },
 
-    setChest() {
+    chestDrop() {
       this.chestChance = Math.floor(Math.random() * 2);  // 25% chance 0-3
 
       if (this.chestChance == 1) {
@@ -511,12 +518,12 @@ export default {
       // chance 0-99 
       if (this.inChance <= 70) {
         this.chestGold = Math.floor((Math.random() * 99) + 1);
-        this.goldCount += this.chestGold;
+        this.Credits.GoldCount += this.chestGold;
         this.totalGoldCount += this.chestGold;
         this.isGold = true;
 
       } else if (this.inChance > 70 && this.inChance <= 90) {
-        this.spellPoints++;
+        this.Hero.SpellPoints++;
         this.totalSpellPoints++;
         this.isPoint = true;
 
@@ -528,7 +535,7 @@ export default {
         this.isBufMiners = true;
         this.bufMiners = true;
         this.countBufMiners++;
-        this.goldPlus = this.countMiners * this.countBufMiners;
+        this.Credits.GoldPlus = this.Credits.CountMiners * this.countBufMiners;
 
       } else if (this.inChance == 99) {
         this.isAutoHeal = true;
@@ -544,7 +551,7 @@ export default {
 
     startAutoheal() {
       if (!this.isPause) {
-        setInterval(() => { this.heroHp += 100; }, 10000);
+        setInterval(() => { this.Hero.Hp += 100; }, 10000);
       }
     },
 
@@ -552,7 +559,7 @@ export default {
       if (this.isChest) {
         this.isChest = false;
         this.isPause = false;
-        this.isEnemyLife = true;
+        this.Enemy.IsLife = true;
         this.isGold = false;
         this.isPoint = false;
         this.isBomb = false;
@@ -562,43 +569,43 @@ export default {
     },
 
     buyBomb() {
-      this.goldCount -= this.bombPrice;
-      this.countBomb += 1;
-      this.bombPrice += 500;
+      this.Credits.GoldCount -= this.Buy.BombPrice;
+      this.Hero.CountBomb += 1;
+      this.Buy.BombPrice += 500;
     },
     useBomb() {
-      this.enemyHp = 0;
-      this.defaultEnemyHP = 100;
-      this.enemyDmg = 10;
-      this.fEnemyLvl = 0;
-      this.killCount += 1;
-      this.countBomb -= 1;
+      this.Enemy.Hp = 0;
+      this.Enemy.DefaultHp = 100;
+      this.Enemy.Dmg = 10;
+      this.Enemy.Lvl = 0;
+      this.Hero.KillCount += 1;
+      this.Hero.CountBomb -= 1;
       this.countUseBomb++;
     },
     useKill() {
-      this.fastKillChance += 1;
-      this.spellPoints -= 1;
+      this.Hero.FastKillChance += 1;
+      this.Hero.SpellPoints -= 1;
     },
     fastKill() {
-      this.enemyHp = 0;
+      this.Enemy.Hp = 0;
       this.isFastKill = true;
       setTimeout(() => { this.isFastKill = false; }, 1000);
     },
 
     useTurret() {
       this.isTurretUse = true;
-      this.turretHp = this.defaultTurretHp;
+      this.Turret.Hp = this.Turret.DefaultHp;
       this.countTurrets++;
-      this.goldCount -= this.turretPrice;
-      this.turretPrice += 100;
+      this.Credits.GoldCount -= this.Turret.Price;
+      this.Turret.Price += 100;
 
       let turretDamage = setInterval(() => {
 
         if (this.isTurretUse && !this.isPause) {
-          this.enemyHp -= this.turretDmg;
+          this.Enemy.Hp -= this.Turret.Dmg;
           console.log("turret");
 
-          if (this.turretHp <= 0) {
+          if (this.Turret.Hp <= 0) {
             this.isTurretUse = false;
             clearInterval(turretDamage);
           }
@@ -607,15 +614,15 @@ export default {
     },
 
     upScore() {
-      this.scorePoints += this.killCount + this.fEnemyLvl;
+      this.scorePoints += this.Hero.KillCount + this.Enemy.Lvl;
     },
     upHeroExp() {
-      this.heroExp += this.fEnemyLvl + 2;
+      this.Hero.Exp += this.Enemy.Lvl + 2;
     },
 
     upTurret() {
-      this.defaultTurretHp += 100;
-      this.spellPoints -= 1;
+      this.Turret.DefaultHp += 100;
+      this.Hero.SpellPoints -= 1;
     },
 
     deleteSendButton() {
@@ -623,99 +630,106 @@ export default {
     },
 
     testPlusGold() {
-      this.goldCount += 1000;
+      this.Credits.GoldCount += 1000;
     },
     testPlusSkill() {
-      this.spellPoints += 1;
+      this.Hero.SpellPoints += 1;
     },
     testMinusEnemyDmg() {
-      this.enemyDmg -= 10;
+      this.Enemy.Dmg -= 10;
     },
     testPlusHeroHp() {
-      this.heroHp += 100;
-    }
-
+      this.Hero.Hp += 100;
+    },
 
   },
+
   watch: {
-    enemyHp(newValue) {
-      if (newValue <= 0) {
+
+    'Hero.Hp': function (v) {
+      if (v <= 0) {
+        this.isFail = true;
+        this.findRecords();
+      }
+    },
+
+    'Enemy.Hp': function (v) {
+      if (v <= 0) {
         this.upScore();
-        this.killCount += 1;
+        this.Hero.KillCount += 1;
         this.upHeroExp();
         // this.heroExp += 1;
-        this.defaultEnemyHP += 100;
-        this.enemyHp = this.defaultEnemyHP;
-        this.fEnemyLvl += 1;
+        this.Enemy.DefaultHp += 100;
+        this.Enemy.Hp = this.Enemy.DefaultHp;
+        this.Enemy.Lvl += 1;
 
-        this.setChest();
+        this.chestDrop();
 
         this.isPause = true;
-        this.isEnemyLife = false;
+        this.Enemy.IsLife = false;
 
         setTimeout(() => {
           if (!this.isChest) {
-            this.isPause = false; this.isEnemyLife = true
+            this.isPause = false; this.Enemy.IsLife = true
           }
         }, 1000);
       }
     },
 
-    heroLvl(newValue, oldValue) {
-      if (newValue > oldValue) {
-        this.spellPoints++;
+    'Hero.Lvl': function (a, b) {
+      if (a > b) {
+        this.Hero.SpellPoints++;
         this.totalSpellPoints++;
-      };
-    },
-
-    heroExp(newValue) {
-      if (newValue >= 3 && newValue < 9) {
-        this.heroLvl = 2;
-        //  this.expMult *= 2;
-        //  this.heroExp = 0;
-      } else if ((newValue >= 9 && newValue < 27)) {
-        this.heroLvl = 3;
-      } else if ((newValue >= 27 && newValue < 65)) {
-        this.heroLvl = 4;
-      } else if ((newValue >= 65 && newValue < 140)) {
-        this.heroLvl = 5;
-      } else if ((newValue >= 140 && newValue < 230)) {
-        this.heroLvl = 6;
-      } else if ((newValue >= 230 && newValue < 340)) {
-        this.heroLvl = 7;
-      } else if ((newValue >= 340 && newValue < 480)) {
-        this.heroLvl = 8;
-      } else if ((newValue >= 480 && newValue < 640)) {
-        this.heroLvl = 9;
-      } else if ((newValue >= 640 && newValue < 850)) {
-        this.heroLvl = 10;
-      } else if ((newValue >= 850 && newValue < 1000)) {
-        this.heroLvl = 11;
-      } else if ((newValue >= 1000 && newValue < 1200)) {
-        this.heroLvl = 12;
-      } else if ((newValue >= 1200 && newValue < 1400)) {
-        this.heroLvl = 13;
-      } else if ((newValue >= 1400 && newValue < 1650)) {
-        this.heroLvl = 14;
-      } else if ((newValue >= 1650 && newValue < 1950)) {
-        this.heroLvl = 15;
-      } else if ((newValue >= 1950 && newValue < 2250)) {
-        this.heroLvl = 16;
-      } else if ((newValue >= 2250 && newValue < 2650)) {
-        this.heroLvl = 17;
-      } else if ((newValue >= 2650 && newValue < 3050)) {
-        this.heroLvl = 18;
-      } else if ((newValue >= 3050 && newValue < 3550)) {
-        this.heroLvl = 19;
-      } else if (newValue <= 3550) {
-        this.heroLvl = 20;
       }
     },
 
-    heroHp(newValue) {
-      if (newValue <= 0) {
-        this.isFail = true;
-        this.findRecords();
+    'Hero.SpellPoints': function (v) {
+      if (v != 0) {
+        this.isSpellPoints = true;
+      } else {
+        this.isSpellPoints = false;
+      }
+    },
+
+    'Hero.Exp': function (newValue) {
+      if (newValue >= 3 && newValue < 9) {
+        this.Hero.Lvl = 2;
+      } else if ((newValue >= 9 && newValue < 27)) {
+        this.Hero.Lvl = 3;
+      } else if ((newValue >= 27 && newValue < 65)) {
+        this.Hero.Lvl = 4;
+      } else if ((newValue >= 65 && newValue < 140)) {
+        this.Hero.Lvl = 5;
+      } else if ((newValue >= 140 && newValue < 230)) {
+        this.Hero.Lvl = 6;
+      } else if ((newValue >= 230 && newValue < 340)) {
+        this.Hero.Lvl = 7;
+      } else if ((newValue >= 340 && newValue < 480)) {
+        this.Hero.Lvl = 8;
+      } else if ((newValue >= 480 && newValue < 640)) {
+        this.Hero.Lvl = 9;
+      } else if ((newValue >= 640 && newValue < 850)) {
+        this.Hero.Lvl = 10;
+      } else if ((newValue >= 850 && newValue < 1000)) {
+        this.Hero.Lvl = 11;
+      } else if ((newValue >= 1000 && newValue < 1200)) {
+        this.Hero.Lvl = 12;
+      } else if ((newValue >= 1200 && newValue < 1400)) {
+        this.Hero.Lvl = 13;
+      } else if ((newValue >= 1400 && newValue < 1650)) {
+        this.Hero.Lvl = 14;
+      } else if ((newValue >= 1650 && newValue < 1950)) {
+        this.Hero.Lvl = 15;
+      } else if ((newValue >= 1950 && newValue < 2250)) {
+        this.Hero.Lvl = 16;
+      } else if ((newValue >= 2250 && newValue < 2650)) {
+        this.Hero.Lvl = 17;
+      } else if ((newValue >= 2650 && newValue < 3050)) {
+        this.Hero.Lvl = 18;
+      } else if ((newValue >= 3050 && newValue < 3550)) {
+        this.Hero.Lvl = 19;
+      } else if (newValue <= 3550) {
+        this.Hero.Lvl = 20;
       }
     },
 
@@ -738,7 +752,7 @@ export default {
         this.shieldUsedText = "ЩИТ АКТИВЕН";
         this.fastKillActiveText = "МОМЕНТАЛЬНОЕ УБИЙСТВО";
       } else {
-        this.fEnemyName = "Enemy level";
+        this.fEnemyName = "Level";
         this.killCountText = "Enemy kills";
         this.levelText = "Level";
         this.critText = "CRIT";
@@ -754,14 +768,6 @@ export default {
         this.chestAutohealText = "Unique technology: auto-regeneration system (periodic recovery of health)";
         this.shieldUsedText = "SHIELD";
         this.fastKillActiveText = "FAST KILL";
-      }
-    },
-
-    spellPoints(newValue) {
-      if (this.spellPoints != 0) {
-        this.isSpellPoints = true;
-      } else {
-        this.isSpellPoints = false;
       }
     },
 
@@ -850,7 +856,7 @@ h1 {
   margin: auto;
 }
 
-.enemy {
+.Enemy {
   height: 200px;
   width: 200px;
   /*  border: 2px solid black; */
@@ -871,7 +877,7 @@ h1 {
   width: 200px;
 }
 
-.imgenemy {
+.imgEnemy {
   height: 290px;
   width: 180px;
 }

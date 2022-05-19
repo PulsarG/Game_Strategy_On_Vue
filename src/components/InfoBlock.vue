@@ -1,12 +1,12 @@
 <template>
     <div class="infomain">
         <div class="info">
-            <h1>{{ goldText }}: {{ goldCount }}</h1>
-            <h1>{{ hpText }}: {{ heroHp }}</h1>
-            <h1>{{ damageText }}: {{ heroDmg }}</h1>
-            <h1>{{ armorText }}: {{ heroArmor }}</h1>
+            <h1>{{ goldText }}: {{ Credits.GoldCount }}</h1>
+            <h1>{{ hpText }}: {{ Hero.Hp }}</h1>
+            <h1>{{ damageText }}: {{ Hero.Dmg }}</h1>
+            <h1>{{ armorText }}: {{ Hero.Armor }}</h1>
 
-            <h2>{{ enemyText }}: {{ enemyDmg }}</h2>
+            <h2>{{ enemyText }}: {{ Enemy.Dmg }}</h2>
         </div>
 
         <!--  <div>
@@ -36,7 +36,7 @@
             <div class="htext">
                 <h1 class="hitemmenu">{{ goldrushText }}</h1>
             </div>
-            <button class="bmbtn" id="btnbuyminer" @click="buyGoldMiner">{{ buyMinerText }} {{ priceGoldMiner
+            <button class="bmbtn" id="btnbuyminer" @click="buyGoldMiner">{{ buyMinerText }} {{ Credits.PriceGoldMiner
             }}</button>
         </div>
 
@@ -46,13 +46,14 @@
             </div>
 
             <button @click="buyForge" class="btnfd" v-bind:class="{ deletebuy: isForgeBuy }">{{ buildForgeText }}
-                {{ forgePrice }}</button>
-            <button class="fbtn" v-bind:class="{ active: isForgeBuy }" @click="upDmg">{{ upDmgText }} {{ priceDmgUp }}
+                {{ Buy.ForgePrice }}</button>
+            <button class="fbtn" v-bind:class="{ active: isForgeBuy }" @click="upDmg">{{ upDmgText }} {{ Buy.PriceDmgUp
+            }}
             </button>
             <button class="fbtn" v-bind:class="{ active: isForgeBuy }" @click="upArmor">{{ upArmorText }}
-                {{ priceArmorUp }}</button>
+                {{ Buy.PriceArmorUp }}</button>
             <button class="fbtn" v-bind:class="{ active: isForgeBuy }" @click="useTurret">Поставить туррель за
-                {{ turretPrice }}</button>
+                {{ Turret.Price }}</button>
         </div>
 
         <div v-show="isTavernOpen" class="tavern">
@@ -60,15 +61,15 @@
                 <h1>{{ tavernText }}</h1>
             </div>
             <button @click="buyTavern" v-bind:class="{ deletebuy: isTavernBuy }" class="btnfd">{{ buyTavernText }}
-                {{ priceTavern }}</button>
+                {{ Buy.PriceTavern }}</button>
             <button class="tbtn" v-bind:class="{ active: isTavernBuy }" @click="healUp">{{ healingText }}
-                {{ healingPrice }}</button>
+                {{ Buy.HealingPrice }}</button>
             <button class="tbtn" v-bind:class="{ active: isTavernBuy, deletebuy: isSpeedMax }" @click="upSpeed">{{
                     speedText
             }}
-                {{ speedPrice }}</button>
+                {{ Buy.SpeedPrice }}</button>
             <button class="tbtn" v-bind:class="{ active: isTavernBuy }" @click="upShield">{{ shieldText }} {{
-                    shieldPrice
+                    Buy.UseShieldPrice
             }}</button>
         </div>
 
@@ -89,16 +90,16 @@
                 <button class="spell" v-bind:class="{ nospell: isNoSpellPoint }" @click="useKill">{{ oneShotKillText
                 }} <br> <br> [{{ countUpFastKill }}]</button>
                 <button class="spell" v-bind:class="{ cantbuybomb: !isCanBuyBomb }" @click="buyBomb">
-                    Buy psy-bomb for {{ bombPrice }}
+                    Buy psy-bomb for {{ Buy.BombPrice }}
                 </button>
             </div>
 
-            <h2>{{ spellPointsText }}: {{ spellPoints }}</h2>
+            <h2>{{ spellPointsText }}: {{ Hero.SpellPoints }}</h2>
 
             <h1>Items: </h1>
             <div class="spellbtn">
                 <button @click="setShield" class="spell">{{ useShieldText }} {{ shieldTimeSec }} sec for {{
-                        useShieldPrice
+                        Buy.UseShieldPrice
                 }} gold</button>
                 <button style="background: none; border: 1px solid black;" class="spell">
                     <h1 v-show="countAutoheal === 0" class="noitm">?</h1>
@@ -110,7 +111,7 @@
                 </button>
                 <button class="spell" style="border: 1px solid black;" v-bind:class="{ isnotbomb: isNotBomb }"
                     @click="useBomb">Use Bomb <br><br> Have
-                    {{ countBomb }} </button>
+                    {{ Hero.CountBomb }} </button>
             </div>
 
         </div>
@@ -119,15 +120,58 @@
 
 <script>
 export default {
+    props: {
+        Hero: {
+            type: Object,
+            required: true,
+        },
+        Enemy: {
+            type: Object,
+            required: true,
+        },
+        Buy: {
+            type: Object,
+            required: true,
+        },
+        Credits: {
+            type: Object,
+            required: true,
+        },
+        Turret: {
+            type: Object,
+            required: true,
+        },
+        shieldTimeSec: Number,
+        countAutoheal: Number,
+        countBufMiners: Number,
+        scorePoints: Number,
+        isItemMenu: {
+            type: Boolean,
+        },
+        isForgeMenu: {
+            type: Boolean,
+        },
+        isForgeBuy: {
+            type: Boolean,
+        },
+        isEng: {
+            type: Boolean,
+        },
+        isTavernOpen: {
+            type: Boolean,
+        },
+        isTavernBuy: {
+            type: Boolean,
+        },
+        isHeroSpellsOpen: {
+            type: Boolean,
+        },
+    },
     data() {
         return {
             upDmgCount: 1,
-            priceDmgUp: 5,
 
             countBuyMiners: 0,
-
-            upArmorCount: 1,
-            priceArmorUp: 10,
 
             countUpSpeed: 0,
             isSpeedMax: false,
@@ -151,7 +195,7 @@ export default {
             upDmgText: "Up Damage for",
             upArmorText: "Up Armor for",
             forgeText: "Support Engineer",
-            goldrushText: "Mining sistem",
+            goldrushText: "Credits sistem",
             enemyText: "Enemy Dmg",
             tavernText: "Supply base",
             healingText: "Healing for",
@@ -168,72 +212,20 @@ export default {
         }
     },
     name: 'info-block',
-    props: {
-        goldCount: Number,
-        priceGoldMiner: Number,
-        heroDmg: Number,
-        heroHp: Number,
-        heroArmor: Number,
-        forgePrice: Number,
-        priceTavern: Number,
-        enemyDmg: Number,
-        healingPrice: Number,
-        speedPrice: Number,
-        shieldPrice: Number,
-        useShieldPrice: Number,
-        shieldTimeSec: Number,
-        spellPoints: Number,
-        bombPrice: Number,
-        countBomb: Number,
-        countAutoheal: Number,
-        countBufMiners: Number,
-        turretPrice: Number,
-        scorePoints: Number,
-
-        testArray: {
-            type: Object,
-            required: true,
-        },
-        isItemMenu: {
-            type: Boolean,
-        },
-        isForgeMenu: {
-            type: Boolean,
-        },
-        isForgeBuy: {
-            type: Boolean,
-        },
-        isEng: {
-            type: Boolean,
-        },
-        isTavernOpen: {
-            type: Boolean,
-        },
-        isTavernBuy: {
-            type: Boolean,
-        },
-        isHeroSpellsOpen: {
-            type: Boolean,
-        },
-    },
     methods: {
         upDmg() {
-            if (this.isForgeBuy && this.goldCount >= this.priceDmgUp) {
-                this.$emit('upDmg', this.priceDmgUp);
-                this.upDmgCount += 1;
-                this.priceDmgUp = 5 * this.upDmgCount;
+            if (this.isForgeBuy && this.Credits.GoldCount >= this.Buy.PriceDmgUp) {
+                this.$emit('upDmg');
             }
         },
         upArmor() {
-            if (this.isForgeBuy && this.goldCount >= this.priceArmorUp) {
-                this.$emit('upArmor', this.priceArmorUp);
-                this.upArmorCount += 1;
-                this.priceArmorUp = 10 * this.upArmorCount;
+            if (this.isForgeBuy && this.Credits.GoldCount >= this.Buy.PriceArmorUp) {
+                this.$emit('upArmor');
             }
         },
 
         buyGoldMiner() {
-            if (this.goldCount >= this.priceGoldMiner) {
+            if (this.Credits.GoldCount >= this.Credits.PriceGoldMiner) {
                 this.$emit('afterBuyMiner');
                 this.countBuyMiners++;
             };
@@ -242,48 +234,48 @@ export default {
             }
         },
         buyForge() {
-            if (this.goldCount >= this.forgePrice) {
+            if (this.Credits.GoldCount >= this.Buy.ForgePrice) {
                 this.$emit('buyForge');
             }
         },
         buyTavern() {
-            if (this.goldCount >= this.priceTavern) {
+            if (this.Credits.GoldCount >= this.Buy.PriceTavern) {
                 this.$emit('buyTavern');
             }
         },
 
         healUp() {
-            if (this.goldCount >= this.healingPrice) {
+            if (this.Credits.GoldCount >= this.Buy.HealingPrice) {
                 this.$emit('healUp');
             }
         },
         upSpeed() {
-            if (this.goldCount >= this.speedPrice && this.countUpSpeed < 5) {
+            if (this.Credits.GoldCount >= this.Buy.SpeedPrice && this.countUpSpeed < 5) {
                 this.$emit('upSpeed');
             }
             this.countUpSpeed += 1;
         },
 
         setShield() {
-            if (this.goldCount >= this.useShieldPrice) {
+            if (this.Credits.GoldCount >= this.Buy.UseShieldPrice) {
                 this.$emit('setUseShield');
             }
         },
         upShield() {
-            if (this.goldCount >= this.shieldPrice) {
+            if (this.Credits.GoldCount >= this.Buy.UpShieldPrice) {
                 this.$emit('upShield');
             }
         },
 
         upCrit() {
-            if (this.spellPoints >= 1) {
+            if (this.Hero.SpellPoints >= 1) {
                 this.$emit('upCrit');
                 this.countUpCrit++;
             }
         },
 
         buyBomb() {
-            if (this.goldCount >= this.bombPrice) {
+            if (this.Credits.GoldCount >= this.Buy.BombPrice) {
                 this.$emit('buyBomb');
             }
         },
@@ -291,19 +283,19 @@ export default {
             this.$emit('useBomb');
         },
         useKill() {
-            if (this.spellPoints >= 1) {
+            if (this.Hero.SpellPoints >= 1) {
                 this.$emit('useKill');
                 this.countUpFastKill++;
             }
         },
 
         useTurret() {
-            if (this.goldCount >= this.turretPrice) {
+            if (this.Credits.GoldCount >= this.Turret.Price) {
                 this.$emit('useTurret');
             }
         },
         upTurret() {
-            if (this.spellPoints >= 1) {
+            if (this.Hero.SpellPoints >= 1) {
                 this.$emit('upTurret');
                 this.countUpTurret++;
             }
@@ -330,7 +322,7 @@ export default {
             }
         },
 
-        spellPoints(newValue) {
+        'Hero.SpellPoints': function (newValue) {
             if (newValue != 0) {
                 this.isNoSpellPoint = false;
             } else {
@@ -338,18 +330,17 @@ export default {
             }
         },
 
-        goldCount(newValue) {
-            if (newValue >= 5000) {
+        'Credits.GoldCount': function (newValue) {
+            if (newValue >= 3000) {
                 this.isCanBuyBomb = true;
             } else {
                 this.isCanBuyBomb = false;
             }
         },
 
-        countBomb(newValue) {
+        'Hero.CountBomb': function (newValue) {
             if (newValue > 0) {
                 this.isNotBomb = false;
-
             } else {
                 this.isNotBomb = true;
             }
@@ -388,7 +379,7 @@ export default {
                 this.upDmgText = "Up Damage for";
                 this.buildForgeText = "Hire an engineer";
                 this.buyMinerText = "Buy Miner-Modul for";
-                this.goldrushText = "Mining sistem";
+                this.goldrushText = "Credits sistem";
                 this.enemyText = "Enemy Dmg";
                 this.tavernText = "Supply base";
                 this.healingText = "Healing for";

@@ -1,6 +1,6 @@
 <template>
   <div class="base">
-    <gold-rush  @setShowMinersMenu="setShowMinersMenu" :countMiners="countMiners" :bufMiners="bufMiners"/>
+    <gold-rush @setShowMinersMenu="setShowMinersMenu" :Credits="Credits" :bufMiners="bufMiners" />
 
     <forge-house :isForgeBuy="isForgeBuy" @setShowForgeMenu="setShowForgeMenu" />
 
@@ -15,7 +15,10 @@ import HeroTavern from "@/components/HeroTavern.vue"
 
 export default {
   props: {
-    countMiners: Number,
+    Credits: {
+      type: Object,
+      required: true,
+    },
     bufMiners: Boolean,
     isForgeBuy: {
       type: Boolean,
@@ -28,7 +31,6 @@ export default {
   name: 'hero-base',
   data() {
     return {
-
     }
   },
   methods: {
